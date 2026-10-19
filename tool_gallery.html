@@ -65,6 +65,19 @@
     text-align:center;color:var(--muted);line-height:1.7}
   .msg{font-size:14px;margin-top:8px;min-height:20px}
   .msg.ok{color:var(--accent-dark)} .msg.no{color:#D9435A}
+  /* 관리자 모드 — 선생님 계정으로 로그인했을 때만 보인다 */
+  .del{border:1px solid #F3CBD2;background:#FDEFF1;color:#A4293C;border-radius:7px;
+    padding:5px 11px;font-size:13px;cursor:pointer;font-family:inherit;white-space:nowrap;
+    align-self:flex-start;margin-top:10px}
+  .del:hover{background:#FADCE0;border-color:#E8A3AF}
+  .del.armed{background:#D9435A;border-color:#D9435A;color:#fff;font-weight:700}
+  .del:disabled{opacity:.6;cursor:default}
+  .rk .del{margin:0 0 0 6px;padding:3px 9px;font-size:12px;align-self:center}
+  .adminbar{display:none;background:#FDEFF1;border:1px solid #F3CBD2;
+    border-left:5px solid #D9435A;border-radius:10px;padding:12px 16px;margin-bottom:18px;
+    color:#7A2231;font-size:14.5px;line-height:1.7}
+  body.admin .adminbar{display:block}
+  .adminbar b{color:#A4293C}
   .safe{margin-top:26px;font-size:13.5px;color:var(--muted);line-height:1.8;
     border-top:1px solid var(--line);padding-top:14px}
   .hide{display:none}
@@ -97,6 +110,12 @@
   </div>
 
   <div class="hide" id="main">
+    <div class="adminbar">
+      <b>관리자 모드입니다.</b> 작품 카드와 랭킹 줄에 '지우기' 버튼이 보입니다.
+      두 번 눌러야 지워지고, <b>한 번 지우면 되돌릴 수 없습니다.</b>
+      랭킹은 다섯 등까지가 아니라 전부 보입니다.
+    </div>
+
     <div class="tabs">
       <button class="on" data-tab="gal">🎮 작품</button>
       <button data-tab="rank">🏆 랭킹</button>
@@ -171,11 +190,16 @@ const firebaseConfig = {
   messagingSenderId: "834264546824",
   appId: "1:834264546824:web:c21fe81b0ef53d639c9bbd"
 };
+
+// 선생님 계정의 UID. 이 계정으로 로그인하면 작품·점수를 지울 수 있습니다.
+// 파이어베이스 콘솔 → Authentication → 사용자 → 본인 행의 '사용자 UID'를 복사해 넣으세요.
+// 비워 두면 아무도 지울 수 없습니다(지금까지와 동일).
+const ADMIN_UID = "";
 /* ═══════════════════ 여기까지 ═══════════════════ */
 
 const el = (id) => document.getElementById(id);
 const READY = !String(firebaseConfig.apiKey).startsWith('여기에');
-let uid = null, fs = null, db = null;
+let uid = null, fs = null, db = null, isAdmin = false;
 
 /* 탭 */
 document.querySelectorAll('.tabs button').forEach((b) => {
@@ -224,13 +248,16 @@ async function start(){
 
   authMod.onAuthStateChanged(auth, async (user) => {
     if (!user){
-      uid = null;
+      uid = null; isAdmin = false;
+      document.body.classList.remove('admin');
       el('gate').classList.remove('hide');
       el('main').classList.add('hide');
       el('who').classList.add('hide');
       return;
     }
     uid = user.uid;
+    isAdmin = !!(ADMIN_UID && uid === ADMIN_UID);
+    document.body.classList.toggle('admin', isAdmin);
     el('gate').classList.add('hide');
     el('main').classList.remove('hide');
     el('who').classList.remove('hide');
@@ -309,13 +336,50 @@ function fillGameList(){
   });
 }
 
+/* 관리자 전용 삭제 버튼.
+   실수로 지우는 일이 없게 두 번 눌러야 실행된다. 되돌릴 수 없기 때문. */
+function delButton(coll, docId, label, after){
+  const b = document.createElement('button');
+  b.className = 'del';
+  b.type = 'button';
+  b.textContent = '지우기';
+  b.title = label + ' 지우기';
+  let armed = false, t = null;
+  b.addEventListener('click', async (ev) => {
+    ev.preventDefault();
+    ev.stopPropagation();
+    if (!armed){
+      armed = true;
+      b.textContent = '정말 지울까요?';
+      b.classList.add('armed');
+      t = setTimeout(() => {
+        armed = false; b.textContent = '지우기'; b.classList.remove('armed');
+      }, 4000);
+      return;
+    }
+    clearTimeout(t);
+    b.disabled = true;
+    b.textContent = '지우는 중…';
+    try {
+      await fs.deleteDoc(fs.doc(db, coll, docId));
+      await after();
+    } catch (e){
+      b.disabled = false;
+      b.classList.remove('armed');
+      b.textContent = '실패: ' + e.code;
+      console.error(e);
+    }
+  });
+  return b;
+}
+
 async function loadGallery(){
   const wrap = el('cards');
   wrap.innerHTML = '';
   let docs = [];
   try {
     const snap = await fs.getDocs(fs.collection(db, 'gallery'));
-    snap.forEach((d) => docs.push(d.data()));
+    snap.forEach((d) => docs.push(Object.assign({ _id: d.id }, d.data())));
   } catch (e){ console.error(e); }
   docs.sort((a, b) => (b.at || 0) - (a.at || 0));
   el('galEmpty').classList.toggle('hide', docs.length > 0);
@@ -335,6 +399,9 @@ async function loadGallery(){
       a.textContent = '해 보기';
       c.appendChild(a);
     }
+    if (isAdmin && w._id){
+      c.appendChild(delButton('gallery', w._id, w.title || '이 작품', loadGallery));
+    }
     wrap.appendChild(c);
   });
 }
@@ -345,7 +412,7 @@ async function loadRanking(){
   let rows = [];
   try {
     const snap = await fs.getDocs(fs.collection(db, 'ranking'));
-    snap.forEach((d) => rows.push(d.data()));
+    snap.forEach((d) => rows.push(Object.assign({ _id: d.id }, d.data())));
   } catch (e){ console.error(e); }
   el('rankEmpty').classList.toggle('hide', rows.length > 0);
 
@@ -367,18 +434,22 @@ async function loadRanking(){
     h.append(t, c);
     box.appendChild(h);
 
-    list.slice(0, 5).forEach((r, i) => {
+    // 관리자는 다섯 등까지가 아니라 전부 본다 — 지우려면 보여야 하니까
+    (isAdmin ? list : list.slice(0, 5)).forEach((r, i) => {
       const row = document.createElement('div');
       row.className = 'rk' + (i === 0 ? ' top' : '') + (r.uid === uid ? ' me' : '');
       const n = document.createElement('span'); n.className = 'n'; n.textContent = (i + 1);
       const w = document.createElement('span'); w.className = 'who2'; w.textContent = r.nickname || '익명';
       const s = document.createElement('span'); s.className = 'sc'; s.textContent = r.score;
       row.append(n, w, s);
+      if (isAdmin && r._id){
+        row.appendChild(delButton('ranking', r._id, (r.nickname || '익명') + '의 점수', loadRanking));
+      }
       box.appendChild(row);
     });
 
     const mineIdx = list.findIndex((r) => r.uid === uid);
-    if (mineIdx >= 5){
+    if (!isAdmin && mineIdx >= 5){
       const row = document.createElement('div');
       row.className = 'rk me';
       const n = document.createElement('span'); n.className = 'n'; n.textContent = (mineIdx + 1);
