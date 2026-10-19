@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#5B3DF5">
+<title>내 할 일 · 어디서나 열리는 목록</title>
+<style>
+  :root{--accent:#5B3DF5;--accent-dark:#4A2FD6;--ink:#171A2E;--muted:#62648A;
+        --line:#DCDCE8;--bg:#F3F3F8;--done:#9A9CBC;--warn:#8a5a00}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Malgun Gothic","Apple SD Gothic Neo",sans-serif;
+    display:flex;flex-direction:column;align-items:center;padding:20px 14px 70px}
+  .app{width:100%;max-width:520px}
+  .bar-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:16px}
+  h1{font-size:26px;margin:0}
+  .who{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--muted)}
+  .who img{width:30px;height:30px;border-radius:50%;background:#E4E4EF}
+  button{background:var(--accent);color:#fff;border:0;border-radius:10px;padding:10px 18px;
+    font-size:15px;cursor:pointer;font-family:inherit}
+  button:hover{background:var(--accent-dark)}
+  button.ghost{background:none;color:var(--muted);border:1px solid var(--line);padding:7px 12px;font-size:14px}
+  button.ghost:hover{background:#F0EFF9;color:var(--ink)}
+  .gate{background:#fff;border:1px solid var(--line);border-radius:10px;padding:34px 24px;text-align:center}
+  .gate h2{font-size:21px;margin:0 0 10px}
+  .gate p{color:var(--muted);line-height:1.75;margin:0 0 20px;font-size:15px}
+  .gate button{font-size:16px;padding:13px 26px}
+  .status{background:#fff;border:1px solid var(--line);border-radius:12px;padding:11px 14px;
+    font-size:14px;color:var(--muted);margin-bottom:12px;display:flex;
+    justify-content:space-between;align-items:center;gap:10px}
+  .status b{color:var(--accent-dark)}
+  .banner{background:#fff4e6;border:1px solid #f0c391;border-left:5px solid var(--warn);
+    border-radius:11px;padding:13px 15px;font-size:14.5px;line-height:1.7;color:#6b4412;margin-bottom:14px}
+  .banner b{color:var(--warn)}
+  .progress{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:14px}
+  .ptop{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+  .ptop b{font-size:24px}
+  .ptop span{color:var(--muted);font-size:14px}
+  .bar{height:12px;border-radius:6px;background:#E4E4EF;overflow:hidden}
+  .bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .25s ease}
+  form{display:flex;gap:8px;margin-bottom:14px}
+  input[type=text]{flex:1;padding:13px 14px;font-size:16px;border:1px solid var(--line);
+    border-radius:10px;font-family:inherit;background:#fff}
+  input[type=text]:focus{outline:2px solid var(--accent);outline-offset:-1px}
+  ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+  li{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--line);
+    border-radius:11px;padding:13px 14px}
+  li .chk{width:24px;height:24px;flex:none;border:2px solid var(--line);border-radius:7px;
+    background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;
+    font-size:15px;color:#fff;padding:0}
+  li.done .chk{background:var(--accent);border-color:var(--accent)}
+  li .txt{flex:1;font-size:16px;word-break:break-all;line-height:1.5}
+  li.done .txt{color:var(--done);text-decoration:line-through}
+  li .del{background:none;color:var(--muted);font-size:19px;padding:0 4px;line-height:1}
+  li .del:hover{background:none;color:#D9435A}
+  .empty{background:#fff;border:1px dashed var(--line);border-radius:12px;padding:32px 18px;
+    text-align:center;color:var(--muted);line-height:1.7}
+  .tools{display:flex;justify-content:space-between;align-items:center;margin-top:16px;
+    color:var(--muted);font-size:14px}
+  .privacy{margin-top:24px;font-size:13.5px;color:var(--muted);line-height:1.8;
+    border-top:1px solid var(--line);padding-top:14px}
+  .hide{display:none}
+  :focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+  nav :focus-visible{outline-color:#FFD400}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="bar-top">
+    <h1>내 할 일</h1>
+    <div class="who hide" id="who">
+      <img id="photo" alt="">
+      <span id="name"></span>
+      <button class="ghost" id="out">로그아웃</button>
+    </div>
+  </div>
+
+  <div class="banner hide" id="setup">
+    <b>아직 설정값을 넣지 않았습니다.</b><br>
+    아래 <code>firebaseConfig</code> 자리에 <b>내 프로젝트</b> 설정값을 붙여넣으면 로그인과 클라우드 저장이 켜집니다.
+    지금은 이 브라우저에만 저장되는 연습 모드로 동작합니다.
+  </div>
+
+  <div class="gate hide" id="gate">
+    <h2>로그인하면 어디서나 같은 목록</h2>
+    <p>학교 컴퓨터에서 적은 할 일이 집에서도, 휴대폰에서도 그대로 보입니다.<br>
+       내 목록은 나만 볼 수 있습니다.</p>
+    <button id="in">구글 계정으로 로그인</button>
+  </div>
+
+  <div class="hide" id="main">
+    <div class="status">
+      <span id="sync">불러오는 중…</span>
+      <b id="mode"></b>
+    </div>
+
+    <div class="progress">
+      <div class="ptop"><b id="ratio">0 / 0</b><span id="cheer">할 일을 적어 보세요</span></div>
+      <div class="bar"><i id="fill"></i></div>
+    </div>
+
+    <form id="f">
+      <input type="text" id="input" placeholder="무엇을 할까요?" maxlength="60" autocomplete="off">
+      <button type="submit">추가</button>
+    </form>
+
+    <ul id="list"></ul>
+    <div class="empty" id="empty">아직 비어 있습니다.<br>위에 할 일을 적고 추가를 눌러 보세요.</div>
+
+    <div class="tools">
+      <span id="count"></span>
+      <button class="ghost" id="clear">완료한 것 치우기</button>
+    </div>
+
+    <div class="privacy">
+      내 할 일은 내 계정에만 저장되고, 다른 사람은 볼 수 없습니다. 보안 규칙이 그렇게 막아 두었습니다.<br>
+      저장되는 것은 구글 계정 번호와 내가 적은 할 일뿐입니다. 이름·연락처·주소처럼 남에게 알려지면 곤란한 내용은 적지 마세요.
+    </div>
+  </div>
+</div>
+
+<script type="module">
+/* =========================================================
+   우리 반 파이어베이스 설정값
+   강사가 준 블록으로 아래를 통째로 바꾸세요.
+   ========================================================= */
+const firebaseConfig = {
+  apiKey: "여기에-내-설정값을-붙여넣으세요",
+  authDomain: "내프로젝트.firebaseapp.com",
+  projectId: "내프로젝트",
+  appId: "내앱아이디"
+};
+/* ========================================================= */
+
+const el = (id) => document.getElementById(id);
+const READY = !String(firebaseConfig.apiKey).startsWith('여기에');
+
+let items = [];
+let uid = null;
+let saveTimer = null;
+let cloud = null;   // { db, doc, setDoc, getDoc }
+
+/* ---------- 저장: 클라우드가 있으면 클라우드, 없으면 이 브라우저 ---------- */
+const LOCAL_KEY = 'todo_cloud_fallback_v1';
+
+function localLoad(){
+  try { const v = JSON.parse(localStorage.getItem(LOCAL_KEY) || '[]'); return Array.isArray(v) ? v : []; }
+  catch (e) { return []; }
+}
+function localSave(){ localStorage.setItem(LOCAL_KEY, JSON.stringify(items)); }
+
+function scheduleSave(){
+  el('sync').textContent = '저장 중…';
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(doSave, 600);
+}
+
+async function doSave(){
+  if (cloud && uid){
+    try {
+      await cloud.setDoc(cloud.doc(cloud.db, 'users', uid, 'data', 'todos'), { items });
+      el('sync').textContent = '저장됨';
+    } catch (e){
+      el('sync').textContent = '저장 실패 — 인터넷을 확인하세요';
+      console.error(e);
+    }
+  } else {
+    localSave();
+    el('sync').textContent = '저장됨';
+  }
+}
+
+/* ---------- 화면 ---------- */
+function render(){
+  const list = el('list');
+  list.innerHTML = '';
+  items.forEach((it) => {
+    const li = document.createElement('li');
+    if (it.done) li.className = 'done';
+
+    const chk = document.createElement('button');
+    chk.className = 'chk';
+    chk.textContent = it.done ? '✓' : '';
+    chk.setAttribute('aria-label', it.done ? '완료 취소' : '완료로 표시');
+    chk.addEventListener('click', () => { it.done = !it.done; render(); scheduleSave(); });
+
+    const txt = document.createElement('span');
+    txt.className = 'txt';
+    txt.textContent = it.text;
+
+    const del = document.createElement('button');
+    del.className = 'del';
+    del.textContent = '×';
+    del.setAttribute('aria-label', '삭제');
+    del.addEventListener('click', () => {
+      items = items.filter((x) => x.id !== it.id);
+      render(); scheduleSave();
+    });
+
+    li.append(chk, txt, del);
+    list.appendChild(li);
+  });
+
+  const total = items.length;
+  const done = items.filter((x) => x.done).length;
+  el('empty').style.display = total ? 'none' : 'block';
+  el('ratio').textContent = done + ' / ' + total;
+  el('fill').style.width = total ? (done / total * 100) + '%' : '0%';
+  el('count').textContent = total ? ('남은 일 ' + (total - done) + '개') : '';
+  el('cheer').textContent =
+    total === 0 ? '할 일을 적어 보세요' :
+    done === total ? '오늘 할 일을 다 했어요' :
+    done === 0 ? '하나만 먼저 해 볼까요' : '잘하고 있어요';
+}
+
+el('f').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const v = el('input').value.trim();
+  if (!v) return;
+  items.push({ id: Date.now() + '_' + Math.random().toString(36).slice(2,7), text: v, done: false });
+  el('input').value = '';
+  render(); scheduleSave();
+});
+
+el('clear').addEventListener('click', () => {
+  items = items.filter((x) => !x.done);
+  render(); scheduleSave();
+});
+
+/* ---------- 연습 모드 (설정값 없음) ---------- */
+function startPracticeMode(reason){
+  el('setup').classList.remove('hide');
+  if (reason) el('setup').innerHTML = '<b>' + reason + '</b><br>지금은 이 브라우저에만 저장되는 연습 모드로 동작합니다.';
+  el('main').classList.remove('hide');
+  el('mode').textContent = '연습 모드';
+  items = localLoad();
+  render();
+  el('sync').textContent = '이 브라우저에만 저장됩니다';
+}
+
+/* ---------- 클라우드 모드 ---------- */
+async function startCloudMode(){
+  const [{ initializeApp }, authMod, fsMod] = await Promise.all([
+    import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js'),
+    import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js'),
+    import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js')
+  ]);
+
+  const app = initializeApp(firebaseConfig);
+  const auth = authMod.getAuth(app);
+  const db = fsMod.getFirestore(app);
+  cloud = { db, doc: fsMod.doc, setDoc: fsMod.setDoc, getDoc: fsMod.getDoc };
+
+  el('in').addEventListener('click', () => {
+    authMod.signInWithPopup(auth, new authMod.GoogleAuthProvider()).catch((e) => {
+      alert('로그인이 되지 않았습니다.\n\n' + e.code + '\n\n선생님께 이 메시지를 보여 주세요.');
+    });
+  });
+  el('out').addEventListener('click', () => authMod.signOut(auth));
+
+  authMod.onAuthStateChanged(auth, async (user) => {
+    if (!user){
+      uid = null; items = [];
+      el('gate').classList.remove('hide');
+      el('main').classList.add('hide');
+      el('who').classList.add('hide');
+      return;
+    }
+    uid = user.uid;
+    el('gate').classList.add('hide');
+    el('main').classList.remove('hide');
+    el('who').classList.remove('hide');
+    el('name').textContent = user.displayName || '나';
+    if (user.photoURL) el('photo').src = user.photoURL;
+    el('mode').textContent = '클라우드 저장';
+    el('sync').textContent = '불러오는 중…';
+
+    try {
+      const snap = await cloud.getDoc(cloud.doc(db, 'users', uid, 'data', 'todos'));
+      const data = snap.exists() ? snap.data() : null;
+      items = (data && Array.isArray(data.items)) ? data.items : [];
+      el('sync').textContent = '어디서나 같은 목록이 보입니다';
+    } catch (e){
+      items = [];
+      el('sync').textContent = '불러오지 못했습니다 — 인터넷을 확인하세요';
+      console.error(e);
+    }
+    render();
+  });
+}
+
+/* ---------- 시작 ---------- */
+if (!READY){
+  startPracticeMode();
+} else {
+  startCloudMode().catch((e) => {
+    console.error(e);
+    startPracticeMode('파이어베이스에 연결하지 못했습니다.');
+  });
+}
+</script>
+</body>
+</html>

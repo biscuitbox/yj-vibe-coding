@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#5B3DF5">
+<title>인쇄용 유인물 · 바이브코딩으로 만드는 나만의 게임과 학습 도구</title>
+<style>
+  :root{--accent:#5B3DF5;--accent-dark:#4A2FD6;--accent-soft:#EDE9FE;--ink:#171A2E;
+        --muted:#62648A;--line:#CFCFE0;--bg:#F3F3F8}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);line-height:1.6;font-size:15px;
+    font-family:-apple-system,"Malgun Gothic","Apple SD Gothic Neo",sans-serif}
+  nav{background:var(--ink);position:sticky;top:0;z-index:20}
+  nav .in{max-width:860px;margin:0 auto;padding:10px 16px;display:flex;flex-wrap:wrap;gap:5px}
+  nav a{color:#A8ABD0;text-decoration:none;padding:6px 10px;border-radius:8px;font-size:15px}
+  nav a:hover{background:#2B3053;color:#fff}
+  nav a.on{background:var(--accent);color:#fff}
+  .tools{max-width:860px;margin:18px auto 0;padding:0 16px;display:flex;gap:10px;align-items:center}
+  .tools button{background:var(--accent);color:#fff;border:0;border-radius:9px;padding:10px 18px;
+    font-size:15px;cursor:pointer;font-family:inherit}
+  .tools button:hover{background:var(--accent-dark)}
+  .tools span{color:var(--muted);font-size:14px}
+
+  .sheet{max-width:860px;margin:18px auto;background:#fff;border:1px solid var(--line);
+    border-radius:10px;padding:26px 30px}
+  .ttl{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;
+    border-bottom:3px solid var(--accent);padding-bottom:9px;margin-bottom:16px}
+  .ttl h1{font-size:21px;margin:0;line-height:1.35}
+  .ttl .me{font-size:13px;color:var(--muted);white-space:nowrap;text-align:right}
+  .ttl .me u{display:inline-block;min-width:85px;text-decoration:none;border-bottom:1px solid var(--line)}
+  h2{font-size:16px;margin:20px 0 8px;color:var(--accent-dark);
+    display:flex;align-items:center;gap:8px}
+  h2::after{content:"";flex:1;height:1px;background:var(--line)}
+  h2:first-of-type{margin-top:4px}
+  p{margin:6px 0}
+  .chk{list-style:none;margin:0;padding:0;columns:2;column-gap:26px;font-size:14.5px}
+  .chk li{break-inside:avoid;margin:0 0 5px;padding-left:22px;position:relative}
+  .chk li::before{content:"";position:absolute;left:0;top:3px;width:13px;height:13px;
+    border:1.5px solid var(--muted);border-radius:3px}
+  .one{columns:1}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .box{border:1px solid var(--line);border-radius:9px;padding:11px 13px}
+  .box b{display:block;font-size:14.5px;margin-bottom:3px;color:var(--accent-dark)}
+  .box p{margin:0;font-size:13.5px;color:#3A3C5C;line-height:1.6}
+  .blank{display:inline-block;min-width:92px;border-bottom:1.5px solid var(--accent);
+    height:1.25em;vertical-align:baseline}
+  .blank.w{min-width:170px}
+  .lines{border:1px solid var(--line);border-radius:9px;padding:9px 13px;
+    background:repeating-linear-gradient(transparent,transparent 27px,var(--line) 27px,var(--line) 28px);
+    min-height:112px}
+  .lines.tall{min-height:170px}
+  table{width:100%;border-collapse:collapse;font-size:14px;margin:6px 0}
+  th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+  th{background:var(--accent-soft);white-space:nowrap}
+  td.fill{height:30px}
+  .mini{font-size:13px;color:var(--muted);margin-top:5px}
+  .foot{margin-top:18px;padding-top:9px;border-top:1px solid var(--line);
+    font-size:12px;color:var(--muted);display:flex;justify-content:space-between}
+  code{background:#F0EFF9;padding:0 4px;border-radius:4px;font-size:13.5px;
+    font-family:ui-monospace,Consolas,monospace}
+
+  @media (max-width:620px){
+    .chk{columns:1} .grid2{grid-template-columns:1fr}
+    .sheet{padding:20px 16px;border-radius:0}
+  }
+  @media print{
+    @page{size:A4 portrait;margin:13mm}
+    body{background:#fff;font-size:10pt;line-height:1.45}
+    nav,.tools{display:none}
+    .sheet{max-width:none;margin:0;border:0;border-radius:0;padding:0;page-break-after:always}
+    .sheet:last-child{page-break-after:auto}
+    .ttl h1{font-size:15pt}
+    h2{font-size:11pt;margin:9px 0 4px}
+    .lines{min-height:40px} .lines.tall{min-height:62px}
+    .chk{font-size:9.5pt;line-height:1.65} table{font-size:9pt}
+    ul,p{margin-top:5px;margin-bottom:5px}
+    .box p{font-size:9.5pt}
+    /* 뒷면이 셋째 쪽으로 넘치지 않게 */
+    .sheet{overflow:hidden}
+    .sheet > *{break-inside:avoid}
+    .foot{margin-top:10px}
+  }
+  :focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+  nav :focus-visible{outline-color:#FFD400}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<nav><div class="in">
+  <a href="index.html">🏠 홈</a>
+  <a href="slides-1.html">📺 강의 슬라이드</a>
+  <a href="workbench.html">🛠️ 실습 워크벤치</a>
+  <a href="playbook.html">📖 초보 가이드북</a>
+  <a class="on" href="handout.html">🖨️ 인쇄용 유인물</a>
+</div></nav>
+
+<div class="tools">
+  <button onclick="window.print()">인쇄하기</button>
+  <span>A4 두 장 · 양면으로 인쇄하면 한 장이 됩니다</span>
+</div>
+
+<!-- ============ 앞면 ============ -->
+<div class="sheet">
+  <div class="ttl">
+    <h1>바이브코딩으로 만드는 나만의 게임과 학습 도구</h1>
+    <div class="me">학년 반 번호 <u></u><br>이름 <u></u></div>
+  </div>
+
+  <h2>준비물</h2>
+  <ul class="chk">
+    <li>인터넷이 되는 컴퓨터</li>
+    <li>영재원 계정 (아이디·비밀번호 확인)</li>
+    <li>크롬 브라우저</li>
+    <li>바탕화면에 내 작품 폴더 하나</li>
+  </ul>
+  <p class="mini">설치할 프로그램은 없습니다. 제미나이 캔버스와 브라우저만 씁니다.</p>
+  <h2>내 계정과 내 주소 — 1차시에 적어 두기</h2>
+  <table>
+    <tr><th style="width:30%">깃허브 아이디</th><td class="fill"></td></tr>
+    <tr><th>저장소 이름</th><td class="fill"></td></tr>
+    <tr><th>내 주소</th><td class="fill"></td></tr>
+  </table>
+  <p class="mini">아이디가 그대로 주소가 됩니다. 비밀번호는 여기 적지 말고 따로 기억하세요.</p>
+  <h2>올리는 네 단계 — 매 차시 끝</h2>
+  <table>
+    <tr><th style="width:8%">1</th><td>캔버스에서 <span class="blank"></span> 를 눌러 파일 받기</td></tr>
+    <tr><th>2</th><td>이름을 영문 + <span class="blank"></span> 로 (첫 페이지만 index.html)</td></tr>
+    <tr><th>3</th><td>내 저장소 → Add file → <span class="blank"></span></td></tr>
+    <tr><th>4</th><td>아래 <span class="blank"></span> 누르고 1~2분 기다리기</td></tr>
+  </table>
+  <h2>프롬프트 작성 공식 — 네 가지를 말해 주세요</h2>
+  <div class="grid2">
+    <div class="box"><b>🎯 목표와 환경</b><p>무엇을 만들지, 어디서 열려야 하는지</p></div>
+    <div class="box"><b>🎨 디자인과 배치</b><p>화면 구성, 색, 글자 크기, 휴대폰 대응</p></div>
+    <div class="box"><b>⚙️ 동작 규칙</b><p>누르면 무엇이 일어나는지, 예외는 어떻게</p></div>
+    <div class="box"><b>🗄️ 데이터 보관</b><p>저장할지, 새로고침해도 남아야 하는지</p></div>
+  </div>
+  <h2>막혔던 것과 해결한 방법</h2>
+  <div class="lines tall"></div>
+  <h2>AI를 쓸 때의 약속</h2>
+  <ul class="chk one">
+    <li>이름·연락처·주소·학교 이름은 AI에게 적지 않는다</li>
+    <li>AI가 틀릴 수 있으므로 직접 눌러서 확인한다</li>
+    <li>남을 놀리거나 무섭게 하는 내용은 만들지 않는다</li>
+    <li>AI가 만들었어도 올린 사람이 책임진다</li>
+  </ul>
+
+  <div class="foot"><span>앞면</span><span>2026</span></div>
+</div>
+
+<!-- ============ 뒷면 ============ -->
+<div class="sheet">
+  <div class="ttl">
+    <h1>차시 기록과 마무리</h1>
+    <div class="me">이름 <u></u></div>
+  </div>
+
+  <h2>내 게임 기획 — 2차시에 작성</h2>
+  <table>
+    <tr><th style="width:26%">게임 이름</th><td class="fill"></td></tr>
+    <tr><th>한 줄 설명</th><td class="fill"></td></tr>
+    <tr><th>어떻게 하는 게임</th><td class="fill" style="height:52px"></td></tr>
+    <tr><th>점수는 어떻게</th><td class="fill"></td></tr>
+    <tr><th>한 판에 걸리는 시간</th><td class="fill"></td></tr>
+  </table>
+  <p class="mini">규격: 한 판 3분 안에 끝남 · 결과는 숫자 하나 · 높을수록 잘한 것 · 혼자 함 · 파일 하나</p>
+  <h2>내 파이어베이스 — 5차시에 적어 두기</h2>
+  <table>
+    <tr><th style="width:30%">프로젝트 이름</th><td class="fill"></td></tr>
+    <tr><th>승인된 도메인에 넣은 값</th><td class="fill"></td></tr>
+  </table>
+  <ul class="chk one">
+    <li>Authentication에서 Google 로그인을 켰다</li>
+    <li>Firestore 데이터베이스를 만들었다</li>
+    <li>설정값을 복사해 프롬프트에 넣었다</li>
+    <li>승인된 도메인에 내 주소를 넣었다</li>
+    <li><b>보안 규칙을 붙여넣고 게시했다</b></li>
+  </ul>
+  <h2>차시별 체크</h2>
+  <ul class="chk one">
+    <li>1차시 — 캔버스에서 내 소개 페이지를 만들었다</li>
+    <li>2차시 — 내 게임이 돌아간다</li>
+    <li>3차시 — 코드를 받아 내 파일로 만들었고, 최고 점수가 남는다</li>
+    <li>4차시 — 내 학습 도구를 만들어 <b>내 주소에 올렸다</b></li>
+    <li>5차시 — 로그인을 붙이고 내 주소에서 확인했다</li>
+    <li>6차시 — 내 게임이 전시관에 올라갔다</li>
+  </ul>
+  <h2>내 주소 적어 두기</h2>
+  <table>
+    <tr><th style="width:30%">내 주소 (1차시)</th><td class="fill"></td></tr>
+    <tr><th>우리 반 전시관</th><td class="fill"></td></tr>
+    <tr><th>내 학습 도구 주소</th><td class="fill"></td></tr>
+    <tr><th>내 게임 주소</th><td class="fill"></td></tr>
+  </table>
+  <p class="mini">별명은 실명 대신 씁니다. 주소를 아는 사람은 누구나 볼 수 있으니 이름·연락처·사진은 넣지 않습니다.</p>
+
+  <div class="foot"><span>뒷면</span><span>바이브코딩으로 만드는 나만의 게임과 학습 도구</span></div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#171A2E">
+<title>6차시 · 웹 서비스 배포하고 공유하기</title>
+<style>
+:root{
+  --ink:#171A2E; --ink-2:#232846; --paper:#F3F3F8; --white:#fff;
+  --accent:#5B3DF5; --accent-dim:#4A2FD6; --accent-soft:#EDE9FE;
+  --spark:#FFD400; --line:#DCDCE8; --muted:#62648A; --dim:#A8ABD0;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--paper);color:var(--ink);overflow:hidden;
+  font-family:-apple-system,"Malgun Gothic","Apple SD Gothic Neo",sans-serif}
+.deck{height:100vh;position:relative}
+.stage{position:absolute;inset:0;overflow:hidden}
+.slide{position:absolute;inset:0;display:none;flex-direction:column;justify-content:center;
+  padding:11vh 5vw 8vh;overflow:auto}
+.slide.on{display:flex}
+
+/* 차시 표지 — 슬라이드 모서리에 고정, 본문 흐름 밖 */
+.mark{position:absolute;left:5vw;top:4.4vh;display:flex;align-items:center;
+  gap:clamp(9px,.9vw,15px);font-size:clamp(13px,1.35vw,21px);color:var(--muted)}
+.mark .n{background:var(--ink);color:var(--paper);font-weight:700;
+  width:clamp(26px,2.5vw,40px);height:clamp(26px,2.5vw,40px);border-radius:4px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:clamp(14px,1.45vw,23px);font-variant-numeric:tabular-nums}
+
+h2{font-size:clamp(28px,4.4vw,72px);line-height:1.18;margin:0 0 clamp(16px,2.6vh,38px);
+  letter-spacing:-.035em;font-weight:700}
+.sub{font-size:clamp(17px,2.2vw,36px);line-height:1.55;color:var(--muted);margin:0}
+.sub b{color:var(--ink);font-weight:700}
+
+/* 목록 — 상자가 아니라 가로줄로 나뉜 행 */
+ul.pts{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+ul.pts li{border-bottom:1px solid var(--line);padding:clamp(13px,2.1vh,27px) 0
+  clamp(13px,2.1vh,27px) clamp(26px,2.6vw,46px);position:relative;
+  font-size:clamp(17px,2.3vw,41px);line-height:1.38}
+ul.pts li::before{content:"";position:absolute;left:0;top:calc(.62em);
+  width:clamp(9px,.85vw,15px);height:clamp(9px,.85vw,15px);background:var(--accent);
+  border-radius:2px}
+ul.pts li b{font-weight:700}
+ul.pts li:nth-last-child(n+5),ul.pts li:nth-last-child(n+5)~li{
+  padding-top:clamp(10px,1.5vh,20px);padding-bottom:clamp(10px,1.5vh,20px);
+  font-size:clamp(16px,2vw,34px)}
+ul.pts:has(li:nth-child(2):last-child) li,
+ul.pts:has(li:nth-child(3):last-child) li{
+  padding-top:clamp(20px,3.6vh,52px);padding-bottom:clamp(20px,3.6vh,52px);
+  font-size:clamp(19px,2.65vw,48px)}
+.note{margin:clamp(16px,2.4vh,32px) 0 0;font-size:clamp(14px,1.75vw,29px);
+  color:var(--muted);line-height:1.5}
+.note b{color:var(--accent-dim);font-weight:700}
+
+/* 단계 카드 — 테두리 없이 위쪽 굵은 선 */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,215px),1fr));
+  gap:clamp(16px,2.1vw,36px)}
+.step{border-top:5px solid var(--accent);padding:clamp(14px,2vh,28px) 0 0}
+.step .ic{font-size:clamp(28px,3.3vw,54px);line-height:1.1}
+.step .ic.num{background:var(--ink);color:var(--paper);width:clamp(32px,2.8vw,46px);
+  height:clamp(32px,2.8vw,46px);border-radius:5px;display:flex;align-items:center;
+  justify-content:center;font-weight:700;font-size:clamp(17px,1.7vw,27px);
+  font-variant-numeric:tabular-nums}
+.step b{display:block;font-size:clamp(18px,2.35vw,39px);margin:clamp(9px,1.3vh,18px) 0 5px;
+  letter-spacing:-.025em;line-height:1.25}
+.step span{color:var(--muted);font-size:clamp(15px,1.9vw,31px);line-height:1.42}
+
+/* 화면 캡처 자리 — 브라우저 창 모양 */
+.shotbox{margin-top:clamp(8px,1.4vh,18px);border:1px solid var(--line);border-radius:10px;
+  background:var(--white);overflow:hidden;display:flex;flex-direction:column;
+  flex:1 1 auto;max-height:62vh}
+.shotbox .chrome{background:var(--ink);color:var(--dim);display:flex;align-items:center;
+  gap:9px;padding:clamp(6px,.9vh,11px) clamp(11px,1.1vw,18px);
+  font-family:ui-monospace,Consolas,"D2Coding",monospace;font-size:clamp(11px,1.15vw,18px)}
+.shotbox .chrome i{width:clamp(7px,.62vw,11px);height:clamp(7px,.62vw,11px);
+  border-radius:50%;background:#464C78;display:block}
+.shotbox .chrome i:first-child{background:var(--spark)}
+.shotbox .body{flex:1;display:flex;align-items:center;justify-content:center;text-align:center;
+  padding:clamp(16px,3vh,34px);min-height:38vh;color:var(--muted);
+  font-size:clamp(13px,1.5vw,23px);background:repeating-linear-gradient(135deg,
+    #fff 0 11px,#FAFAFD 11px 22px)}
+.shotbox img{max-width:100%;max-height:52vh;display:block;border-radius:4px}
+
+figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:clamp(8px,1.6vh,20px);width:100%}
+figure svg{width:100%;height:auto;max-height:58vh}
+figcaption{color:var(--muted);font-size:clamp(13px,1.55vw,25px);text-align:center;
+  max-width:46em;line-height:1.45}
+
+/* 표지 */
+.cover{background:var(--ink);color:var(--white);justify-content:flex-end;
+  padding-bottom:15vh}
+.cover .ses{display:flex;align-items:baseline;gap:clamp(10px,1vw,18px);margin:0 0 clamp(14px,2vh,26px)}
+.cover .ses .num{font-size:clamp(46px,8vw,132px);font-weight:700;line-height:.82;
+  color:var(--spark);letter-spacing:-.05em;font-variant-numeric:tabular-nums}
+.cover .ses .of{font-size:clamp(15px,1.7vw,26px);color:var(--dim)}
+.cover h1{font-size:clamp(30px,5.4vw,88px);line-height:1.14;margin:0 0 clamp(10px,1.6vh,22px);
+  letter-spacing:-.04em;font-weight:700}
+.cover p{font-size:clamp(17px,2.3vw,38px);color:var(--dim);margin:0;max-width:30em;line-height:1.4}
+.cover .course{position:absolute;left:5vw;top:4.4vh;font-size:clamp(12px,1.3vw,19px);
+  color:#6E72A8}
+.six{display:flex;gap:clamp(5px,.55vw,10px);margin:0 0 clamp(16px,2.6vh,34px)}
+.six span{width:clamp(34px,3.4vw,58px);height:clamp(7px,.85vh,13px);border-radius:2px;
+  background:#2E3356;display:block}
+.six span.done{background:#454B7C}
+.six span.now{background:var(--spark)}
+
+/* 타임라인 — 블록 길이를 막대 너비로 보여 준다 */
+.tl{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.tlrow{display:flex;align-items:center;gap:clamp(14px,1.6vw,30px);
+  border-bottom:1px solid var(--line);padding:clamp(12px,2.2vh,30px) 0}
+.tlrow .t{font-variant-numeric:tabular-nums;font-weight:700;color:var(--ink);
+  font-size:clamp(14px,1.75vw,30px);white-space:nowrap;
+  font-family:ui-monospace,Consolas,"D2Coding",monospace;letter-spacing:-.05em;
+  flex:0 0 auto;min-width:6.2em}
+.tlrow .d{font-size:clamp(16px,2.1vw,37px);flex:1 1 auto;min-width:0}
+.tlrow .track{flex:0 0 32%;height:clamp(9px,1.05vh,16px);background:#E2E2EE;
+  border-radius:3px;overflow:hidden}
+.tlrow .len{display:block;height:100%;background:var(--accent);border-radius:3px}
+.tlrow:last-child .len{background:var(--spark)}
+
+/* 한 문장 슬라이드 — 잉크 바탕 */
+.punch{background:var(--ink);color:var(--white)}
+.punch .mark{color:var(--dim)}
+.punch .mark .n{background:var(--spark);color:var(--ink)}
+.lead{font-size:clamp(16px,2vw,32px);font-weight:700;color:var(--accent);
+  margin:0 0 clamp(10px,1.5vh,20px);line-height:1.3;letter-spacing:-.02em}
+.punch .lead{color:var(--spark)}
+.big{font-size:clamp(33px,6.6vw,108px);font-weight:700;line-height:1.08;
+  margin:0 0 clamp(14px,2.2vh,30px);letter-spacing:-.045em}
+.punch .sub{color:var(--dim)}
+.punch .sub b{color:var(--white)}
+
+/* 하단 — 평소엔 진행선만, 마우스를 움직이면 조작부가 올라온다 */
+.rail{position:absolute;left:0;right:0;bottom:0;height:4px;background:#E2E2EE;z-index:5}
+.punch~.rail,.cover~.rail{background:#2E3356}
+.rail i{display:block;height:100%;width:0;background:var(--accent);transition:width .22s}
+.bar{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;gap:13px;
+  padding:9px 16px 12px;background:rgba(255,255,255,.96);border-top:1px solid var(--line);
+  z-index:6;transform:translateY(105%);transition:transform .2s ease;
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.deck.show .bar{transform:translateY(0)}
+.bar button{background:var(--accent);color:#fff;border:0;border-radius:7px;padding:8px 15px;
+  font-size:14.5px;cursor:pointer;font-family:inherit}
+.bar button:hover{background:var(--accent-dim)}
+.bar button:disabled{background:#B9BAD2;cursor:default}
+.bar .count{font-variant-numeric:tabular-nums;color:var(--muted);font-size:14.5px;
+  font-family:ui-monospace,Consolas,monospace}
+.bar .sp{flex:1}
+.bar a{color:var(--muted);text-decoration:none;font-size:14px;padding:5px 9px;border-radius:7px}
+.bar a:hover{background:var(--accent-soft);color:var(--accent-dim)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.punch :focus-visible,.cover :focus-visible{outline-color:var(--spark)}
+
+@media (max-width:600px){
+  .slide{padding:9vh 6vw 7vh}
+  .bar a{display:none}
+  .tlrow .len{display:none}
+  .tlrow .t{min-width:4.6em}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media print{
+  body{overflow:visible} .deck{height:auto;position:static} .stage{position:static}
+  .slide{display:flex!important;position:static;page-break-after:always;min-height:95vh;
+    border-bottom:1px solid #ccc}
+  .bar,.rail{display:none}
+  .cover,.punch{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+  <div class="stage">
+<section class="slide cover"><div class="course">바이브코딩으로 만드는 나만의 게임과 학습 도구</div><div class="six"><span class="done"></span><span class="done"></span><span class="done"></span><span class="done"></span><span class="done"></span><span class="now"></span></div><p class="ses"><span class="num">6</span><span class="of">차시 / 전체 6차시</span></p><h1>웹 서비스 배포하고 공유하기</h1><p>주소가 생기면 친구가 내 게임을 한다</p></section>
+<section class="slide"><div class="mark"><span class="n">6</span><span>웹 서비스 배포하고 공유하기</span></div><h2>오늘의 흐름 · 45분</h2><div class="tl"><div class="tlrow"><span class="t">00~08분</span><span class="d">최종 업로드와 점검</span><span class="track"><i class="len" style="width:17.8%"></i></span></div><div class="tlrow"><span class="t">08~18분</span><span class="d">전시관에 등록</span><span class="track"><i class="len" style="width:22.2%"></i></span></div><div class="tlrow"><span class="t">18~38분</span><span class="d">친구 게임 해 보기</span><span class="track"><i class="len" style="width:44.4%"></i></span></div><div class="tlrow"><span class="t">38~45분</span><span class="d">마무리</span><span class="track"><i class="len" style="width:15.6%"></i></span></div></div><p class="note">시간은 안내일 뿐입니다. 막히는 사람이 많으면 실습 시간을 늘립니다.</p></section>
+<section class="slide punch"><div class="mark"><span class="n">6</span><span>웹 서비스 배포하고 공유하기</span></div><p class="lead">마지막 시간</p><p class="big">전시관을 엽니다</p><p class="sub">내 게임을 올리고, 친구 게임을 해 보고, 점수를 남깁니다.</p></section>
+<section class="slide"><div class="mark"><span class="n">6</span><span>웹 서비스 배포하고 공유하기</span></div><h2>오늘 순서</h2><div class="steps"><div class="step"><div class="ic num">1</div><b>최종 업로드</b><span>게임 파일을 마지막으로 올리기</span></div><div class="step"><div class="ic num">2</div><b>주소 확인</b><span>내 주소에서 열리는지 눌러 보기</span></div><div class="step"><div class="ic num">3</div><b>전시관 등록</b><span>별명 저장 → 내 게임 주소 올리기</span></div><div class="step"><div class="ic num">4</div><b>서로 하기</b><span>친구 게임 해 보고 점수 올리기</span></div></div></section>
+<section class="slide"><div class="mark"><span class="n">6</span><span>웹 서비스 배포하고 공유하기</span></div><h2>올리기 전 점검</h2><ul class="pts"><li>파일 이름은 영문으로 — 예: <b>game.html</b></li><li>이름·연락처·학교 이름이 들어 있지 않은지 확인</li><li>내 컴퓨터에서 한 번 열어서 잘 돌아가는지 확인</li><li>올린 뒤 <b>내 주소</b>를 눌러 실제로 열리는지 확인</li></ul></section>
+<section class="slide"><div class="mark"><span class="n">6</span><span>웹 서비스 배포하고 공유하기</span></div><h2>주소 읽는 법</h2><figure><svg viewBox="0 0 980 236" role="img" aria-label="깃허브 페이지 주소의 구조"><defs><marker id="a" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0 0 L11 4 L0 8 z" fill="#5B3DF5"/></marker><marker id="g" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0 0 L11 4 L0 8 z" fill="#AAABC6"/></marker><marker id="r" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0 0 L11 4 L0 8 z" fill="#D9435A"/></marker></defs>
+<rect x="135" y="50" width="710" height="62" rx="12" fill="#fff" stroke="#5B3DF5" stroke-width="2.5"/>
+<text x="159" y="90" font-size="26" font-family="ui-monospace,Consolas,monospace" fill="#171A2E">
+<tspan fill="#9A9CBC">https://</tspan><tspan fill="#4A2FD6" font-weight="700">minsu</tspan><tspan fill="#9A9CBC">.github.io/</tspan><tspan fill="#B07A00" font-weight="700">my-web</tspan><tspan fill="#9A9CBC">/</tspan><tspan fill="#171A2E" font-weight="700">game.html</tspan></text>
+
+<g stroke-width="2.5" fill="none">
+  <path d="M323 158 L323 120" stroke="#5B3DF5" marker-end="url(#a)"/>
+  <path d="M581 158 L581 120" stroke="#B07A00" marker-end="url(#a)"/>
+  <path d="M714 158 L714 120" stroke="#62648A" marker-end="url(#g)"/>
+</g>
+<text x="323" y="184" font-size="17" font-weight="700" fill="#4A2FD6" text-anchor="middle">내 계정</text>
+<text x="323" y="208" font-size="15" fill="#62648A" text-anchor="middle">깃허브 아이디</text>
+
+<text x="581" y="184" font-size="17" font-weight="700" fill="#B07A00" text-anchor="middle">내 저장소</text>
+<text x="581" y="208" font-size="15" fill="#62648A" text-anchor="middle">저장소 이름</text>
+
+<text x="714" y="184" font-size="17" font-weight="700" fill="#3A3C5C" text-anchor="middle">내 작품</text>
+<text x="714" y="208" font-size="15" fill="#62648A" text-anchor="middle">올린 파일 이름</text>
+
+<text x="490" y="30" font-size="17" fill="#62648A" text-anchor="middle">주소는 세 부분으로 되어 있다</text>
+</svg><figcaption>수업이 끝난 뒤에도 이 주소로 친구들 작품을 다시 열어 볼 수 있습니다.</figcaption></figure></section>
+<section class="slide"><div class="mark"><span class="n">6</span><span>웹 서비스 배포하고 공유하기</span></div><h2>전시관</h2><figure><svg viewBox="0 0 980 320" role="img" aria-label="전시관 화면 — 작품 카드와 게임별 랭킹"><defs><marker id="a" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0 0 L11 4 L0 8 z" fill="#5B3DF5"/></marker><marker id="g" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0 0 L11 4 L0 8 z" fill="#AAABC6"/></marker><marker id="r" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0 0 L11 4 L0 8 z" fill="#D9435A"/></marker></defs>
+<rect x="130" y="18" width="720" height="282" rx="14" fill="#fff" stroke="#DCDCE8" stroke-width="2"/>
+<rect x="130" y="18" width="720" height="36" rx="14" fill="#F0EFF9"/>
+<rect x="130" y="40" width="720" height="14" fill="#F0EFF9"/>
+<circle cx="156" cy="36" r="5.5" fill="#CFCFE0"/><circle cx="174" cy="36" r="5.5" fill="#CFCFE0"/>
+<text x="490" y="42" font-size="15" fill="#62648A" text-anchor="middle">우리 반 전시관</text>
+
+<g>
+  <rect x="158" y="76" width="200" height="92" rx="11" fill="#F3F3F8" stroke="#E4E4EF"/>
+  <text x="178" y="106" font-size="17" font-weight="700" fill="#171A2E">30초 두더지</text>
+  <text x="178" y="131" font-size="14" fill="#62648A">폭탄을 피해서 잡으세요</text>
+  <rect x="178" y="140" width="76" height="20" rx="9" fill="#5B3DF5"/>
+  <text x="216" y="155" font-size="13" fill="#fff" text-anchor="middle">해 보기</text>
+
+  <rect x="388" y="76" width="200" height="92" rx="11" fill="#F3F3F8" stroke="#E4E4EF"/>
+  <text x="408" y="106" font-size="17" font-weight="700" fill="#171A2E">색깔 구별</text>
+  <text x="408" y="131" font-size="14" fill="#62648A">다른 색 한 칸 찾기</text>
+  <rect x="408" y="140" width="76" height="20" rx="9" fill="#5B3DF5"/>
+  <text x="446" y="155" font-size="13" fill="#fff" text-anchor="middle">해 보기</text>
+
+  <rect x="618" y="76" width="200" height="92" rx="11" fill="#F3F3F8" stroke="#E4E4EF"/>
+  <text x="638" y="106" font-size="17" font-weight="700" fill="#171A2E">여덟 번의 질문</text>
+  <text x="638" y="131" font-size="14" fill="#62648A">숫자를 맞혀 보세요</text>
+  <rect x="638" y="140" width="76" height="20" rx="9" fill="#5B3DF5"/>
+  <text x="676" y="155" font-size="13" fill="#fff" text-anchor="middle">해 보기</text>
+</g>
+
+<text x="158" y="206" font-size="16" fill="#62648A">🏆 두더지 잡기 랭킹</text>
+<g font-size="16">
+  <rect x="158" y="218" width="660" height="30" rx="8" fill="#EDE9FE"/>
+  <text x="178" y="239" font-weight="700" fill="#B07A00">1</text>
+  <text x="212" y="239" fill="#171A2E">초록두더지</text>
+  <text x="798" y="239" font-weight="700" fill="#171A2E" text-anchor="end">420</text>
+  <text x="178" y="274" fill="#62648A">2</text>
+  <text x="212" y="274" fill="#171A2E">파랑연필</text>
+  <text x="798" y="274" font-weight="700" fill="#171A2E" text-anchor="end">385</text>
+</g>
+<path d="M90 233 L152 233" stroke="#5B3DF5" stroke-width="2.5" marker-end="url(#a)"/>
+<text x="80" y="228" font-size="15" fill="#4A2FD6" text-anchor="end">실명 말고</text>
+<text x="80" y="248" font-size="15" font-weight="700" fill="#4A2FD6" text-anchor="end">별명</text>
+</svg><figcaption>작품 카드를 누르면 친구 게임이 열립니다. 아래는 게임별 랭킹입니다.</figcaption></figure></section>
+<section class="slide"><div class="mark"><span class="n">6</span><span>웹 서비스 배포하고 공유하기</span></div><h2>전시관에서 할 일</h2><ul class="pts"><li><b>별명 저장</b> — 실명 대신 별명을 씁니다</li><li>게임 이름, 한 줄 설명, <b>내 게임 주소</b>를 등록합니다</li><li>친구 게임을 눌러서 해 봅니다</li><li>최고 기록이 나오면 점수를 등록합니다</li></ul><p class="note">전시관은 선생님이 만든 곳입니다. 여기서는 구글 로그인만 하면 됩니다.</p></section>
+<section class="slide"><div class="mark"><span class="n">6</span><span>웹 서비스 배포하고 공유하기</span></div><h2>인터넷에 올린다는 것</h2><ul class="pts"><li>주소를 아는 사람은 <b>누구나</b> 볼 수 있습니다</li><li>깃허브에 올린 파일은 <b>코드까지</b> 누구나 볼 수 있습니다</li><li>한 번 올린 것은 완전히 지우기 어렵습니다</li><li>그래서 실명·사진·연락처는 넣지 않습니다</li><li>친구가 올린 것도 함부로 퍼뜨리지 않습니다</li></ul></section>
+<section class="slide punch"><div class="mark"><span class="n">6</span><span>웹 서비스 배포하고 공유하기</span></div><p class="lead">남은 시간</p><p class="big">서로의 게임 해 보기</p><p class="sub">오늘의 보상은 여기에 있습니다.</p></section>
+<section class="slide"><div class="mark"><span class="n">6</span><span>웹 서비스 배포하고 공유하기</span></div><h2>혼자 이어가려면</h2><ul class="pts"><li>내 저장소는 수업이 끝나도 그대로 남습니다</li><li>만들던 게임에 기능을 하나씩 더해 보세요</li><li>집에서 쓸 도구를 하나 더 만들어 올려 보세요</li><li>막히면 AI에게 물어보세요 — 이제 묻는 법을 압니다</li></ul></section>
+<section class="slide punch"><div class="mark"><span class="n">6</span><span>웹 서비스 배포하고 공유하기</span></div><p class="lead">여섯 번 동안</p><p class="big">내 주소가 생겼습니다</p><p class="sub">계정 하나, 저장소 하나, 데이터베이스 하나.<br>그리고 그 안에 내가 만든 것들.<br>코드를 한 줄도 쓰지 않고.</p></section>
+  </div>
+  <div class="rail"><i id="fill"></i></div>
+  <div class="bar">
+    <button id="prev">← 이전</button>
+    <button id="next">다음 →</button>
+    <span class="count"><b id="cur">1</b> / 12</span>
+    <span class="sp"></span>
+    <a href="index.html">🏠 홈</a>
+    <a href="workbench.html">🛠️ 워크벤치</a>
+    <a href="slides-1.html">1차시</a><a href="slides-2.html">2차시</a><a href="slides-3.html">3차시</a><a href="slides-4.html">4차시</a><a href="slides-5.html">5차시</a>
+  </div>
+</div>
+<script>
+var slides = document.querySelectorAll('.slide');
+var deck = document.getElementById('deck');
+var i = 0;
+function show(n){
+  i = Math.max(0, Math.min(slides.length - 1, n));
+  slides.forEach(function(s, k){ s.classList.toggle('on', k === i); });
+  document.getElementById('cur').textContent = (i + 1);
+  document.getElementById('fill').style.width = ((i + 1) / slides.length * 100) + '%';
+  document.getElementById('prev').disabled = (i === 0);
+  document.getElementById('next').disabled = (i === slides.length - 1);
+  try {
+    if (location.hash !== '#' + (i + 1)) history.replaceState(null, '', '#' + (i + 1));
+  } catch (e) { /* 미리보기 창이나 일부 환경에서는 주소를 바꿀 수 없음 — 넘어감 */ }
+  slides[i].scrollTop = 0;
+}
+document.addEventListener('keydown', function(e){
+  if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); show(i + 1); }
+  if (e.key === 'ArrowLeft'  || e.key === 'PageUp')  { e.preventDefault(); show(i - 1); }
+  if (e.key === 'Home') show(0);
+  if (e.key === 'End')  show(slides.length - 1);
+});
+document.getElementById('prev').addEventListener('click', function(){ show(i - 1); });
+document.getElementById('next').addEventListener('click', function(){ show(i + 1); });
+
+/* 발표 중에는 조작부를 감춘다. 마우스를 움직이면 2.5초 동안 나타난다. */
+var hideT = null;
+function peek(){
+  deck.classList.add('show');
+  clearTimeout(hideT);
+  hideT = setTimeout(function(){ deck.classList.remove('show'); }, 2500);
+}
+['mousemove','touchstart'].forEach(function(ev){
+  document.addEventListener(ev, peek, {passive:true});
+});
+document.querySelector('.bar').addEventListener('mouseenter', function(){
+  deck.classList.add('show'); clearTimeout(hideT);
+});
+document.addEventListener('focusin', function(e){
+  if (e.target.closest && e.target.closest('.bar')) { deck.classList.add('show'); clearTimeout(hideT); }
+});
+
+var t0 = null;
+document.querySelector('.stage').addEventListener('touchstart', function(e){ t0 = e.changedTouches[0].clientX; }, {passive:true});
+document.querySelector('.stage').addEventListener('touchend', function(e){
+  if (t0 === null) return;
+  var d = e.changedTouches[0].clientX - t0;
+  if (Math.abs(d) > 60) show(d < 0 ? i + 1 : i - 1);
+  t0 = null;
+}, {passive:true});
+function fromHash(){
+  var n = 0;
+  try { n = (parseInt((location.hash || '#1').slice(1), 10) - 1) || 0; } catch (e) { n = 0; }
+  return n;
+}
+addEventListener('hashchange', function(){
+  var n = fromHash();
+  if (n !== i) show(n);
+});
+show(fromHash());
+peek();
+</script>
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#5B3DF5">
+<title>숫자 맞히기 · 여덟 번의 질문</title>
+<style>
+  :root{--accent:#5B3DF5;--ink:#171A2E;--muted:#62648A;--line:#DCDCE8;--bg:#F3F3F8;
+        --up:#1d4ed8;--down:#D9435A;--hit:#15803d}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Malgun Gothic","Apple SD Gothic Neo",sans-serif;
+    display:flex;flex-direction:column;align-items:center;padding:20px 14px 60px}
+  h1{font-size:26px;margin:6px 0 2px}
+  .sub{color:var(--muted);font-size:15px;margin:0 0 18px;text-align:center}
+  .board{width:100%;max-width:440px}
+  .range{background:#fff;border:1px solid var(--line);border-radius:10px;padding:18px;text-align:center}
+  .range .big{font-size:34px;font-weight:700;letter-spacing:-1px}
+  .range .big i{font-style:normal;color:var(--accent)}
+  .range .lbl{color:var(--muted);font-size:14px;margin-bottom:4px}
+  .bar{height:10px;border-radius:5px;background:#E4E4EF;margin:14px 0 4px;position:relative;overflow:hidden}
+  .bar i{position:absolute;top:0;bottom:0;background:var(--accent);opacity:.35;display:block}
+  form{display:flex;gap:8px;margin-top:14px}
+  input[type=number]{flex:1;padding:14px;font-size:20px;text-align:center;border:1px solid var(--line);
+    border-radius:10px;font-family:inherit;background:#fff;-moz-appearance:textfield}
+  input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+  button{background:var(--accent);color:#fff;border:0;border-radius:10px;padding:0 20px;
+    font-size:16px;cursor:pointer;font-family:inherit}
+  button:disabled{background:#AAABC6;cursor:default}
+  .log{margin-top:14px;display:flex;flex-direction:column;gap:6px}
+  .try{display:flex;justify-content:space-between;align-items:center;background:#fff;
+    border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-size:15px}
+  .try b{font-size:19px}
+  .try .up{color:var(--up)} .try .down{color:var(--down)} .try .hit{color:var(--hit);font-weight:700}
+  .panel{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-top:16px}
+  .score{font-size:42px;font-weight:700;color:var(--accent);line-height:1.1}
+  .label{color:var(--muted);font-size:14px}
+  .row{display:flex;justify-content:space-between;align-items:baseline;padding:7px 0;
+    border-bottom:1px dashed var(--line)}
+  .row:last-child{border:0}
+  .again{width:100%;padding:12px;margin-top:12px}
+  .note{color:var(--muted);font-size:13px;margin-top:18px;text-align:center;max-width:440px;line-height:1.6}
+  :focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+  nav :focus-visible{outline-color:#FFD400}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<h1>여덟 번의 질문</h1>
+<p class="sub">1부터 100까지 중 하나. 여덟 번 안에 찾으면 이깁니다.</p>
+
+<div class="board">
+  <div class="range">
+    <div class="lbl">남은 범위</div>
+    <div class="big"><i id="lo">1</i> 부터 <i id="hi">100</i> 까지</div>
+    <div class="bar"><i id="barfill"></i></div>
+    <div class="lbl" id="left">남은 기회 8번</div>
+    <form id="f">
+      <input type="number" id="guess" min="1" max="100" placeholder="숫자" autocomplete="off">
+      <button type="submit" id="submit">확인</button>
+    </form>
+  </div>
+
+  <div class="log" id="log"></div>
+
+  <div class="panel">
+    <div class="label">점수</div>
+    <div class="score" id="score">—</div>
+    <div id="detail"></div>
+    <div class="row"><span>최고 점수</span><b id="best">0</b></div>
+    <button class="again" id="again" style="display:none">새 숫자로 다시</button>
+  </div>
+</div>
+
+<p class="note">기록은 이 브라우저에만 저장됩니다. 다른 컴퓨터에서 열면 처음부터 시작합니다.</p>
+
+<script>
+/* ===== 게임 규격 ===== */
+const GAME_ID   = 'number';
+const GAME_NAME = '숫자 맞히기';
+
+/* ===== 점수 저장 모듈 (3차시) ===== */
+function saveScore(score){
+  const key = 'best_' + GAME_ID;
+  const best = Number(localStorage.getItem(key) || 0);
+  if (score > best) localStorage.setItem(key, String(score));
+  return Math.max(score, best);
+}
+function loadBest(){ return Number(localStorage.getItem('best_' + GAME_ID) || 0); }
+
+/* ===== 게임 본체 ===== */
+const MAX_TRY = 8;
+const el = function(id){ return document.getElementById(id); };
+let answer, lo, hi, tries, over;
+
+function start(){
+  answer = Math.floor(Math.random() * 100) + 1;
+  lo = 1; hi = 100; tries = 0; over = false;
+  el('log').innerHTML = '';
+  el('score').textContent = '—';
+  el('detail').innerHTML = '';
+  el('again').style.display = 'none';
+  el('guess').disabled = false;
+  el('submit').disabled = false;
+  el('guess').value = '';
+  paint();
+  el('guess').focus();
+}
+
+function paint(){
+  el('lo').textContent = lo;
+  el('hi').textContent = hi;
+  el('left').textContent = over ? '끝' : '남은 기회 ' + (MAX_TRY - tries) + '번';
+  const f = el('barfill');
+  f.style.left = ((lo - 1) / 100 * 100) + '%';
+  f.style.width = ((hi - lo + 1) / 100 * 100) + '%';
+}
+
+function addLog(n, kind, text){
+  const d = document.createElement('div');
+  d.className = 'try';
+  d.innerHTML = '<b>' + n + '</b><span class="' + kind + '">' + text + '</span>';
+  el('log').prepend(d);
+}
+
+function finish(win){
+  over = true;
+  el('guess').disabled = true;
+  el('submit').disabled = true;
+  el('again').style.display = 'block';
+  paint();
+  let score = 0;
+  if (win){
+    score = (MAX_TRY - tries + 1) * 120 + 40;
+    el('detail').innerHTML =
+      '<div class="row"><span>맞힌 숫자</span><b>' + answer + '</b></div>' +
+      '<div class="row"><span>사용한 기회</span><b>' + tries + '번</b></div>';
+  } else {
+    el('detail').innerHTML =
+      '<div class="row"><span>정답이었던 숫자</span><b>' + answer + '</b></div>' +
+      '<div class="row"><span>결과</span><b>기회를 다 썼어요</b></div>';
+  }
+  gameOver(score);
+}
+
+function gameOver(score){
+  el('score').textContent = score;
+  el('best').textContent = saveScore(score);
+}
+
+el('f').addEventListener('submit', function(e){
+  e.preventDefault();
+  if (over) return;
+  const n = Number(el('guess').value);
+  if (!n || n < 1 || n > 100){ el('guess').value = ''; return; }
+  tries++;
+  if (n === answer){ addLog(n, 'hit', '정답!'); finish(true); return; }
+  if (n < answer){ addLog(n, 'up', '더 큰 수'); lo = Math.max(lo, n + 1); }
+  else { addLog(n, 'down', '더 작은 수'); hi = Math.min(hi, n - 1); }
+  el('guess').value = '';
+  if (tries >= MAX_TRY){ finish(false); return; }
+  paint();
+  el('guess').focus();
+});
+
+el('again').addEventListener('click', start);
+el('best').textContent = loadBest();
+start();
+</script>
+</body>
+</html>

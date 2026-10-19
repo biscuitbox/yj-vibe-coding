@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#171A2E">
+<title>1차시 · 개발 환경 구축하고 첫 페이지 배포하기</title>
+<style>
+:root{
+  --ink:#171A2E; --ink-2:#232846; --paper:#F3F3F8; --white:#fff;
+  --accent:#5B3DF5; --accent-dim:#4A2FD6; --accent-soft:#EDE9FE;
+  --spark:#FFD400; --line:#DCDCE8; --muted:#62648A; --dim:#A8ABD0;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--paper);color:var(--ink);overflow:hidden;
+  font-family:-apple-system,"Malgun Gothic","Apple SD Gothic Neo",sans-serif}
+.deck{height:100vh;position:relative}
+.stage{position:absolute;inset:0;overflow:hidden}
+.slide{position:absolute;inset:0;display:none;flex-direction:column;justify-content:center;
+  padding:11vh 5vw 8vh;overflow:auto}
+.slide.on{display:flex}
+
+/* 차시 표지 — 슬라이드 모서리에 고정, 본문 흐름 밖 */
+.mark{position:absolute;left:5vw;top:4.4vh;display:flex;align-items:center;
+  gap:clamp(9px,.9vw,15px);font-size:clamp(13px,1.35vw,21px);color:var(--muted)}
+.mark .n{background:var(--ink);color:var(--paper);font-weight:700;
+  width:clamp(26px,2.5vw,40px);height:clamp(26px,2.5vw,40px);border-radius:4px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:clamp(14px,1.45vw,23px);font-variant-numeric:tabular-nums}
+
+h2{font-size:clamp(28px,4.4vw,72px);line-height:1.18;margin:0 0 clamp(16px,2.6vh,38px);
+  letter-spacing:-.035em;font-weight:700}
+.sub{font-size:clamp(17px,2.2vw,36px);line-height:1.55;color:var(--muted);margin:0}
+.sub b{color:var(--ink);font-weight:700}
+
+/* 목록 — 상자가 아니라 가로줄로 나뉜 행 */
+ul.pts{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+ul.pts li{border-bottom:1px solid var(--line);padding:clamp(13px,2.1vh,27px) 0
+  clamp(13px,2.1vh,27px) clamp(26px,2.6vw,46px);position:relative;
+  font-size:clamp(17px,2.3vw,41px);line-height:1.38}
+ul.pts li::before{content:"";position:absolute;left:0;top:calc(.62em);
+  width:clamp(9px,.85vw,15px);height:clamp(9px,.85vw,15px);background:var(--accent);
+  border-radius:2px}
+ul.pts li b{font-weight:700}
+ul.pts li:nth-last-child(n+5),ul.pts li:nth-last-child(n+5)~li{
+  padding-top:clamp(10px,1.5vh,20px);padding-bottom:clamp(10px,1.5vh,20px);
+  font-size:clamp(16px,2vw,34px)}
+ul.pts:has(li:nth-child(2):last-child) li,
+ul.pts:has(li:nth-child(3):last-child) li{
+  padding-top:clamp(20px,3.6vh,52px);padding-bottom:clamp(20px,3.6vh,52px);
+  font-size:clamp(19px,2.65vw,48px)}
+.note{margin:clamp(16px,2.4vh,32px) 0 0;font-size:clamp(14px,1.75vw,29px);
+  color:var(--muted);line-height:1.5}
+.note b{color:var(--accent-dim);font-weight:700}
+
+/* 단계 카드 — 테두리 없이 위쪽 굵은 선 */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,215px),1fr));
+  gap:clamp(16px,2.1vw,36px)}
+.step{border-top:5px solid var(--accent);padding:clamp(14px,2vh,28px) 0 0}
+.step .ic{font-size:clamp(28px,3.3vw,54px);line-height:1.1}
+.step .ic.num{background:var(--ink);color:var(--paper);width:clamp(32px,2.8vw,46px);
+  height:clamp(32px,2.8vw,46px);border-radius:5px;display:flex;align-items:center;
+  justify-content:center;font-weight:700;font-size:clamp(17px,1.7vw,27px);
+  font-variant-numeric:tabular-nums}
+.step b{display:block;font-size:clamp(18px,2.35vw,39px);margin:clamp(9px,1.3vh,18px) 0 5px;
+  letter-spacing:-.025em;line-height:1.25}
+.step span{color:var(--muted);font-size:clamp(15px,1.9vw,31px);line-height:1.42}
+
+/* 화면 캡처 자리 — 브라우저 창 모양 */
+.shotbox{margin-top:clamp(8px,1.4vh,18px);border:1px solid var(--line);border-radius:10px;
+  background:var(--white);overflow:hidden;display:flex;flex-direction:column;
+  flex:1 1 auto;max-height:62vh}
+.shotbox .chrome{background:var(--ink);color:var(--dim);display:flex;align-items:center;
+  gap:9px;padding:clamp(6px,.9vh,11px) clamp(11px,1.1vw,18px);
+  font-family:ui-monospace,Consolas,"D2Coding",monospace;font-size:clamp(11px,1.15vw,18px)}
+.shotbox .chrome i{width:clamp(7px,.62vw,11px);height:clamp(7px,.62vw,11px);
+  border-radius:50%;background:#464C78;display:block}
+.shotbox .chrome i:first-child{background:var(--spark)}
+.shotbox .body{flex:1;display:flex;align-items:center;justify-content:center;text-align:center;
+  padding:clamp(16px,3vh,34px);min-height:38vh;color:var(--muted);
+  font-size:clamp(13px,1.5vw,23px);background:repeating-linear-gradient(135deg,
+    #fff 0 11px,#FAFAFD 11px 22px)}
+.shotbox img{max-width:100%;max-height:52vh;display:block;border-radius:4px}
+
+figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:clamp(8px,1.6vh,20px);width:100%}
+figure svg{width:100%;height:auto;max-height:58vh}
+figcaption{color:var(--muted);font-size:clamp(13px,1.55vw,25px);text-align:center;
+  max-width:46em;line-height:1.45}
+
+/* 표지 */
+.cover{background:var(--ink);color:var(--white);justify-content:flex-end;
+  padding-bottom:15vh}
+.cover .ses{display:flex;align-items:baseline;gap:clamp(10px,1vw,18px);margin:0 0 clamp(14px,2vh,26px)}
+.cover .ses .num{font-size:clamp(46px,8vw,132px);font-weight:700;line-height:.82;
+  color:var(--spark);letter-spacing:-.05em;font-variant-numeric:tabular-nums}
+.cover .ses .of{font-size:clamp(15px,1.7vw,26px);color:var(--dim)}
+.cover h1{font-size:clamp(30px,5.4vw,88px);line-height:1.14;margin:0 0 clamp(10px,1.6vh,22px);
+  letter-spacing:-.04em;font-weight:700}
+.cover p{font-size:clamp(17px,2.3vw,38px);color:var(--dim);margin:0;max-width:30em;line-height:1.4}
+.cover .course{position:absolute;left:5vw;top:4.4vh;font-size:clamp(12px,1.3vw,19px);
+  color:#6E72A8}
+.six{display:flex;gap:clamp(5px,.55vw,10px);margin:0 0 clamp(16px,2.6vh,34px)}
+.six span{width:clamp(34px,3.4vw,58px);height:clamp(7px,.85vh,13px);border-radius:2px;
+  background:#2E3356;display:block}
+.six span.done{background:#454B7C}
+.six span.now{background:var(--spark)}
+
+/* 타임라인 — 블록 길이를 막대 너비로 보여 준다 */
+.tl{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.tlrow{display:flex;align-items:center;gap:clamp(14px,1.6vw,30px);
+  border-bottom:1px solid var(--line);padding:clamp(12px,2.2vh,30px) 0}
+.tlrow .t{font-variant-numeric:tabular-nums;font-weight:700;color:var(--ink);
+  font-size:clamp(14px,1.75vw,30px);white-space:nowrap;
+  font-family:ui-monospace,Consolas,"D2Coding",monospace;letter-spacing:-.05em;
+  flex:0 0 auto;min-width:6.2em}
+.tlrow .d{font-size:clamp(16px,2.1vw,37px);flex:1 1 auto;min-width:0}
+.tlrow .track{flex:0 0 32%;height:clamp(9px,1.05vh,16px);background:#E2E2EE;
+  border-radius:3px;overflow:hidden}
+.tlrow .len{display:block;height:100%;background:var(--accent);border-radius:3px}
+.tlrow:last-child .len{background:var(--spark)}
+
+/* 한 문장 슬라이드 — 잉크 바탕 */
+.punch{background:var(--ink);color:var(--white)}
+.punch .mark{color:var(--dim)}
+.punch .mark .n{background:var(--spark);color:var(--ink)}
+.lead{font-size:clamp(16px,2vw,32px);font-weight:700;color:var(--accent);
+  margin:0 0 clamp(10px,1.5vh,20px);line-height:1.3;letter-spacing:-.02em}
+.punch .lead{color:var(--spark)}
+.big{font-size:clamp(33px,6.6vw,108px);font-weight:700;line-height:1.08;
+  margin:0 0 clamp(14px,2.2vh,30px);letter-spacing:-.045em}
+.punch .sub{color:var(--dim)}
+.punch .sub b{color:var(--white)}
+
+/* 하단 — 평소엔 진행선만, 마우스를 움직이면 조작부가 올라온다 */
+.rail{position:absolute;left:0;right:0;bottom:0;height:4px;background:#E2E2EE;z-index:5}
+.punch~.rail,.cover~.rail{background:#2E3356}
+.rail i{display:block;height:100%;width:0;background:var(--accent);transition:width .22s}
+.bar{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;gap:13px;
+  padding:9px 16px 12px;background:rgba(255,255,255,.96);border-top:1px solid var(--line);
+  z-index:6;transform:translateY(105%);transition:transform .2s ease;
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.deck.show .bar{transform:translateY(0)}
+.bar button{background:var(--accent);color:#fff;border:0;border-radius:7px;padding:8px 15px;
+  font-size:14.5px;cursor:pointer;font-family:inherit}
+.bar button:hover{background:var(--accent-dim)}
+.bar button:disabled{background:#B9BAD2;cursor:default}
+.bar .count{font-variant-numeric:tabular-nums;color:var(--muted);font-size:14.5px;
+  font-family:ui-monospace,Consolas,monospace}
+.bar .sp{flex:1}
+.bar a{color:var(--muted);text-decoration:none;font-size:14px;padding:5px 9px;border-radius:7px}
+.bar a:hover{background:var(--accent-soft);color:var(--accent-dim)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.punch :focus-visible,.cover :focus-visible{outline-color:var(--spark)}
+
+@media (max-width:600px){
+  .slide{padding:9vh 6vw 7vh}
+  .bar a{display:none}
+  .tlrow .len{display:none}
+  .tlrow .t{min-width:4.6em}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media print{
+  body{overflow:visible} .deck{height:auto;position:static} .stage{position:static}
+  .slide{display:flex!important;position:static;page-break-after:always;min-height:95vh;
+    border-bottom:1px solid #ccc}
+  .bar,.rail{display:none}
+  .cover,.punch{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+  <div class="stage">
+<section class="slide cover"><div class="course">바이브코딩으로 만드는 나만의 게임과 학습 도구</div><div class="six"><span class="now"></span><span class=""></span><span class=""></span><span class=""></span><span class=""></span><span class=""></span></div><p class="ses"><span class="num">1</span><span class="of">차시 / 전체 6차시</span></p><h1>개발 환경 구축하고 첫 페이지 배포하기</h1><p>오늘 끝나면 내 주소가 생긴다</p></section>
+<section class="slide"><div class="mark"><span class="n">1</span><span>개발 환경 구축하고 첫 페이지 배포하기</span></div><h2>오늘의 흐름 · 45분</h2><div class="tl"><div class="tlrow"><span class="t">00~07분</span><span class="d">바이브코딩과 오늘의 목표</span><span class="track"><i class="len" style="width:15.6%"></i></span></div><div class="tlrow"><span class="t">07~22분</span><span class="d">계정과 내 저장소 만들기</span><span class="track"><i class="len" style="width:33.3%"></i></span></div><div class="tlrow"><span class="t">22~36분</span><span class="d">캔버스로 첫 페이지</span><span class="track"><i class="len" style="width:31.1%"></i></span></div><div class="tlrow"><span class="t">36~45분</span><span class="d">올리고 내 주소 확인</span><span class="track"><i class="len" style="width:20.0%"></i></span></div></div><p class="note">시간은 안내일 뿐입니다. 막히는 사람이 많으면 실습 시간을 늘립니다.</p></section>
+<section class="slide punch"><div class="mark"><span class="n">1</span><span>개발 환경 구축하고 첫 페이지 배포하기</span></div><p class="lead">코딩을 몰라도 만들 수 있을까</p><p class="big">있습니다.</p><p class="sub">만들고 싶은 것을 <b>말로 설명하면</b> AI가 코드를 써 줍니다.<br>이런 방식을 <b>바이브코딩</b>이라고 합니다.</p></section>
+<section class="slide"><div class="mark"><span class="n">1</span><span>개발 환경 구축하고 첫 페이지 배포하기</span></div><h2>바이브코딩이란</h2><figure><svg viewBox="0 0 980 260" role="img" aria-label="바이브코딩 과정: 나 → 말로 설명 → AI가 코드 작성 → 작동하는 결과물"><defs><marker id="a" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0 0 L11 4 L0 8 z" fill="#5B3DF5"/></marker><marker id="g" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0 0 L11 4 L0 8 z" fill="#AAABC6"/></marker><marker id="r" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0 0 L11 4 L0 8 z" fill="#D9435A"/></marker></defs>
+<g text-anchor="middle">
+  <rect x="12" y="52" width="196" height="132" rx="16" fill="#fff" stroke="#DCDCE8" stroke-width="2"/>
+  <text x="110" y="100" font-size="38">🙋</text>
+  <text x="110" y="134" font-size="21" font-weight="700" fill="#171A2E">나</text>
+  <text x="110" y="162" font-size="16" fill="#62648A">만들고 싶은 것</text>
+
+  <rect x="265" y="52" width="196" height="132" rx="16" fill="#EDE9FE" stroke="#5B3DF5" stroke-width="2"/>
+  <text x="363" y="100" font-size="38">💬</text>
+  <text x="363" y="134" font-size="21" font-weight="700" fill="#4A2FD6">말로 설명</text>
+  <text x="363" y="162" font-size="16" fill="#62648A">목표·디자인·동작·저장</text>
+
+  <rect x="518" y="52" width="196" height="132" rx="16" fill="#fff" stroke="#DCDCE8" stroke-width="2"/>
+  <text x="616" y="100" font-size="38">🤖</text>
+  <text x="616" y="134" font-size="21" font-weight="700" fill="#171A2E">AI가 코드 작성</text>
+  <text x="616" y="162" font-size="16" fill="#62648A">내가 쓰지 않는다</text>
+
+  <rect x="771" y="52" width="196" height="132" rx="16" fill="#4A2FD6" stroke="#4A2FD6" stroke-width="2"/>
+  <text x="869" y="100" font-size="38">🖥️</text>
+  <text x="869" y="134" font-size="21" font-weight="700" fill="#fff">작동하는 결과물</text>
+  <text x="869" y="162" font-size="16" fill="#E0DAFB">브라우저에서 바로</text>
+</g>
+<g stroke="#5B3DF5" stroke-width="3" marker-end="url(#a)">
+  <line x1="212" y1="118" x2="258" y2="118"/>
+  <line x1="465" y1="118" x2="511" y2="118"/>
+  <line x1="718" y1="118" x2="764" y2="118"/>
+</g>
+<text x="490" y="226" font-size="19" fill="#62648A" text-anchor="middle">
+  내가 할 일은 <tspan font-weight="700" fill="#4A2FD6">설명하는 것</tspan>과 <tspan font-weight="700" fill="#4A2FD6">확인하는 것</tspan></text>
+</svg><figcaption>내가 할 일은 설명하는 것과 확인하는 것. 코드를 쓰는 일은 AI가 합니다.</figcaption></figure></section>
+<section class="slide punch"><div class="mark"><span class="n">1</span><span>개발 환경 구축하고 첫 페이지 배포하기</span></div><p class="lead">오늘 끝나면</p><p class="big">인터넷에 내 주소가 생깁니다</p><p class="sub">누구에게나 보낼 수 있는 주소 하나.<br>오늘은 그 주소를 만들고, 첫 페이지를 올립니다.</p></section>
+<section class="slide"><div class="mark"><span class="n">1</span><span>개발 환경 구축하고 첫 페이지 배포하기</span></div><h2>오늘 하는 일</h2><ul class="pts"><li>깃허브에 <b>내 계정</b>을 만든다</li><li>내 작품을 모아 둘 <b>저장소</b>를 하나 만든다</li><li>그 저장소를 <b>인터넷에 공개</b>하도록 켠다</li><li>캔버스로 만든 페이지를 올려서 주소로 열어 본다</li></ul><p class="note">앞의 세 가지는 오늘 한 번만 합니다. 다음 시간부터는 올리기만 하면 됩니다.</p></section>
+<section class="slide"><div class="mark"><span class="n">1</span><span>개발 환경 구축하고 첫 페이지 배포하기</span></div><h2>오늘 만들 구조</h2><figure><svg viewBox="0 0 980 282" role="img" aria-label="계정과 저장소가 주소를 만드는 구조"><defs><marker id="a" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0 0 L11 4 L0 8 z" fill="#5B3DF5"/></marker><marker id="g" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0 0 L11 4 L0 8 z" fill="#AAABC6"/></marker><marker id="r" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0 0 L11 4 L0 8 z" fill="#D9435A"/></marker></defs>
+<g text-anchor="middle">
+  <rect x="24" y="64" width="212" height="150" rx="16" fill="#fff" stroke="#5B3DF5" stroke-width="2.5"/>
+  <text x="130" y="112" font-size="40">👤</text>
+  <text x="130" y="150" font-size="22" font-weight="700" fill="#4A2FD6">내 계정</text>
+  <text x="130" y="178" font-size="16" fill="#62648A">깃허브 아이디</text>
+  <text x="130" y="200" font-size="15" font-family="ui-monospace,Consolas,monospace" fill="#171A2E">minsu</text>
+
+  <rect x="296" y="64" width="212" height="150" rx="16" fill="#fff" stroke="#5B3DF5" stroke-width="2.5"/>
+  <text x="402" y="112" font-size="40">📁</text>
+  <text x="402" y="150" font-size="22" font-weight="700" fill="#4A2FD6">내 저장소</text>
+  <text x="402" y="178" font-size="16" fill="#62648A">작품을 모아 두는 곳</text>
+  <text x="402" y="200" font-size="15" font-family="ui-monospace,Consolas,monospace" fill="#171A2E">my-web</text>
+
+  <rect x="568" y="64" width="388" height="150" rx="16" fill="#EDE9FE" stroke="#5B3DF5" stroke-width="2.5"/>
+  <text x="762" y="108" font-size="36">🌍</text>
+  <text x="762" y="144" font-size="22" font-weight="700" fill="#4A2FD6">내 주소</text>
+  <text x="762" y="176" font-size="17" font-family="ui-monospace,Consolas,monospace" fill="#171A2E">minsu.github.io/my-web/</text>
+  <text x="762" y="200" font-size="15" fill="#62648A">누구에게나 보낼 수 있는 한 줄</text>
+</g>
+<g stroke-width="2.5" fill="none">
+  <path d="M244 139 L288 139" stroke="#5B3DF5" marker-end="url(#a)"/>
+  <path d="M516 139 L560 139" stroke="#5B3DF5" marker-end="url(#a)"/>
+</g>
+<text x="490" y="262" font-size="19" fill="#62648A" text-anchor="middle">계정과 저장소는 <tspan font-weight="700" fill="#4A2FD6">1차시에 한 번만</tspan> 만듭니다</text>
+</svg><figcaption>이 세 가지가 오늘의 결과물입니다. 다음 시간부터는 파일을 올리기만 하면 됩니다.</figcaption></figure></section>
+<section class="slide"><div class="mark"><span class="n">1</span><span>개발 환경 구축하고 첫 페이지 배포하기</span></div><h2>깃허브 계정 만들기</h2><p class="sub" style="margin-bottom:clamp(10px,1.8vh,24px)"><b>github.com</b>에 접속해 Sign up을 누릅니다. 영재원에서 받은 계정 주소로 가입합니다.</p><div class="shotbox"><div class="chrome"><i></i><i></i><i></i><span>github.com/signup</span></div><div class="body"><img src="shots/gh_signup.png" alt="" onerror="this.style.display='none';this.parentNode.insertAdjacentText('beforeend','여기에 깃허브 가입 화면 캡처 — shots/gh_signup.png')"></div></div></section>
+<section class="slide"><div class="mark"><span class="n">1</span><span>개발 환경 구축하고 첫 페이지 배포하기</span></div><h2>계정을 만들 때</h2><div class="steps"><div class="step"><div class="ic num">1</div><b>아이디</b><span>영문 소문자로 짧게 — <b>이게 주소가 됩니다</b></span></div><div class="step"><div class="ic num">2</div><b>메일 인증</b><span>받은 메일의 숫자를 입력합니다</span></div><div class="step"><div class="ic num">3</div><b>비밀번호</b><span>적어 두세요. 6차시 내내 씁니다</span></div><div class="step"><div class="ic num">4</div><b>확인</b><span>로그인된 화면이 보이면 성공</span></div></div><p class="note">아이디는 나중에 바꾸기 번거롭습니다. 실명 대신 영문 별명으로 정하세요.</p></section>
+<section class="slide"><div class="mark"><span class="n">1</span><span>개발 환경 구축하고 첫 페이지 배포하기</span></div><h2>저장소 만들기</h2><p class="sub" style="margin-bottom:clamp(10px,1.8vh,24px)">오른쪽 위 <b>+</b> → New repository. 이름은 <b>my-web</b>처럼 영문으로, <b>Public</b>을 고르고 Create를 누릅니다.</p><div class="shotbox"><div class="chrome"><i></i><i></i><i></i><span>github.com/new</span></div><div class="body"><img src="shots/gh_newrepo.png" alt="" onerror="this.style.display='none';this.parentNode.insertAdjacentText('beforeend','여기에 New repository 화면 캡처 — shots/gh_newrepo.png')"></div></div></section>
+<section class="slide"><div class="mark"><span class="n">1</span><span>개발 환경 구축하고 첫 페이지 배포하기</span></div><h2>인터넷에 공개하기</h2><p class="sub" style="margin-bottom:clamp(10px,1.8vh,24px)">저장소의 <b>Settings</b> → 왼쪽 <b>Pages</b> → Branch를 <b>main</b>으로 바꾸고 Save. 1~2분 뒤 주소가 나타납니다.</p><div class="shotbox"><div class="chrome"><i></i><i></i><i></i><span>github.com — Settings → Pages</span></div><div class="body"><img src="shots/gh_pages.png" alt="" onerror="this.style.display='none';this.parentNode.insertAdjacentText('beforeend','여기에 Settings → Pages 화면 캡처 — shots/gh_pages.png')"></div></div></section>
+<section class="slide"><div class="mark"><span class="n">1</span><span>개발 환경 구축하고 첫 페이지 배포하기</span></div><h2>주소 읽는 법</h2><figure><svg viewBox="0 0 980 236" role="img" aria-label="깃허브 페이지 주소의 구조"><defs><marker id="a" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0 0 L11 4 L0 8 z" fill="#5B3DF5"/></marker><marker id="g" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0 0 L11 4 L0 8 z" fill="#AAABC6"/></marker><marker id="r" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0 0 L11 4 L0 8 z" fill="#D9435A"/></marker></defs>
+<rect x="135" y="50" width="710" height="62" rx="12" fill="#fff" stroke="#5B3DF5" stroke-width="2.5"/>
+<text x="159" y="90" font-size="26" font-family="ui-monospace,Consolas,monospace" fill="#171A2E">
+<tspan fill="#9A9CBC">https://</tspan><tspan fill="#4A2FD6" font-weight="700">minsu</tspan><tspan fill="#9A9CBC">.github.io/</tspan><tspan fill="#B07A00" font-weight="700">my-web</tspan><tspan fill="#9A9CBC">/</tspan><tspan fill="#171A2E" font-weight="700">game.html</tspan></text>
+
+<g stroke-width="2.5" fill="none">
+  <path d="M323 158 L323 120" stroke="#5B3DF5" marker-end="url(#a)"/>
+  <path d="M581 158 L581 120" stroke="#B07A00" marker-end="url(#a)"/>
+  <path d="M714 158 L714 120" stroke="#62648A" marker-end="url(#g)"/>
+</g>
+<text x="323" y="184" font-size="17" font-weight="700" fill="#4A2FD6" text-anchor="middle">내 계정</text>
+<text x="323" y="208" font-size="15" fill="#62648A" text-anchor="middle">깃허브 아이디</text>
+
+<text x="581" y="184" font-size="17" font-weight="700" fill="#B07A00" text-anchor="middle">내 저장소</text>
+<text x="581" y="208" font-size="15" fill="#62648A" text-anchor="middle">저장소 이름</text>
+
+<text x="714" y="184" font-size="17" font-weight="700" fill="#3A3C5C" text-anchor="middle">내 작품</text>
+<text x="714" y="208" font-size="15" fill="#62648A" text-anchor="middle">올린 파일 이름</text>
+
+<text x="490" y="30" font-size="17" fill="#62648A" text-anchor="middle">주소는 세 부분으로 되어 있다</text>
+</svg><figcaption>앞은 내 계정, 가운데는 내 저장소, 뒤는 내 파일. 이 세 가지가 주소를 만듭니다.</figcaption></figure></section>
+<section class="slide punch"><div class="mark"><span class="n">1</span><span>개발 환경 구축하고 첫 페이지 배포하기</span></div><p class="lead">이제 직접</p><p class="big">14분, 내 소개 페이지 만들기</p><p class="sub">워크벤치의 1차시 프롬프트를 그대로 넣어 보고,<br>그다음 내 이야기로 바꿔 보세요.</p></section>
+<section class="slide"><div class="mark"><span class="n">1</span><span>개발 환경 구축하고 첫 페이지 배포하기</span></div><h2>올리는 네 단계</h2><div class="steps"><div class="step"><div class="ic num">1</div><b>코드 받기</b><span>캔버스 오른쪽 위 메뉴에서</span></div><div class="step"><div class="ic num">2</div><b>이름 바꾸기</b><span>첫 페이지는 반드시 <b>index.html</b></span></div><div class="step"><div class="ic num">3</div><b>업로드</b><span>저장소 → Add file → Upload files</span></div><div class="step"><div class="ic num">4</div><b>Commit</b><span>1~2분 뒤 내 주소로 열립니다</span></div></div><p class="note"><b>index.html</b>이라는 이름이어야 주소를 눌렀을 때 바로 열립니다.</p></section>
+<section class="slide"><div class="mark"><span class="n">1</span><span>개발 환경 구축하고 첫 페이지 배포하기</span></div><h2>AI를 쓸 때의 약속</h2><ul class="pts"><li>이름, 연락처, 주소, 학교 이름은 적지 않는다</li><li>AI가 준 답이 틀릴 때가 있다 — 직접 눌러서 확인한다</li><li>올린 것은 누구나 볼 수 있다 — 누군가를 놀리는 내용은 만들지 않는다</li><li>AI가 만들었어도 그 결과에 대한 책임은 올린 사람에게 있다</li></ul></section>
+<section class="slide punch"><div class="mark"><span class="n">1</span><span>개발 환경 구축하고 첫 페이지 배포하기</span></div><p class="lead">다음 시간</p><p class="big">내 게임 만들기</p><p class="sub">만들고 싶은 게임을 하나 생각해 오세요.</p></section>
+  </div>
+  <div class="rail"><i id="fill"></i></div>
+  <div class="bar">
+    <button id="prev">← 이전</button>
+    <button id="next">다음 →</button>
+    <span class="count"><b id="cur">1</b> / 16</span>
+    <span class="sp"></span>
+    <a href="index.html">🏠 홈</a>
+    <a href="workbench.html">🛠️ 워크벤치</a>
+    <a href="slides-2.html">2차시</a><a href="slides-3.html">3차시</a><a href="slides-4.html">4차시</a><a href="slides-5.html">5차시</a><a href="slides-6.html">6차시</a>
+  </div>
+</div>
+<script>
+var slides = document.querySelectorAll('.slide');
+var deck = document.getElementById('deck');
+var i = 0;
+function show(n){
+  i = Math.max(0, Math.min(slides.length - 1, n));
+  slides.forEach(function(s, k){ s.classList.toggle('on', k === i); });
+  document.getElementById('cur').textContent = (i + 1);
+  document.getElementById('fill').style.width = ((i + 1) / slides.length * 100) + '%';
+  document.getElementById('prev').disabled = (i === 0);
+  document.getElementById('next').disabled = (i === slides.length - 1);
+  try {
+    if (location.hash !== '#' + (i + 1)) history.replaceState(null, '', '#' + (i + 1));
+  } catch (e) { /* 미리보기 창이나 일부 환경에서는 주소를 바꿀 수 없음 — 넘어감 */ }
+  slides[i].scrollTop = 0;
+}
+document.addEventListener('keydown', function(e){
+  if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); show(i + 1); }
+  if (e.key === 'ArrowLeft'  || e.key === 'PageUp')  { e.preventDefault(); show(i - 1); }
+  if (e.key === 'Home') show(0);
+  if (e.key === 'End')  show(slides.length - 1);
+});
+document.getElementById('prev').addEventListener('click', function(){ show(i - 1); });
+document.getElementById('next').addEventListener('click', function(){ show(i + 1); });
+
+/* 발표 중에는 조작부를 감춘다. 마우스를 움직이면 2.5초 동안 나타난다. */
+var hideT = null;
+function peek(){
+  deck.classList.add('show');
+  clearTimeout(hideT);
+  hideT = setTimeout(function(){ deck.classList.remove('show'); }, 2500);
+}
+['mousemove','touchstart'].forEach(function(ev){
+  document.addEventListener(ev, peek, {passive:true});
+});
+document.querySelector('.bar').addEventListener('mouseenter', function(){
+  deck.classList.add('show'); clearTimeout(hideT);
+});
+document.addEventListener('focusin', function(e){
+  if (e.target.closest && e.target.closest('.bar')) { deck.classList.add('show'); clearTimeout(hideT); }
+});
+
+var t0 = null;
+document.querySelector('.stage').addEventListener('touchstart', function(e){ t0 = e.changedTouches[0].clientX; }, {passive:true});
+document.querySelector('.stage').addEventListener('touchend', function(e){
+  if (t0 === null) return;
+  var d = e.changedTouches[0].clientX - t0;
+  if (Math.abs(d) > 60) show(d < 0 ? i + 1 : i - 1);
+  t0 = null;
+}, {passive:true});
+function fromHash(){
+  var n = 0;
+  try { n = (parseInt((location.hash || '#1').slice(1), 10) - 1) || 0; } catch (e) { n = 0; }
+  return n;
+}
+addEventListener('hashchange', function(){
+  var n = fromHash();
+  if (n !== i) show(n);
+});
+show(fromHash());
+peek();
+</script>
+</body>
+</html>

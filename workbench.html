@@ -1,0 +1,1823 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#171A2E">
+<title>실습 워크벤치 · 바이브코딩으로 만드는 나만의 게임과 학습 도구</title>
+<style>
+:root{--accent:#5B3DF5;--accent-dark:#4A2FD6;--accent-soft:#EDE9FE;--ink:#171A2E;
+      --muted:#62648A;--line:#DCDCE8;--bg:#F3F3F8;--warn:#8a5a00;--warn-soft:#fff4e6}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,"Malgun Gothic","Apple SD Gothic Neo",sans-serif;
+  line-height:1.7;font-size:16px}
+nav{background:var(--ink);position:sticky;top:0;z-index:20}
+nav .in{max-width:880px;margin:0 auto;padding:10px 16px;display:flex;flex-wrap:wrap;gap:5px}
+nav a{color:#A8ABD0;text-decoration:none;padding:6px 10px;border-radius:8px;font-size:15px}
+nav a:hover{background:#2B3053;color:#fff}
+nav a.on{background:var(--accent);color:#fff}
+main{max-width:880px;margin:0 auto;padding:26px 16px 90px}
+h1{font-size:31px;line-height:1.3;margin:10px 0 4px}
+.lead{color:var(--muted);margin:0 0 22px}
+.jump{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:28px}
+.jump a{background:#fff;border:1px solid var(--line);border-radius:7px;padding:6px 11px;
+  text-decoration:none;color:var(--ink);font-size:14px}
+.jump a:hover{border-color:var(--accent);color:var(--accent-dark)}
+.canvasbox{background:#fff;border:1px solid var(--accent);border-radius:10px;
+  padding:22px;margin-bottom:34px;border-top:5px solid var(--accent)}
+.canvasbox h2{margin:0 0 4px;font-size:21px}
+.canvasbox p.sub{margin:0 0 16px;color:var(--muted);font-size:15px}
+.cvsteps{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:12px}
+.cvstep{background:var(--bg);border-radius:12px;padding:14px 16px}
+.cvstep b{display:block;font-size:16px;margin-bottom:3px}
+.cvstep .n{display:inline-block;background:var(--accent);color:#fff;font-weight:700;
+  border-radius:6px;padding:1px 9px;font-size:13px;margin-bottom:7px}
+.cvstep span{color:#3A3C5C;font-size:14px;line-height:1.6;display:block;word-break:keep-all}
+.cvstep code{white-space:nowrap}
+.shot{border:2px dashed #AAABC6;border-radius:12px;background:#F0EFF9;color:var(--muted);
+  text-align:center;padding:36px 14px;margin:16px 0 0;font-size:14.5px}
+.shot img{max-width:100%;border-radius:8px;display:block}
+.lab{background:#fff;border:1px solid var(--line);border-radius:10px;padding:0 22px 22px;
+  margin-bottom:30px;overflow:hidden}
+.labhead{display:flex;gap:14px;align-items:center;margin:0 -22px 18px;padding:16px 22px;
+  background:var(--ink);color:#fff}
+.labhead .em{font-size:30px;line-height:1.2}
+.labhead h2{margin:0;font-size:20.5px;letter-spacing:-.02em}
+.labhead p{margin:2px 0 0;color:#A8ABD0;font-size:14.5px}
+.prev{display:inline-block;background:var(--accent-soft);color:var(--accent-dark);
+  text-decoration:none;border-radius:10px;padding:10px 16px;font-size:15px;margin-bottom:14px}
+.prev:hover{background:#D5CCFB}
+.codewrap{margin:14px 0;border:1px solid var(--line);border-radius:10px;overflow:hidden;
+  background:#fff}
+.codewrap.accentbox{border-color:var(--accent)}
+.chrome{background:var(--ink);color:#A8ABD0;display:flex;align-items:center;gap:7px;
+  padding:8px 13px;font-family:ui-monospace,Consolas,"D2Coding",monospace;font-size:12.5px}
+.chrome i{width:8px;height:8px;border-radius:50%;background:#464C78;display:block;flex:0 0 auto}
+.chrome i:first-child{background:#FFD400}
+.chrome span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.codehead{display:flex;justify-content:space-between;align-items:center;gap:10px;
+  background:#F0EFF9;padding:9px 13px;font-size:14px;color:var(--muted);
+  border-bottom:1px solid var(--line)}
+.codewrap.accentbox .codehead{background:var(--accent-soft);color:var(--accent-dark);
+  font-weight:700;border-bottom-color:#CFC4FB}
+pre{margin:0;background:#11142B;color:#DCD9F6;padding:14px 16px;overflow:auto;
+  font-size:13px;line-height:1.6;max-height:300px;
+  font-family:ui-monospace,Consolas,"D2Coding",monospace;white-space:pre}
+.codewrap.accentbox pre{background:#1C2142;font-size:14px;max-height:420px;
+  white-space:pre-wrap;word-break:break-word}
+.codewrap.dim pre{max-height:210px}
+pre code{background:none;color:inherit;padding:0}
+.copy{background:var(--accent);color:#fff;border:0;border-radius:8px;padding:6px 14px;
+  font-size:14px;cursor:pointer;font-family:inherit;white-space:nowrap}
+.copy:hover{background:var(--accent-dark)}
+.copy.done{background:#166534}
+.tip{background:var(--warn-soft);border:1px solid #f0c391;border-left:5px solid var(--warn);
+  border-radius:11px;padding:13px 16px;margin-top:14px;font-size:14.5px;line-height:1.75;color:#5f4110}
+.tip b{color:var(--warn);display:block;margin-bottom:4px}
+.tip p{margin:0}
+.submit{display:flex;align-items:center;justify-content:space-between;gap:16px;
+  flex-wrap:wrap;background:var(--ink);color:#fff;text-decoration:none;border-radius:10px;
+  padding:16px 20px;margin-top:16px}
+.submit .go{text-decoration:none}
+.submit .go:hover{background:var(--accent-dim)}
+.submit .t b{display:block;font-size:17.5px;letter-spacing:-.02em}
+.submit .t em{font-style:normal;color:#A8ABD0;font-size:14.5px;display:block;margin-top:2px}
+.submit .t code{background:#2B3053;color:#E4E2FA;font-size:13.5px}
+.submit .go{background:var(--accent);color:#fff;border-radius:8px;padding:9px 16px;
+  font-size:15px;white-space:nowrap;flex:0 0 auto}
+.ideas{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px;margin:14px 0}
+.idea{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:13px 15px;
+  display:flex;flex-direction:column;gap:2px}
+.idea span{font-size:22px} .idea b{font-size:16px}
+.idea i{font-style:normal;color:var(--muted);font-size:13.5px}
+h2.sec{font-size:23px;margin:44px 0 10px;padding-bottom:8px;border-bottom:2px solid var(--line)}
+.formula{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:14px}
+.fcard{background:#fff;border:1px solid var(--line);border-left:5px solid var(--accent);
+  border-radius:12px;padding:15px 17px}
+.fcard b{display:block;font-size:16.5px;margin-bottom:3px}
+.fcard p{margin:0;font-size:14.5px;color:#3A3C5C;line-height:1.7}
+.fcard em{display:block;font-style:normal;color:var(--muted);font-size:13.5px;margin-top:7px}
+code{background:#EFEDFB;padding:1px 6px;border-radius:5px;font-size:14px;
+  font-family:ui-monospace,Consolas,monospace}
+footer{max-width:880px;margin:0 auto;padding:22px 16px 70px;color:var(--muted);
+  font-size:14px;border-top:1px solid var(--line)}
+@media (max-width:520px){
+  h1{font-size:25px} body{font-size:15px} main{padding:20px 12px 70px}
+  .lab{padding:17px} .labhead .em{font-size:26px} .labhead h2{font-size:19px}
+  pre{font-size:12px}
+}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+nav :focus-visible{outline-color:#FFD400}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<nav><div class="in"><a href="index.html">🏠 홈</a><a href="slides-1.html">📺 강의 슬라이드</a><a class="on" href="workbench.html">🛠️ 실습 워크벤치</a><a href="playbook.html">📖 초보 가이드북</a><a href="handout.html">🖨️ 인쇄용 유인물</a></div></nav>
+<main>
+<h1>실습 워크벤치</h1>
+<p class="lead">바이브코딩으로 만드는 나만의 게임과 학습 도구 · 프롬프트와 완성 코드를 한곳에</p>
+<div class="jump"><a href="#l1">1차시 웹페이지</a><a href="#l2">2차시 게임</a><a href="#l3">3차시 기록 저장</a><a href="#l4">4차시 학습 도구</a><a href="#l5">5차시 로그인</a><a href="#l6">6차시 배포·전시</a><a href="#github">내 주소 만들기</a><a href="#upload">올리는 법</a><a href="#formula">프롬프트 작성 공식</a></div>
+<div class="canvasbox"><h2>먼저 — 캔버스를 켜세요</h2><p class="sub">이 수업은 제미나이의 캔버스에서 진행합니다. 켜 두면 만든 화면이 오른쪽에 바로 뜹니다.</p><div class="cvsteps"><div class="cvstep"><span class="n">1</span><b>제미나이 열기</b><span>gemini.google.com · 영재원 계정으로 로그인</span></div><div class="cvstep"><span class="n">2</span><b>캔버스 켜기</b><span>입력창 아래의 캔버스 버튼을 누릅니다.</span></div><div class="cvstep"><span class="n">3</span><b>프롬프트 붙여넣기</b><span>아래에서 복사해 그대로 넣습니다.</span></div><div class="cvstep"><span class="n">4</span><b>고치기</b><span>고칠 부분만 말하면 그 자리에서 바뀝니다.</span></div></div><div class="shot"><img src="shots/canvas_button.png" alt="" onerror="this.style.display='none';this.parentNode.insertAdjacentText('beforeend','여기에 캔버스 버튼 위치 캡처 — shots/canvas_button.png')"></div></div>
+<div class="canvasbox" id="github"><h2>그다음 — 내 주소 만들기 (1차시에 한 번만)</h2><p class="sub">계정과 저장소는 처음 한 번만 만듭니다. 그 뒤로는 파일을 올리기만 하면 됩니다.</p><div class="cvsteps"><div class="cvstep"><span class="n">1</span><b>계정 만들기</b><span><code>github.com</code> → Sign up. <b>아이디가 그대로 주소가 됩니다.</b> 영문 소문자로 짧게.</span></div><div class="cvstep"><span class="n">2</span><b>저장소 만들기</b><span>오른쪽 위 <b>+</b> → New repository. 이름은 <code>my-web</code>처럼 영문으로, <b>Public</b>으로.</span></div><div class="cvstep"><span class="n">3</span><b>인터넷에 공개</b><span>Settings → Pages → Branch를 <b>main</b>으로 Save.</span></div><div class="cvstep"><span class="n">4</span><b>주소 확인</b><span>1~2분 뒤 <code>내아이디.github.io/my-web/</code>이 열립니다.</span></div></div><div class="shot"><img src="shots/gh_pages.png" alt="" onerror="this.style.display='none';this.parentNode.insertAdjacentText('beforeend','여기에 Settings → Pages 화면 캡처 — shots/gh_pages.png')"></div></div>
+<div class="canvasbox" id="upload"><h2>매 차시 끝 — 내 저장소에 올리기</h2><p class="sub">1차시부터 6차시까지 매번 같은 네 단계입니다. 익숙해지면 1분이면 됩니다.</p><div class="cvsteps"><div class="cvstep"><span class="n">1</span><b>코드 받기</b><span>캔버스 오른쪽 위 메뉴에서 파일을 받습니다.</span></div><div class="cvstep"><span class="n">2</span><b>이름 바꾸기</b><span>영문 + <code>.html</code>. 첫 페이지만 <code>index.html</code>.</span></div><div class="cvstep"><span class="n">3</span><b>업로드</b><span>내 저장소 → <b>Add file</b> → <b>Upload files</b> → 끌어다 놓기.</span></div><div class="cvstep"><span class="n">4</span><b>Commit</b><span>아래 <b>Commit changes</b>. 1~2분 뒤 주소로 열립니다.</span></div></div><p style="margin:16px 0 0;color:var(--muted);font-size:14.5px">같은 이름으로 다시 올리면 <b>덮어쓰기</b>가 됩니다. 고친 파일은 같은 이름으로 올리세요. 올린 직후 404가 뜨면 고장이 아니라 아직 올라가는 중입니다.</p></div>
+<section class="lab" id="l1">
+<div class="labhead"><span class="em">💬</span><div><h2>1차시 · AI와 대화하여 웹페이지 제작하기</h2><p>말로 설명했더니 화면이 생겼다</p></div></div>
+<div class="codewrap accentbox"><div class="chrome"><i></i><i></i><i></i><span>gemini.google.com — 캔버스</span></div><div class="codehead"><span>프롬프트 원문 — 캔버스를 켠 제미나이에 붙여넣기</span><button class="copy" data-t="l1-p">복사</button></div><pre id="l1-p"><code>웹페이지를 하나 만들어 줘. "나를 소개하는 페이지"야.
+
+[목표와 환경]
+- HTML, CSS, 자바스크립트를 파일 하나에 모두 넣어 줘.
+- 인터넷에서 불러오는 글꼴이나 라이브러리는 쓰지 마.
+
+[디자인]
+- 맨 위에 큰 제목으로 내 별명, 그 아래 한 줄 소개.
+- 그 아래에 카드 세 개: 좋아하는 것 / 요즘 관심사 / 올해 해 보고 싶은 것.
+- 색은 밝고 시원한 느낌으로, 글자는 크게.
+- 휴대폰 화면에서도 가로로 밀리지 않게 만들어 줘.
+
+[동작]
+- 카드를 누르면 숨어 있던 설명 한 줄이 펼쳐지고, 다시 누르면 접혀야 해.
+
+[데이터]
+- 따로 저장하는 기능은 없어도 돼.
+
+내용은 일단 예시로 채워 줘. 내가 나중에 직접 고칠게.</code></pre></div>
+
+<div class="tip"><b>꿀팁</b><p><b>캔버스를 켜는 걸 잊지 마세요.</b> 입력창 아래의 캔버스 버튼을 눌러 두면 만든 화면이 오른쪽에 바로 뜹니다. 안 켜면 코드만 길게 나와서 뭘 만들었는지 보이지 않습니다.
+<br><br><b>첫 페이지는 반드시 <code>index.html</code></b><br>
+이 이름이어야 <code>내아이디.github.io/내저장소/</code>를 눌렀을 때 바로 열립니다. 다른 이름이면 주소 뒤에 파일 이름을 붙여야 열립니다.
+<br><br><b>올리는 순서</b><br>
+① 캔버스에서 <b>코드 받기</b> → ② 이름을 <code>index.html</code>로 → ③ 저장소에서 <b>Add file → Upload files</b> → ④ 아래 <b>Commit changes</b>
+<br><br><b>1~2분 기다리세요.</b> 올린 직후에는 주소가 404로 나올 수 있습니다. 고장이 아니라 아직 올라가는 중입니다.
+<br><br><b>아이디는 신중히.</b> 깃허브 아이디가 그대로 주소가 됩니다. 실명 대신 영문 별명으로 짧게 정하세요.</p></div>
+<div class="submit"><span class="t"><b>📤 오늘 올릴 것 — 내 소개 페이지</b><em>이름을 <code>index.html</code>으로 바꿔 내 저장소에 업로드 → Commit → <code>내주소/index.html</code>으로 열어 보기</em></span><a class="go" href="#upload">올리는 법</a></div>
+</section>
+<section class="lab" id="l2">
+<div class="labhead"><span class="em">🎮</span><div><h2>2차시 · 게임 로직 설계하고 구현하기</h2><p>내가 정한 규칙으로 만드는 내 게임</p></div></div>
+<a class="prev" href="tool_game_mole.html" target="_blank" rel="noopener">▶ 시드 게임 먼저 보기</a>
+<div class="codewrap accentbox"><div class="chrome"><i></i><i></i><i></i><span>gemini.google.com — 캔버스</span></div><div class="codehead"><span>프롬프트 원문 — 캔버스를 켠 제미나이에 붙여넣기</span><button class="copy" data-t="l2-p">복사</button></div><pre id="l2-p"><code>웹게임을 하나 만들어 줘.
+
+[만들 게임]
+여기에 내가 만들 게임을 3~4줄로 설명해.
+예) 30초 동안 3x3 칸에서 두더지가 튀어나오면 누르는 게임.
+    두더지를 누르면 점수가 오르고, 가끔 폭탄이 나오는데 그걸 누르면 점수가 깎여.
+
+[반드시 지킬 규격]
+- HTML, CSS, 자바스크립트를 파일 하나에 모두 넣어 줘. 외부 라이브러리는 쓰지 마.
+- 한 판은 3분 안에 끝나야 해.
+- 결과는 숫자 하나(점수)로 나오고, 높을수록 잘한 거야.
+- 코드 맨 위에 const GAME_ID = 'my-game'; 를 만들어 줘.
+- 게임이 끝나면 gameOver(점수) 함수를 부르고, 그 함수 안에서 점수를 화면에 보여 줘.
+- 혼자 하는 게임이고, 마우스나 손가락 터치만 써.
+
+[디자인]
+- 화면 맨 위에 남은 시간과 현재 점수를 크게.
+- 글자는 크게, 휴대폰에서도 가로 스크롤 없이 보이게.
+- 버튼을 누르면 눌렸다는 게 바로 보이게 해 줘.
+
+[데이터]
+- 아직 저장 기능은 넣지 마. 다음 시간에 붙일 거야.</code></pre></div>
+<h3 style="margin:22px 0 2px;font-size:17px">무엇을 만들지 모르겠다면</h3><p style="margin:0;color:var(--muted);font-size:14.5px">골라도 되고, 바꿔도 되고, 무시해도 됩니다.</p><div class="ideas"><div class="idea"><span>⚡</span><b>반응속도</b><i>신호가 바뀌는 순간 누르기</i></div>
+<div class="idea"><span>🔢</span><b>숫자 맞히기</b><i>위아래 힌트로 정답 찾기</i></div>
+<div class="idea"><span>🐹</span><b>두더지 잡기</b><i>튀어나오는 것만 빠르게</i></div>
+<div class="idea"><span>🃏</span><b>짝 맞추기</b><i>뒤집어서 같은 그림 찾기</i></div>
+<div class="idea"><span>🎨</span><b>색깔 구별</b><i>다른 색 한 칸 찾아내기</i></div>
+<div class="idea"><span>👆</span><b>클릭 연타</b><i>10초에 몇 번 누르나</i></div>
+<div class="idea"><span>🍎</span><b>떨어지는 것 받기</b><i>좌우로 움직여 받아내기</i></div>
+<div class="idea"><span>✊</span><b>가위바위보 연승</b><i>몇 번까지 이기나</i></div>
+<div class="idea"><span>⌨️</span><b>타자 속도</b><i>제시어를 빠르게 치기</i></div>
+<div class="idea"><span>➗</span><b>사칙연산 빨리 풀기</b><i>30초에 몇 문제나</i></div>
+<div class="idea"><span>🔍</span><b>다른 곳 찾기</b><i>두 화면의 차이 찾기</i></div>
+<div class="idea"><span>🧭</span><b>미로 탈출</b><i>방향키로 출구까지</i></div></div>
+<div class="codewrap dim"><div class="chrome"><i></i><i></i><i></i><span>tool_game_reaction.html</span></div><div class="codehead"><span>완성 코드 — 반응속도</span><button class="copy" data-t="l2-d0">복사</button></div><pre id="l2-d0"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="ko"&gt;
+&lt;head&gt;
+&lt;meta charset="UTF-8"&gt;
+&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+&lt;meta name="theme-color" content="#5B3DF5"&gt;
+&lt;title&gt;반응속도 · 5번의 찰나&lt;/title&gt;
+&lt;style&gt;
+  :root{--accent:#5B3DF5;--ink:#171A2E;--muted:#62648A;--line:#DCDCE8;--bg:#F3F3F8}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Malgun Gothic","Apple SD Gothic Neo",sans-serif;
+    display:flex;flex-direction:column;align-items:center;padding:20px 14px 60px}
+  h1{font-size:26px;margin:6px 0 2px}
+  .sub{color:var(--muted);font-size:15px;margin:0 0 18px;text-align:center}
+  .board{width:100%;max-width:460px}
+  .pad{height:280px;border-radius:10px;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;cursor:pointer;user-select:none;
+    background:#353A5E;color:#fff;text-align:center;padding:16px;
+    transition:background .08s linear;border:0;width:100%;font-family:inherit}
+  .pad b{font-size:26px;display:block;margin-bottom:6px}
+  .pad span{font-size:16px;opacity:.85;line-height:1.6}
+  .pad.wait{background:#D9435A}
+  .pad.go{background:#15803d}
+  .pad.early{background:#8a5a00}
+  .pad:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+  .rounds{display:flex;gap:6px;justify-content:center;margin:14px 0}
+  .dot{width:38px;height:38px;border-radius:9px;background:#E4E4EF;border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;font-size:12.5px;color:var(--muted)}
+  .dot.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .panel{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-top:16px}
+  .score{font-size:42px;font-weight:700;color:var(--accent);line-height:1.1}
+  .label{color:var(--muted);font-size:14px}
+  .row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;
+    padding:7px 0;border-bottom:1px dashed var(--line)}
+  .row:last-child{border:0}
+  button.go{background:var(--accent);color:#fff;border:0;border-radius:10px;padding:12px 22px;
+    font-size:16px;cursor:pointer;font-family:inherit;margin-top:12px;width:100%}
+  .note{color:var(--muted);font-size:13px;margin-top:18px;text-align:center;max-width:460px;line-height:1.6}
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;h1&gt;5번의 찰나&lt;/h1&gt;
+&lt;p class="sub"&gt;초록으로 바뀌는 순간 누르세요. 다섯 번의 평균으로 점수가 정해집니다.&lt;/p&gt;
+
+&lt;div class="board"&gt;
+  &lt;button class="pad" id="pad"&gt;&lt;b&gt;누르면 시작&lt;/b&gt;&lt;span&gt;빨강일 때 기다리고&lt;br&gt;초록이 되면 바로 누르세요&lt;/span&gt;&lt;/button&gt;
+  &lt;div class="rounds" id="rounds"&gt;&lt;/div&gt;
+
+  &lt;div class="panel"&gt;
+    &lt;div class="label"&gt;점수&lt;/div&gt;
+    &lt;div class="score" id="score"&gt;—&lt;/div&gt;
+    &lt;div id="detail"&gt;&lt;/div&gt;
+    &lt;div class="row"&gt;&lt;span&gt;최고 점수&lt;/span&gt;&lt;b id="best"&gt;0&lt;/b&gt;&lt;/div&gt;
+    &lt;button class="go" id="again" style="display:none"&gt;다시 하기&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p class="note"&gt;기록은 이 브라우저에만 저장됩니다. 다른 컴퓨터에서 열면 처음부터 시작합니다.&lt;/p&gt;
+
+&lt;script&gt;
+/* =========================================================
+   게임 규격 — 이 네 줄은 어떤 게임을 만들어도 똑같이 지킵니다
+   ========================================================= */
+const GAME_ID   = 'reaction';
+const GAME_NAME = '반응속도';
+// 게임이 끝나면 gameOver(점수) 를 부릅니다. 점수는 높을수록 잘한 것.
+
+/* ===== 점수 저장 모듈 (3차시) =====
+   localStorage = 이 브라우저에만 남는 저장소 */
+function saveScore(score){
+  const key = 'best_' + GAME_ID;
+  const best = Number(localStorage.getItem(key) || 0);
+  if (score &gt; best) localStorage.setItem(key, String(score));
+  return Math.max(score, best);
+}
+function loadBest(){
+  return Number(localStorage.getItem('best_' + GAME_ID) || 0);
+}
+
+/* ===== 게임 본체 ===== */
+const TOTAL = 5;
+const pad = document.getElementById('pad');
+const roundsEl = document.getElementById('rounds');
+const scoreEl = document.getElementById('score');
+const detailEl = document.getElementById('detail');
+const bestEl = document.getElementById('best');
+const againBtn = document.getElementById('again');
+
+let times = [], state = 'idle', timer = null, startAt = 0;
+
+function drawRounds(){
+  roundsEl.innerHTML = '';
+  for (let i = 0; i &lt; TOTAL; i++){
+    const d = document.createElement('div');
+    d.className = 'dot' + (times[i] !== undefined ? ' on' : '');
+    d.textContent = times[i] !== undefined ? times[i] : (i + 1);
+    roundsEl.appendChild(d);
+  }
+}
+
+function setPad(cls, title, desc){
+  pad.className = 'pad' + (cls ? ' ' + cls : '');
+  pad.innerHTML = '&lt;b&gt;' + title + '&lt;/b&gt;&lt;span&gt;' + desc + '&lt;/span&gt;';
+}
+
+function nextRound(){
+  if (times.length &gt;= TOTAL){ finish(); return; }
+  state = 'wait';
+  setPad('wait', '기다리세요', '초록이 될 때까지 누르면 안 됩니다');
+  const delay = 1200 + Math.random() * 2600;
+  timer = setTimeout(function(){
+    state = 'go';
+    startAt = performance.now();
+    setPad('go', '지금!', '누르세요');
+  }, delay);
+}
+
+function finish(){
+  state = 'done';
+  const avg = Math.round(times.reduce(function(a,b){return a+b;}, 0) / times.length);
+  const score = Math.max(0, 1000 - avg);
+  setPad('', '끝!', '평균 ' + avg + '밀리초');
+  detailEl.innerHTML =
+    '&lt;div class="row"&gt;&lt;span&gt;평균 반응속도&lt;/span&gt;&lt;b&gt;' + avg + ' ms&lt;/b&gt;&lt;/div&gt;' +
+    '&lt;div class="row"&gt;&lt;span&gt;가장 빨랐던 판&lt;/span&gt;&lt;b&gt;' + Math.min.apply(null, times) + ' ms&lt;/b&gt;&lt;/div&gt;';
+  gameOver(score);
+  againBtn.style.display = 'block';
+}
+
+function gameOver(score){
+  scoreEl.textContent = score;
+  const best = saveScore(score);
+  bestEl.textContent = best;
+}
+
+pad.addEventListener('click', function(){
+  if (state === 'idle' || state === 'done'){
+    times = []; drawRounds();
+    scoreEl.textContent = '—'; detailEl.innerHTML = '';
+    againBtn.style.display = 'none';
+    nextRound();
+    return;
+  }
+  if (state === 'wait'){
+    clearTimeout(timer);
+    state = 'early';
+    setPad('early', '너무 빨랐어요', '초록이 될 때까지 기다려야 합니다&lt;br&gt;눌러서 이 판 다시 하기');
+    setTimeout(function(){ if (state === 'early') state = 'ready'; }, 400);
+    return;
+  }
+  if (state === 'ready'){ nextRound(); return; }
+  if (state === 'go'){
+    const ms = Math.round(performance.now() - startAt);
+    times.push(ms);
+    drawRounds();
+    if (times.length &gt;= TOTAL){ finish(); }
+    else { setPad('', ms + ' ms', '눌러서 다음 판으로'); state = 'ready'; }
+  }
+});
+
+againBtn.addEventListener('click', function(){ pad.click(); });
+
+drawRounds();
+bestEl.textContent = loadBest();
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre></div>
+<div class="codewrap dim"><div class="chrome"><i></i><i></i><i></i><span>tool_game_number.html</span></div><div class="codehead"><span>완성 코드 — 숫자 맞히기</span><button class="copy" data-t="l2-d1">복사</button></div><pre id="l2-d1"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="ko"&gt;
+&lt;head&gt;
+&lt;meta charset="UTF-8"&gt;
+&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+&lt;meta name="theme-color" content="#5B3DF5"&gt;
+&lt;title&gt;숫자 맞히기 · 여덟 번의 질문&lt;/title&gt;
+&lt;style&gt;
+  :root{--accent:#5B3DF5;--ink:#171A2E;--muted:#62648A;--line:#DCDCE8;--bg:#F3F3F8;
+        --up:#1d4ed8;--down:#D9435A;--hit:#15803d}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Malgun Gothic","Apple SD Gothic Neo",sans-serif;
+    display:flex;flex-direction:column;align-items:center;padding:20px 14px 60px}
+  h1{font-size:26px;margin:6px 0 2px}
+  .sub{color:var(--muted);font-size:15px;margin:0 0 18px;text-align:center}
+  .board{width:100%;max-width:440px}
+  .range{background:#fff;border:1px solid var(--line);border-radius:10px;padding:18px;text-align:center}
+  .range .big{font-size:34px;font-weight:700;letter-spacing:-1px}
+  .range .big i{font-style:normal;color:var(--accent)}
+  .range .lbl{color:var(--muted);font-size:14px;margin-bottom:4px}
+  .bar{height:10px;border-radius:5px;background:#E4E4EF;margin:14px 0 4px;position:relative;overflow:hidden}
+  .bar i{position:absolute;top:0;bottom:0;background:var(--accent);opacity:.35;display:block}
+  form{display:flex;gap:8px;margin-top:14px}
+  input[type=number]{flex:1;padding:14px;font-size:20px;text-align:center;border:1px solid var(--line);
+    border-radius:10px;font-family:inherit;background:#fff;-moz-appearance:textfield}
+  input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+  button{background:var(--accent);color:#fff;border:0;border-radius:10px;padding:0 20px;
+    font-size:16px;cursor:pointer;font-family:inherit}
+  button:disabled{background:#AAABC6;cursor:default}
+  .log{margin-top:14px;display:flex;flex-direction:column;gap:6px}
+  .try{display:flex;justify-content:space-between;align-items:center;background:#fff;
+    border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-size:15px}
+  .try b{font-size:19px}
+  .try .up{color:var(--up)} .try .down{color:var(--down)} .try .hit{color:var(--hit);font-weight:700}
+  .panel{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-top:16px}
+  .score{font-size:42px;font-weight:700;color:var(--accent);line-height:1.1}
+  .label{color:var(--muted);font-size:14px}
+  .row{display:flex;justify-content:space-between;align-items:baseline;padding:7px 0;
+    border-bottom:1px dashed var(--line)}
+  .row:last-child{border:0}
+  .again{width:100%;padding:12px;margin-top:12px}
+  .note{color:var(--muted);font-size:13px;margin-top:18px;text-align:center;max-width:440px;line-height:1.6}
+  :focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+  nav :focus-visible{outline-color:#FFD400}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;h1&gt;여덟 번의 질문&lt;/h1&gt;
+&lt;p class="sub"&gt;1부터 100까지 중 하나. 여덟 번 안에 찾으면 이깁니다.&lt;/p&gt;
+
+&lt;div class="board"&gt;
+  &lt;div class="range"&gt;
+    &lt;div class="lbl"&gt;남은 범위&lt;/div&gt;
+    &lt;div class="big"&gt;&lt;i id="lo"&gt;1&lt;/i&gt; 부터 &lt;i id="hi"&gt;100&lt;/i&gt; 까지&lt;/div&gt;
+    &lt;div class="bar"&gt;&lt;i id="barfill"&gt;&lt;/i&gt;&lt;/div&gt;
+    &lt;div class="lbl" id="left"&gt;남은 기회 8번&lt;/div&gt;
+    &lt;form id="f"&gt;
+      &lt;input type="number" id="guess" min="1" max="100" placeholder="숫자" autocomplete="off"&gt;
+      &lt;button type="submit" id="submit"&gt;확인&lt;/button&gt;
+    &lt;/form&gt;
+  &lt;/div&gt;
+
+  &lt;div class="log" id="log"&gt;&lt;/div&gt;
+
+  &lt;div class="panel"&gt;
+    &lt;div class="label"&gt;점수&lt;/div&gt;
+    &lt;div class="score" id="score"&gt;—&lt;/div&gt;
+    &lt;div id="detail"&gt;&lt;/div&gt;
+    &lt;div class="row"&gt;&lt;span&gt;최고 점수&lt;/span&gt;&lt;b id="best"&gt;0&lt;/b&gt;&lt;/div&gt;
+    &lt;button class="again" id="again" style="display:none"&gt;새 숫자로 다시&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p class="note"&gt;기록은 이 브라우저에만 저장됩니다. 다른 컴퓨터에서 열면 처음부터 시작합니다.&lt;/p&gt;
+
+&lt;script&gt;
+/* ===== 게임 규격 ===== */
+const GAME_ID   = 'number';
+const GAME_NAME = '숫자 맞히기';
+
+/* ===== 점수 저장 모듈 (3차시) ===== */
+function saveScore(score){
+  const key = 'best_' + GAME_ID;
+  const best = Number(localStorage.getItem(key) || 0);
+  if (score &gt; best) localStorage.setItem(key, String(score));
+  return Math.max(score, best);
+}
+function loadBest(){ return Number(localStorage.getItem('best_' + GAME_ID) || 0); }
+
+/* ===== 게임 본체 ===== */
+const MAX_TRY = 8;
+const el = function(id){ return document.getElementById(id); };
+let answer, lo, hi, tries, over;
+
+function start(){
+  answer = Math.floor(Math.random() * 100) + 1;
+  lo = 1; hi = 100; tries = 0; over = false;
+  el('log').innerHTML = '';
+  el('score').textContent = '—';
+  el('detail').innerHTML = '';
+  el('again').style.display = 'none';
+  el('guess').disabled = false;
+  el('submit').disabled = false;
+  el('guess').value = '';
+  paint();
+  el('guess').focus();
+}
+
+function paint(){
+  el('lo').textContent = lo;
+  el('hi').textContent = hi;
+  el('left').textContent = over ? '끝' : '남은 기회 ' + (MAX_TRY - tries) + '번';
+  const f = el('barfill');
+  f.style.left = ((lo - 1) / 100 * 100) + '%';
+  f.style.width = ((hi - lo + 1) / 100 * 100) + '%';
+}
+
+function addLog(n, kind, text){
+  const d = document.createElement('div');
+  d.className = 'try';
+  d.innerHTML = '&lt;b&gt;' + n + '&lt;/b&gt;&lt;span class="' + kind + '"&gt;' + text + '&lt;/span&gt;';
+  el('log').prepend(d);
+}
+
+function finish(win){
+  over = true;
+  el('guess').disabled = true;
+  el('submit').disabled = true;
+  el('again').style.display = 'block';
+  paint();
+  let score = 0;
+  if (win){
+    score = (MAX_TRY - tries + 1) * 120 + 40;
+    el('detail').innerHTML =
+      '&lt;div class="row"&gt;&lt;span&gt;맞힌 숫자&lt;/span&gt;&lt;b&gt;' + answer + '&lt;/b&gt;&lt;/div&gt;' +
+      '&lt;div class="row"&gt;&lt;span&gt;사용한 기회&lt;/span&gt;&lt;b&gt;' + tries + '번&lt;/b&gt;&lt;/div&gt;';
+  } else {
+    el('detail').innerHTML =
+      '&lt;div class="row"&gt;&lt;span&gt;정답이었던 숫자&lt;/span&gt;&lt;b&gt;' + answer + '&lt;/b&gt;&lt;/div&gt;' +
+      '&lt;div class="row"&gt;&lt;span&gt;결과&lt;/span&gt;&lt;b&gt;기회를 다 썼어요&lt;/b&gt;&lt;/div&gt;';
+  }
+  gameOver(score);
+}
+
+function gameOver(score){
+  el('score').textContent = score;
+  el('best').textContent = saveScore(score);
+}
+
+el('f').addEventListener('submit', function(e){
+  e.preventDefault();
+  if (over) return;
+  const n = Number(el('guess').value);
+  if (!n || n &lt; 1 || n &gt; 100){ el('guess').value = ''; return; }
+  tries++;
+  if (n === answer){ addLog(n, 'hit', '정답!'); finish(true); return; }
+  if (n &lt; answer){ addLog(n, 'up', '더 큰 수'); lo = Math.max(lo, n + 1); }
+  else { addLog(n, 'down', '더 작은 수'); hi = Math.min(hi, n - 1); }
+  el('guess').value = '';
+  if (tries &gt;= MAX_TRY){ finish(false); return; }
+  paint();
+  el('guess').focus();
+});
+
+el('again').addEventListener('click', start);
+el('best').textContent = loadBest();
+start();
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre></div>
+<div class="codewrap dim"><div class="chrome"><i></i><i></i><i></i><span>tool_game_mole.html</span></div><div class="codehead"><span>완성 코드 — 두더지 잡기</span><button class="copy" data-t="l2-d2">복사</button></div><pre id="l2-d2"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="ko"&gt;
+&lt;head&gt;
+&lt;meta charset="UTF-8"&gt;
+&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+&lt;meta name="theme-color" content="#5B3DF5"&gt;
+&lt;title&gt;두더지 잡기 · 30초&lt;/title&gt;
+&lt;style&gt;
+  :root{--accent:#5B3DF5;--ink:#171A2E;--muted:#62648A;--line:#DCDCE8;--bg:#F3F3F8;--bad:#D9435A}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Malgun Gothic","Apple SD Gothic Neo",sans-serif;
+    display:flex;flex-direction:column;align-items:center;padding:20px 14px 60px}
+  h1{font-size:26px;margin:6px 0 2px}
+  .sub{color:var(--muted);font-size:15px;margin:0 0 16px;text-align:center}
+  .board{width:100%;max-width:420px}
+  .hud{display:flex;justify-content:space-between;background:#fff;border:1px solid var(--line);
+    border-radius:12px;padding:12px 16px;margin-bottom:12px}
+  .hud div{text-align:center;flex:1}
+  .hud .l{color:var(--muted);font-size:13px}
+  .hud .v{font-size:25px;font-weight:700;line-height:1.2}
+  .hud .v.low{color:var(--bad)}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .hole{aspect-ratio:1;border-radius:10px;background:#E4E4EF;border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;font-size:40px;cursor:pointer;
+    user-select:none;padding:0;font-family:inherit;transition:background .1s}
+  .hole:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+  .hole.up{background:#DCD5FA}
+  .hole.bomb{background:#FADCE0}
+  .hole.hit{background:var(--accent)}
+  .hole.miss{background:#F3CBD2}
+  .panel{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-top:16px}
+  .score{font-size:42px;font-weight:700;color:var(--accent);line-height:1.1}
+  .label{color:var(--muted);font-size:14px}
+  .row{display:flex;justify-content:space-between;align-items:baseline;padding:7px 0;
+    border-bottom:1px dashed var(--line)}
+  .row:last-child{border:0}
+  button.go{background:var(--accent);color:#fff;border:0;border-radius:10px;padding:13px;
+    font-size:16px;cursor:pointer;font-family:inherit;width:100%;margin-top:12px}
+  .note{color:var(--muted);font-size:13px;margin-top:18px;text-align:center;max-width:420px;line-height:1.6}
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;h1&gt;30초 두더지&lt;/h1&gt;
+&lt;p class="sub"&gt;두더지는 +10점, 폭탄은 −15점. 폭탄을 참는 게 실력입니다.&lt;/p&gt;
+
+&lt;div class="board"&gt;
+  &lt;div class="hud"&gt;
+    &lt;div&gt;&lt;div class="l"&gt;남은 시간&lt;/div&gt;&lt;div class="v" id="time"&gt;30&lt;/div&gt;&lt;/div&gt;
+    &lt;div&gt;&lt;div class="l"&gt;현재 점수&lt;/div&gt;&lt;div class="v" id="live"&gt;0&lt;/div&gt;&lt;/div&gt;
+    &lt;div&gt;&lt;div class="l"&gt;연속&lt;/div&gt;&lt;div class="v" id="combo"&gt;0&lt;/div&gt;&lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;div class="grid" id="grid"&gt;&lt;/div&gt;
+
+  &lt;div class="panel"&gt;
+    &lt;div class="label"&gt;점수&lt;/div&gt;
+    &lt;div class="score" id="score"&gt;—&lt;/div&gt;
+    &lt;div id="detail"&gt;&lt;/div&gt;
+    &lt;div class="row"&gt;&lt;span&gt;최고 점수&lt;/span&gt;&lt;b id="best"&gt;0&lt;/b&gt;&lt;/div&gt;
+    &lt;button class="go" id="start"&gt;시작하기&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p class="note"&gt;기록은 이 브라우저에만 저장됩니다. 다른 컴퓨터에서 열면 처음부터 시작합니다.&lt;/p&gt;
+
+&lt;script&gt;
+/* ===== 게임 규격 ===== */
+const GAME_ID   = 'mole';
+const GAME_NAME = '두더지 잡기';
+
+/* ===== 점수 저장 모듈 (3차시) ===== */
+function saveScore(score){
+  const key = 'best_' + GAME_ID;
+  const best = Number(localStorage.getItem(key) || 0);
+  if (score &gt; best) localStorage.setItem(key, String(score));
+  return Math.max(score, best);
+}
+function loadBest(){ return Number(localStorage.getItem('best_' + GAME_ID) || 0); }
+
+/* ===== 게임 본체 ===== */
+const SIZE = 9, PLAY_SEC = 30;
+const el = function(id){ return document.getElementById(id); };
+const grid = el('grid');
+const holes = [];
+let live = 0, combo = 0, maxCombo = 0, hits = 0, bombs = 0;
+let running = false, tickTimer = null, popTimer = null, left = PLAY_SEC;
+
+for (let i = 0; i &lt; SIZE; i++){
+  const b = document.createElement('button');
+  b.className = 'hole';
+  b.dataset.kind = '';
+  b.addEventListener('click', function(){ whack(b); });
+  grid.appendChild(b);
+  holes.push(b);
+}
+
+function clearHole(b){
+  b.dataset.kind = '';
+  b.textContent = '';
+  b.className = 'hole';
+}
+
+function flash(b, cls){
+  b.className = 'hole ' + cls;
+  setTimeout(function(){ if (b.dataset.kind === '') b.className = 'hole'; }, 160);
+}
+
+function pop(){
+  if (!running) return;
+  const free = holes.filter(function(h){ return h.dataset.kind === ''; });
+  if (free.length){
+    const b = free[Math.floor(Math.random() * free.length)];
+    const isBomb = Math.random() &lt; 0.25;
+    b.dataset.kind = isBomb ? 'bomb' : 'mole';
+    b.textContent = isBomb ? '💣' : '🐹';
+    b.classList.add(isBomb ? 'bomb' : 'up');
+    const life = 700 + Math.random() * 600;
+    setTimeout(function(){
+      if (b.dataset.kind === 'mole'){ combo = 0; el('combo').textContent = 0; }
+      if (b.dataset.kind !== '') clearHole(b);
+    }, life);
+  }
+  const gap = Math.max(260, 760 - (PLAY_SEC - left) * 14);
+  popTimer = setTimeout(pop, gap);
+}
+
+function whack(b){
+  if (!running) return;
+  const kind = b.dataset.kind;
+  if (kind === 'mole'){
+    hits++; combo++; maxCombo = Math.max(maxCombo, combo);
+    live += 10 + Math.min(combo - 1, 5) * 2;
+    clearHole(b); flash(b, 'hit');
+  } else if (kind === 'bomb'){
+    bombs++; combo = 0;
+    live = Math.max(0, live - 15);
+    clearHole(b); flash(b, 'miss');
+  } else {
+    combo = 0;
+    flash(b, 'miss');
+  }
+  el('live').textContent = live;
+  el('combo').textContent = combo;
+}
+
+function start(){
+  running = true;
+  live = 0; combo = 0; maxCombo = 0; hits = 0; bombs = 0; left = PLAY_SEC;
+  holes.forEach(clearHole);
+  el('live').textContent = 0;
+  el('combo').textContent = 0;
+  el('time').textContent = PLAY_SEC;
+  el('time').classList.remove('low');
+  el('score').textContent = '—';
+  el('detail').innerHTML = '';
+  el('start').style.display = 'none';
+  pop();
+  tickTimer = setInterval(function(){
+    left--;
+    el('time').textContent = left;
+    if (left &lt;= 5) el('time').classList.add('low');
+    if (left &lt;= 0) finish();
+  }, 1000);
+}
+
+function finish(){
+  running = false;
+  clearInterval(tickTimer);
+  clearTimeout(popTimer);
+  holes.forEach(clearHole);
+  el('detail').innerHTML =
+    '&lt;div class="row"&gt;&lt;span&gt;잡은 두더지&lt;/span&gt;&lt;b&gt;' + hits + '마리&lt;/b&gt;&lt;/div&gt;' +
+    '&lt;div class="row"&gt;&lt;span&gt;밟은 폭탄&lt;/span&gt;&lt;b&gt;' + bombs + '개&lt;/b&gt;&lt;/div&gt;' +
+    '&lt;div class="row"&gt;&lt;span&gt;최고 연속&lt;/span&gt;&lt;b&gt;' + maxCombo + '연타&lt;/b&gt;&lt;/div&gt;';
+  el('start').textContent = '다시 하기';
+  el('start').style.display = 'block';
+  gameOver(live);
+}
+
+function gameOver(score){
+  el('score').textContent = score;
+  el('best').textContent = saveScore(score);
+}
+
+el('start').addEventListener('click', start);
+el('best').textContent = loadBest();
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre></div>
+<div class="tip"><b>꿀팁</b><p><b>게임이 너무 커지는 게 가장 흔한 실패입니다.</b> 처음부터 여러 단계나 여러 캐릭터를 넣지 마세요. 한 판 3분, 점수 하나. 이 두 가지만 지키면 3차시부터 모든 게 순조롭습니다.
+<br><br><b>안 움직일 때</b><br>
+"버튼을 눌러도 아무 일도 일어나지 않아. 왜 그런지 찾아서 고쳐 줘."<br>
+"화면이 하얗게만 나와. 고쳐 줘."
+<br><br><b>재미가 부족할 때</b><br>
+"연속으로 성공하면 점수가 더 많이 오르게 해 줘."<br>
+"시간이 지날수록 조금씩 빨라지게 해 줘."<br>
+"가끔 방해 요소가 나오게 해 줘. 그걸 누르면 점수가 깎여."
+<br><br><b>오늘 대화는 닫지 마세요.</b> 다음 시간에 같은 대화를 이어서 열면 만들던 게임을 그대로 고칠 수 있습니다.</p></div>
+<div class="submit"><span class="t"><b>📤 오늘 올릴 것 — 내 게임</b><em>이름을 <code>game.html</code>으로 바꿔 내 저장소에 업로드 → Commit → <code>내주소/game.html</code>으로 열어 보기</em></span><a class="go" href="#upload">올리는 법</a></div>
+</section>
+<section class="lab" id="l3">
+<div class="labhead"><span class="em">💾</span><div><h2>3차시 · 데이터 저장하여 기록 관리하기</h2><p>새로고침해도 최고 점수는 남는다</p></div></div>
+<div class="codewrap accentbox"><div class="chrome"><i></i><i></i><i></i><span>gemini.google.com — 캔버스</span></div><div class="codehead"><span>프롬프트 원문 — 캔버스를 켠 제미나이에 붙여넣기</span><button class="copy" data-t="l3-p">복사</button></div><pre id="l3-p"><code>지금 만든 게임에 최고 점수 저장 기능을 추가해 줘.
+
+[추가할 것]
+- saveScore(점수) 함수를 만들어 줘. localStorage에 'best_' + GAME_ID 라는 이름으로 최고 점수만 저장해.
+- 지금까지의 최고 점수보다 높을 때만 바꿔 써.
+- loadBest() 함수로 저장된 최고 점수를 읽어 와.
+- 페이지를 열 때 최고 점수를 화면에 보여 줘.
+- gameOver(점수) 안에서 saveScore를 부르도록 연결해 줘.
+
+[화면]
+- 현재 점수 아래에 "최고 점수"를 한 줄 더 보여 줘.
+- 화면 맨 아래에 "기록은 이 브라우저에만 저장됩니다"라고 안내 문구를 작게 넣어 줘.
+
+[주의]
+- 저장 부분은 다른 코드와 섞지 말고 한 곳에 모아 줘. 주석으로 어디부터 어디까지인지 표시해 줘.</code></pre></div>
+<div class="codewrap "><div class="chrome"><i></i><i></i><i></i><span>내 게임 파일 안에 들어갈 부분</span></div><div class="codehead"><span>저장 모듈 — 참고용</span><button class="copy" data-t="l3-mod">복사</button></div><pre id="l3-mod"><code>/* ===== 점수 저장 모듈 (3차시) =====
+   localStorage = 이 브라우저에만 남는 저장소 */
+
+const GAME_ID = 'my-game';   // 내 게임마다 다른 이름으로
+
+function saveScore(score){
+  const key  = 'best_' + GAME_ID;
+  const best = Number(localStorage.getItem(key) || 0);
+  if (score &gt; best) localStorage.setItem(key, String(score));
+  return Math.max(score, best);
+}
+
+function loadBest(){
+  return Number(localStorage.getItem('best_' + GAME_ID) || 0);
+}
+
+/* 게임이 끝날 때 이렇게 부릅니다 */
+function gameOver(score){
+  document.getElementById('score').textContent = score;
+  document.getElementById('best').textContent  = saveScore(score);
+}</code></pre></div><h3 style="margin:22px 0 2px;font-size:17px">캔버스에서 내 파일로 가져오기</h3><p style="margin:0 0 12px;color:var(--muted);font-size:14.5px">저장 기능을 <b>붙인 뒤에</b> 받으세요. 먼저 받으면 저장 기능이 없는 파일이 됩니다.</p><div class="cvsteps"><div class="cvstep"><span class="n">1</span><b>코드 받기</b><span>캔버스 오른쪽 위 메뉴에서 내려받습니다.</span></div><div class="cvstep"><span class="n">2</span><b>이름 바꾸기</b><span>영문 + <code>.html</code> (예: mygame.html)</span></div><div class="cvstep"><span class="n">3</span><b>내 폴더에</b><span>바탕화면에 폴더를 하나 만들어 모아 둡니다.</span></div><div class="cvstep"><span class="n">4</span><b>더블클릭</b><span>브라우저가 열리면 성공입니다.</span></div></div><div class="shot"><img src="shots/canvas_export.png" alt="" onerror="this.style.display='none';this.parentNode.insertAdjacentText('beforeend','여기에 캔버스 코드 받기 메뉴 캡처 — shots/canvas_export.png')"></div>
+<div class="tip"><b>꿀팁</b><p><b>순서가 중요합니다.</b> 저장 기능을 붙인 <b>뒤에</b> 코드를 받으세요. 먼저 받으면 저장 기능이 없는 파일이 됩니다.
+<br><br><b>코드 받는 법</b><br>
+캔버스 오른쪽 위 메뉴에서 내려받거나, 코드 탭에서 전체를 복사해 메모장에 붙여 <code>mygame.html</code>로 저장합니다. 메모장을 쓸 때는 파일 형식을 <b>모든 파일</b>로 바꿔야 합니다.
+<br><br><b>저장이 됐는지 확인</b><br>
+받은 파일을 더블클릭해 열고 점수를 낸 뒤 <b>F5</b>를 눌러 보세요. 최고 점수가 그대로면 성공입니다.
+<br><br><b>여기서 반드시 확인할 것</b><br>
+같은 파일을 <b>옆자리 컴퓨터</b>에서 열어 보게 하세요. 내 기록이 없습니다. 이 경험이 5차시 로그인의 이유가 됩니다.</p></div>
+</section>
+<section class="lab" id="l4">
+<div class="labhead"><span class="em">📋</span><div><h2>4차시 · 사용자 중심 학습 도구 개발하기</h2><p>오늘부터 내가 진짜로 쓸 도구</p></div></div>
+<a class="prev" href="tool_todo_local.html" target="_blank" rel="noopener">▶ 완성된 도구 먼저 보기</a>
+<div class="codewrap accentbox"><div class="chrome"><i></i><i></i><i></i><span>gemini.google.com — 캔버스</span></div><div class="codehead"><span>프롬프트 원문 — 캔버스를 켠 제미나이에 붙여넣기</span><button class="copy" data-t="l4-p">복사</button></div><pre id="l4-p"><code>"오늘 할 일" 도구를 만들어 줘. 내가 매일 실제로 쓸 거야.
+
+[목표와 환경]
+- HTML, CSS, 자바스크립트를 파일 하나에. 외부 라이브러리는 쓰지 마.
+
+[디자인]
+- 맨 위에 오늘 날짜를 한국어로 (예: 2026년 10월 12일 월요일).
+- 그 아래에 "3 / 7" 같은 완료 개수와 막대 그래프.
+- 입력칸과 추가 버튼은 한 줄로 나란히.
+- 할 일은 카드 모양으로 세로로 쌓이게.
+- 휴대폰에서도 가로 스크롤 없이.
+
+[동작]
+- 할 일을 적고 추가를 누르면 목록에 들어가.
+- 왼쪽 네모를 누르면 완료 표시가 되고 글자에 줄이 그어져. 다시 누르면 풀려.
+- 오른쪽 X를 누르면 그 항목만 지워져.
+- "완료한 것 치우기" 버튼을 누르면 끝낸 것만 한 번에 사라져.
+- 목록이 비어 있을 때는 안내 문구를 보여 줘.
+
+[데이터 보관]
+- localStorage에 저장해서 새로고침해도 남아 있게 해 줘.
+- 화면 아래에 "이 목록은 지금 쓰는 브라우저에만 저장됩니다"라고 안내해 줘.</code></pre></div>
+
+<div class="codewrap dim"><div class="chrome"><i></i><i></i><i></i><span>tool_todo_local.html</span></div><div class="codehead"><span>완성 코드 — 오늘 할 일</span><button class="copy" data-t="l4-d0">복사</button></div><pre id="l4-d0"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="ko"&gt;
+&lt;head&gt;
+&lt;meta charset="UTF-8"&gt;
+&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+&lt;meta name="theme-color" content="#5B3DF5"&gt;
+&lt;title&gt;오늘 할 일 · 내 컴퓨터에만 저장&lt;/title&gt;
+&lt;style&gt;
+  :root{--accent:#5B3DF5;--accent-dark:#4A2FD6;--ink:#171A2E;--muted:#62648A;
+        --line:#DCDCE8;--bg:#F3F3F8;--done:#9A9CBC}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Malgun Gothic","Apple SD Gothic Neo",sans-serif;
+    display:flex;flex-direction:column;align-items:center;padding:20px 14px 70px}
+  .app{width:100%;max-width:520px}
+  header{margin-bottom:18px}
+  h1{font-size:27px;margin:0 0 2px}
+  .date{color:var(--muted);font-size:15px;margin:0}
+  .progress{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:14px}
+  .ptop{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+  .ptop b{font-size:25px}
+  .ptop span{color:var(--muted);font-size:14px}
+  .bar{height:12px;border-radius:6px;background:#E4E4EF;overflow:hidden}
+  .bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .25s ease}
+  form{display:flex;gap:8px;margin-bottom:14px}
+  input[type=text]{flex:1;padding:13px 14px;font-size:16px;border:1px solid var(--line);
+    border-radius:10px;font-family:inherit;background:#fff}
+  input[type=text]:focus{outline:2px solid var(--accent);outline-offset:-1px}
+  button{background:var(--accent);color:#fff;border:0;border-radius:10px;padding:0 20px;
+    font-size:16px;cursor:pointer;font-family:inherit}
+  button:hover{background:var(--accent-dark)}
+  ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+  li{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--line);
+    border-radius:11px;padding:13px 14px}
+  li .chk{width:24px;height:24px;flex:none;border:2px solid var(--line);border-radius:7px;
+    background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;
+    font-size:15px;color:#fff;padding:0}
+  li.done .chk{background:var(--accent);border-color:var(--accent)}
+  li .txt{flex:1;font-size:16px;word-break:break-all;line-height:1.5}
+  li.done .txt{color:var(--done);text-decoration:line-through}
+  li .del{background:none;color:var(--muted);font-size:19px;padding:0 4px;line-height:1}
+  li .del:hover{background:none;color:#D9435A}
+  .empty{background:#fff;border:1px dashed var(--line);border-radius:12px;padding:34px 18px;
+    text-align:center;color:var(--muted);line-height:1.7}
+  .tools{display:flex;justify-content:space-between;align-items:center;margin-top:16px;
+    color:var(--muted);font-size:14px}
+  .tools button{background:none;color:var(--muted);font-size:14px;padding:6px 10px;
+    border:1px solid var(--line);border-radius:8px}
+  .tools button:hover{background:#F0EFF9;color:var(--ink)}
+  .note{background:#fff8e8;border:1px solid #f0dcb0;border-radius:11px;padding:13px 15px;
+    margin-top:22px;font-size:14px;line-height:1.7;color:#6b4e12}
+  :focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+  nav :focus-visible{outline-color:#FFD400}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class="app"&gt;
+  &lt;header&gt;
+    &lt;h1&gt;오늘 할 일&lt;/h1&gt;
+    &lt;p class="date" id="date"&gt;&lt;/p&gt;
+  &lt;/header&gt;
+
+  &lt;div class="progress"&gt;
+    &lt;div class="ptop"&gt;&lt;b id="ratio"&gt;0 / 0&lt;/b&gt;&lt;span id="cheer"&gt;할 일을 적어 보세요&lt;/span&gt;&lt;/div&gt;
+    &lt;div class="bar"&gt;&lt;i id="fill"&gt;&lt;/i&gt;&lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;form id="f"&gt;
+    &lt;input type="text" id="input" placeholder="무엇을 할까요?" maxlength="60" autocomplete="off"&gt;
+    &lt;button type="submit"&gt;추가&lt;/button&gt;
+  &lt;/form&gt;
+
+  &lt;ul id="list"&gt;&lt;/ul&gt;
+  &lt;div class="empty" id="empty"&gt;아직 비어 있습니다.&lt;br&gt;위에 할 일을 적고 추가를 눌러 보세요.&lt;/div&gt;
+
+  &lt;div class="tools"&gt;
+    &lt;span id="count"&gt;&lt;/span&gt;
+    &lt;button id="clear"&gt;완료한 것 치우기&lt;/button&gt;
+  &lt;/div&gt;
+
+  &lt;div class="note"&gt;
+    &lt;b&gt;이 목록은 지금 쓰는 브라우저에만 저장됩니다.&lt;/b&gt;&lt;br&gt;
+    다른 컴퓨터나 휴대폰에서 열면 비어 있습니다. 어디서든 보이게 하려면 로그인과 클라우드 저장이 필요합니다 — 5차시에 만듭니다.
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+/* ===== 저장: localStorage = 이 브라우저에만 남는 저장소 ===== */
+const KEY = 'todo_local_v1';
+let items = [];
+
+function load(){
+  try { items = JSON.parse(localStorage.getItem(KEY) || '[]'); }
+  catch (e) { items = []; }
+  if (!Array.isArray(items)) items = [];
+}
+function save(){
+  localStorage.setItem(KEY, JSON.stringify(items));
+}
+
+/* ===== 화면 ===== */
+const el = function(id){ return document.getElementById(id); };
+
+function today(){
+  const d = new Date();
+  const days = ['일','월','화','수','목','금','토'];
+  return d.getFullYear() + '년 ' + (d.getMonth()+1) + '월 ' + d.getDate() + '일 ' + days[d.getDay()] + '요일';
+}
+
+function render(){
+  const list = el('list');
+  list.innerHTML = '';
+  items.forEach(function(it){
+    const li = document.createElement('li');
+    if (it.done) li.className = 'done';
+
+    const chk = document.createElement('button');
+    chk.className = 'chk';
+    chk.textContent = it.done ? '✓' : '';
+    chk.setAttribute('aria-label', it.done ? '완료 취소' : '완료로 표시');
+    chk.addEventListener('click', function(){
+      it.done = !it.done; save(); render();
+    });
+
+    const txt = document.createElement('span');
+    txt.className = 'txt';
+    txt.textContent = it.text;
+
+    const del = document.createElement('button');
+    del.className = 'del';
+    del.textContent = '×';
+    del.setAttribute('aria-label', '삭제');
+    del.addEventListener('click', function(){
+      items = items.filter(function(x){ return x.id !== it.id; });
+      save(); render();
+    });
+
+    li.append(chk, txt, del);
+    list.appendChild(li);
+  });
+
+  const total = items.length;
+  const done = items.filter(function(x){ return x.done; }).length;
+  el('empty').style.display = total ? 'none' : 'block';
+  el('ratio').textContent = done + ' / ' + total;
+  el('fill').style.width = total ? (done / total * 100) + '%' : '0%';
+  el('count').textContent = total ? ('남은 일 ' + (total - done) + '개') : '';
+  el('cheer').textContent =
+    total === 0 ? '할 일을 적어 보세요' :
+    done === total ? '오늘 할 일을 다 했어요' :
+    done === 0 ? '하나만 먼저 해 볼까요' : '잘하고 있어요';
+}
+
+el('f').addEventListener('submit', function(e){
+  e.preventDefault();
+  const v = el('input').value.trim();
+  if (!v) return;
+  items.push({ id: Date.now() + '_' + Math.random().toString(36).slice(2,7), text: v, done: false });
+  el('input').value = '';
+  save(); render();
+});
+
+el('clear').addEventListener('click', function(){
+  items = items.filter(function(x){ return !x.done; });
+  save(); render();
+});
+
+el('date').textContent = today();
+load();
+render();
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre></div>
+<div class="tip"><b>꿀팁</b><p><b>4차시 결과물은 오늘부터 실제로 쓰게 하세요.</b> 일주일 써 본 학생과 안 써 본 학생은 5차시 몰입도가 완전히 다릅니다.
+<br><br><b>오늘은 올리기까지 해야 합니다.</b> 내 저장소에 올라가 있어야 다음 시간에 로그인을 붙여 확인할 수 있습니다. 파일 이름은 <code>todo.html</code>로 통일하세요.
+<br><br><b>다른 도구로 바꾸고 싶다면</b><br>
+"과목별 시간표를 만들어 줘. 칸을 누르면 과목 이름을 고칠 수 있게."<br>
+"25분 공부하고 5분 쉬는 타이머를 만들어 줘. 몇 번 했는지 세어 줘."<br>
+"시험까지 며칠 남았는지 세어 주는 화면을 만들어 줘."
+<br><br><b>더 해 볼 요청</b><br>
+"할 일에 중요 표시를 달 수 있게 해 줘. 중요한 건 위로 올라오게."<br>
+"어제 못 끝낸 일이 오늘 목록에 남아 있게 해 줘.</p></div>
+<div class="submit"><span class="t"><b>📤 오늘 올릴 것 — 내 학습 도구</b><em>이름을 <code>todo.html</code>으로 바꿔 내 저장소에 업로드 → Commit → <code>내주소/todo.html</code>으로 열어 보기</em></span><a class="go" href="#upload">올리는 법</a></div>
+</section>
+<section class="lab" id="l5">
+<div class="labhead"><span class="em">🔐</span><div><h2>5차시 · 계정 인증과 클라우드 데이터베이스 연동하기</h2><p>로그인하면 집에서도 내 것이 그대로</p></div></div>
+<a class="prev" href="tool_todo.html" target="_blank" rel="noopener">▶ 로그인 도구 먼저 보기</a>
+<div class="codewrap accentbox"><div class="chrome"><i></i><i></i><i></i><span>gemini.google.com — 캔버스</span></div><div class="codehead"><span>프롬프트 원문 — 캔버스를 켠 제미나이에 붙여넣기</span><button class="copy" data-t="l5-p">복사</button></div><pre id="l5-p"><code>지금 만든 할 일 도구에 구글 로그인과 클라우드 저장을 붙여 줘.
+
+[설정값]
+아래 firebaseConfig를 코드 맨 위에 넣고 써 줘.
+
+(여기에 내 파이어베이스 프로젝트의 설정값을 붙여넣으세요)
+
+[방식]
+- 파이어베이스 v10 모듈 방식으로, https://www.gstatic.com/firebasejs/10.12.2/ 에서 불러와 줘.
+- &lt;script type="module"&gt; 안에 넣어 줘.
+
+[로그인]
+- 로그인 전에는 "구글 계정으로 로그인" 버튼만 보이는 안내 화면을 보여 줘.
+- 로그인하면 내 이름과 프로필 사진, 로그아웃 버튼을 위쪽에 보여 줘.
+
+[저장]
+- 할 일 목록을 users/{내 uid}/data/todos 문서에 { items: [...] } 모양으로 저장해 줘.
+- 로그인하면 저장된 목록을 불러와서 화면에 보여 줘.
+- 목록이 바뀌면 자동으로 저장해 줘. 다만 글자를 칠 때마다 저장하지 말고 0.6초쯤 기다렸다 한 번만 저장해.
+- "저장 중…" / "저장됨" 같은 상태를 작게 보여 줘.
+
+[안 될 때]
+- 설정값이 없거나 인터넷 연결이 안 되면, 오류로 멈추지 말고 localStorage에만 저장하는 연습 모드로 돌아가게 해 줘. 그 상태를 화면에 안내해 줘.
+- 로그인이 실패하면 오류 코드를 화면에 그대로 보여 줘. 무엇 때문인지 알아야 고칠 수 있어.
+
+[안내 문구]
+- 화면 아래에 "내 할 일은 내 계정에만 저장되고 다른 사람은 볼 수 없습니다"라고 넣어 줘.</code></pre></div>
+<div class="codewrap accentbox"><div class="chrome"><i></i><i></i><i></i><span>gemini.google.com — 캔버스에 함께 붙여넣기</span></div><div class="codehead"><span>설정값 넣는 자리 — 내 프로젝트 값으로 바꾸세요</span><button class="copy" data-t="cfgbox">복사</button></div><pre id="cfgbox"><code>// ===== 내 파이어베이스 설정값 =====
+// 파이어베이스 콘솔 → 프로젝트 설정(⚙️) → 내 앱 → 구성 에서 복사해
+// 아래 전체를 바꿔 넣으세요. apiKey 는 비밀번호가 아니라 주소표입니다.
+const firebaseConfig = {
+  apiKey: "여기에-내-설정값을-붙여넣으세요",
+  authDomain: "내프로젝트.firebaseapp.com",
+  projectId: "내프로젝트",
+  appId: "내앱아이디"
+};</code></pre></div><h3 style="margin:24px 0 2px;font-size:17px">내 설정값은 어디서 찾나</h3><p style="margin:0 0 12px;color:var(--muted);font-size:14.5px">파이어베이스 콘솔 → 왼쪽 위 <b>프로젝트 설정(⚙️)</b> → 아래로 내려 <b>내 앱</b> → <b>구성(Config)</b>. <code>const firebaseConfig = { … }</code> 전체를 복사합니다.</p><div class="shot"><img src="shots/fb_config.png" alt="" onerror="this.style.display='none';this.parentNode.insertAdjacentText('beforeend','여기에 firebaseConfig 화면 캡처 — shots/fb_config.png')"></div><h3 style="margin:26px 0 2px;font-size:17px">마지막에 보안 규칙을 게시하세요</h3><p style="margin:0 0 12px;color:var(--muted);font-size:14.5px">테스트 모드로 만든 데이터베이스는 <b>30일 동안 누구나 읽고 쓸 수 있습니다.</b> 아래를 복사해 Firestore → <b>규칙</b> 탭에 통째로 붙여넣고 <b>게시</b>를 누르세요.</p><div class="codewrap"><div class="chrome"><i></i><i></i><i></i><span>console.firebase.google.com — Firestore → 규칙</span></div><div class="codehead"><span>내 보안 규칙</span><button class="copy" data-t="rulebox">복사</button></div><pre id="rulebox"><code>rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // 내 자료는 나만 읽고 쓴다
+    match /users/{uid}/{document=**} {
+      allow read, write: if request.auth != null &amp;&amp; request.auth.uid == uid;
+    }
+
+    // 그 외의 모든 곳은 막는다
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}</code></pre></div>
+<div class="codewrap dim"><div class="chrome"><i></i><i></i><i></i><span>tool_todo.html</span></div><div class="codehead"><span>완성 코드 — 로그인되는 할 일 도구</span><button class="copy" data-t="l5-d0">복사</button></div><pre id="l5-d0"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="ko"&gt;
+&lt;head&gt;
+&lt;meta charset="UTF-8"&gt;
+&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+&lt;meta name="theme-color" content="#5B3DF5"&gt;
+&lt;title&gt;내 할 일 · 어디서나 열리는 목록&lt;/title&gt;
+&lt;style&gt;
+  :root{--accent:#5B3DF5;--accent-dark:#4A2FD6;--ink:#171A2E;--muted:#62648A;
+        --line:#DCDCE8;--bg:#F3F3F8;--done:#9A9CBC;--warn:#8a5a00}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Malgun Gothic","Apple SD Gothic Neo",sans-serif;
+    display:flex;flex-direction:column;align-items:center;padding:20px 14px 70px}
+  .app{width:100%;max-width:520px}
+  .bar-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:16px}
+  h1{font-size:26px;margin:0}
+  .who{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--muted)}
+  .who img{width:30px;height:30px;border-radius:50%;background:#E4E4EF}
+  button{background:var(--accent);color:#fff;border:0;border-radius:10px;padding:10px 18px;
+    font-size:15px;cursor:pointer;font-family:inherit}
+  button:hover{background:var(--accent-dark)}
+  button.ghost{background:none;color:var(--muted);border:1px solid var(--line);padding:7px 12px;font-size:14px}
+  button.ghost:hover{background:#F0EFF9;color:var(--ink)}
+  .gate{background:#fff;border:1px solid var(--line);border-radius:10px;padding:34px 24px;text-align:center}
+  .gate h2{font-size:21px;margin:0 0 10px}
+  .gate p{color:var(--muted);line-height:1.75;margin:0 0 20px;font-size:15px}
+  .gate button{font-size:16px;padding:13px 26px}
+  .status{background:#fff;border:1px solid var(--line);border-radius:12px;padding:11px 14px;
+    font-size:14px;color:var(--muted);margin-bottom:12px;display:flex;
+    justify-content:space-between;align-items:center;gap:10px}
+  .status b{color:var(--accent-dark)}
+  .banner{background:#fff4e6;border:1px solid #f0c391;border-left:5px solid var(--warn);
+    border-radius:11px;padding:13px 15px;font-size:14.5px;line-height:1.7;color:#6b4412;margin-bottom:14px}
+  .banner b{color:var(--warn)}
+  .progress{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:14px}
+  .ptop{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+  .ptop b{font-size:24px}
+  .ptop span{color:var(--muted);font-size:14px}
+  .bar{height:12px;border-radius:6px;background:#E4E4EF;overflow:hidden}
+  .bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .25s ease}
+  form{display:flex;gap:8px;margin-bottom:14px}
+  input[type=text]{flex:1;padding:13px 14px;font-size:16px;border:1px solid var(--line);
+    border-radius:10px;font-family:inherit;background:#fff}
+  input[type=text]:focus{outline:2px solid var(--accent);outline-offset:-1px}
+  ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+  li{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--line);
+    border-radius:11px;padding:13px 14px}
+  li .chk{width:24px;height:24px;flex:none;border:2px solid var(--line);border-radius:7px;
+    background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;
+    font-size:15px;color:#fff;padding:0}
+  li.done .chk{background:var(--accent);border-color:var(--accent)}
+  li .txt{flex:1;font-size:16px;word-break:break-all;line-height:1.5}
+  li.done .txt{color:var(--done);text-decoration:line-through}
+  li .del{background:none;color:var(--muted);font-size:19px;padding:0 4px;line-height:1}
+  li .del:hover{background:none;color:#D9435A}
+  .empty{background:#fff;border:1px dashed var(--line);border-radius:12px;padding:32px 18px;
+    text-align:center;color:var(--muted);line-height:1.7}
+  .tools{display:flex;justify-content:space-between;align-items:center;margin-top:16px;
+    color:var(--muted);font-size:14px}
+  .privacy{margin-top:24px;font-size:13.5px;color:var(--muted);line-height:1.8;
+    border-top:1px solid var(--line);padding-top:14px}
+  .hide{display:none}
+  :focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+  nav :focus-visible{outline-color:#FFD400}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class="app"&gt;
+
+  &lt;div class="bar-top"&gt;
+    &lt;h1&gt;내 할 일&lt;/h1&gt;
+    &lt;div class="who hide" id="who"&gt;
+      &lt;img id="photo" alt=""&gt;
+      &lt;span id="name"&gt;&lt;/span&gt;
+      &lt;button class="ghost" id="out"&gt;로그아웃&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;div class="banner hide" id="setup"&gt;
+    &lt;b&gt;아직 설정값을 넣지 않았습니다.&lt;/b&gt;&lt;br&gt;
+    아래 &lt;code&gt;firebaseConfig&lt;/code&gt; 자리에 &lt;b&gt;내 프로젝트&lt;/b&gt; 설정값을 붙여넣으면 로그인과 클라우드 저장이 켜집니다.
+    지금은 이 브라우저에만 저장되는 연습 모드로 동작합니다.
+  &lt;/div&gt;
+
+  &lt;div class="gate hide" id="gate"&gt;
+    &lt;h2&gt;로그인하면 어디서나 같은 목록&lt;/h2&gt;
+    &lt;p&gt;학교 컴퓨터에서 적은 할 일이 집에서도, 휴대폰에서도 그대로 보입니다.&lt;br&gt;
+       내 목록은 나만 볼 수 있습니다.&lt;/p&gt;
+    &lt;button id="in"&gt;구글 계정으로 로그인&lt;/button&gt;
+  &lt;/div&gt;
+
+  &lt;div class="hide" id="main"&gt;
+    &lt;div class="status"&gt;
+      &lt;span id="sync"&gt;불러오는 중…&lt;/span&gt;
+      &lt;b id="mode"&gt;&lt;/b&gt;
+    &lt;/div&gt;
+
+    &lt;div class="progress"&gt;
+      &lt;div class="ptop"&gt;&lt;b id="ratio"&gt;0 / 0&lt;/b&gt;&lt;span id="cheer"&gt;할 일을 적어 보세요&lt;/span&gt;&lt;/div&gt;
+      &lt;div class="bar"&gt;&lt;i id="fill"&gt;&lt;/i&gt;&lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;form id="f"&gt;
+      &lt;input type="text" id="input" placeholder="무엇을 할까요?" maxlength="60" autocomplete="off"&gt;
+      &lt;button type="submit"&gt;추가&lt;/button&gt;
+    &lt;/form&gt;
+
+    &lt;ul id="list"&gt;&lt;/ul&gt;
+    &lt;div class="empty" id="empty"&gt;아직 비어 있습니다.&lt;br&gt;위에 할 일을 적고 추가를 눌러 보세요.&lt;/div&gt;
+
+    &lt;div class="tools"&gt;
+      &lt;span id="count"&gt;&lt;/span&gt;
+      &lt;button class="ghost" id="clear"&gt;완료한 것 치우기&lt;/button&gt;
+    &lt;/div&gt;
+
+    &lt;div class="privacy"&gt;
+      내 할 일은 내 계정에만 저장되고, 다른 사람은 볼 수 없습니다. 보안 규칙이 그렇게 막아 두었습니다.&lt;br&gt;
+      저장되는 것은 구글 계정 번호와 내가 적은 할 일뿐입니다. 이름·연락처·주소처럼 남에게 알려지면 곤란한 내용은 적지 마세요.
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;script type="module"&gt;
+/* =========================================================
+   우리 반 파이어베이스 설정값
+   강사가 준 블록으로 아래를 통째로 바꾸세요.
+   ========================================================= */
+const firebaseConfig = {
+  apiKey: "여기에-내-설정값을-붙여넣으세요",
+  authDomain: "내프로젝트.firebaseapp.com",
+  projectId: "내프로젝트",
+  appId: "내앱아이디"
+};
+/* ========================================================= */
+
+const el = (id) =&gt; document.getElementById(id);
+const READY = !String(firebaseConfig.apiKey).startsWith('여기에');
+
+let items = [];
+let uid = null;
+let saveTimer = null;
+let cloud = null;   // { db, doc, setDoc, getDoc }
+
+/* ---------- 저장: 클라우드가 있으면 클라우드, 없으면 이 브라우저 ---------- */
+const LOCAL_KEY = 'todo_cloud_fallback_v1';
+
+function localLoad(){
+  try { const v = JSON.parse(localStorage.getItem(LOCAL_KEY) || '[]'); return Array.isArray(v) ? v : []; }
+  catch (e) { return []; }
+}
+function localSave(){ localStorage.setItem(LOCAL_KEY, JSON.stringify(items)); }
+
+function scheduleSave(){
+  el('sync').textContent = '저장 중…';
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(doSave, 600);
+}
+
+async function doSave(){
+  if (cloud &amp;&amp; uid){
+    try {
+      await cloud.setDoc(cloud.doc(cloud.db, 'users', uid, 'data', 'todos'), { items });
+      el('sync').textContent = '저장됨';
+    } catch (e){
+      el('sync').textContent = '저장 실패 — 인터넷을 확인하세요';
+      console.error(e);
+    }
+  } else {
+    localSave();
+    el('sync').textContent = '저장됨';
+  }
+}
+
+/* ---------- 화면 ---------- */
+function render(){
+  const list = el('list');
+  list.innerHTML = '';
+  items.forEach((it) =&gt; {
+    const li = document.createElement('li');
+    if (it.done) li.className = 'done';
+
+    const chk = document.createElement('button');
+    chk.className = 'chk';
+    chk.textContent = it.done ? '✓' : '';
+    chk.setAttribute('aria-label', it.done ? '완료 취소' : '완료로 표시');
+    chk.addEventListener('click', () =&gt; { it.done = !it.done; render(); scheduleSave(); });
+
+    const txt = document.createElement('span');
+    txt.className = 'txt';
+    txt.textContent = it.text;
+
+    const del = document.createElement('button');
+    del.className = 'del';
+    del.textContent = '×';
+    del.setAttribute('aria-label', '삭제');
+    del.addEventListener('click', () =&gt; {
+      items = items.filter((x) =&gt; x.id !== it.id);
+      render(); scheduleSave();
+    });
+
+    li.append(chk, txt, del);
+    list.appendChild(li);
+  });
+
+  const total = items.length;
+  const done = items.filter((x) =&gt; x.done).length;
+  el('empty').style.display = total ? 'none' : 'block';
+  el('ratio').textContent = done + ' / ' + total;
+  el('fill').style.width = total ? (done / total * 100) + '%' : '0%';
+  el('count').textContent = total ? ('남은 일 ' + (total - done) + '개') : '';
+  el('cheer').textContent =
+    total === 0 ? '할 일을 적어 보세요' :
+    done === total ? '오늘 할 일을 다 했어요' :
+    done === 0 ? '하나만 먼저 해 볼까요' : '잘하고 있어요';
+}
+
+el('f').addEventListener('submit', (e) =&gt; {
+  e.preventDefault();
+  const v = el('input').value.trim();
+  if (!v) return;
+  items.push({ id: Date.now() + '_' + Math.random().toString(36).slice(2,7), text: v, done: false });
+  el('input').value = '';
+  render(); scheduleSave();
+});
+
+el('clear').addEventListener('click', () =&gt; {
+  items = items.filter((x) =&gt; !x.done);
+  render(); scheduleSave();
+});
+
+/* ---------- 연습 모드 (설정값 없음) ---------- */
+function startPracticeMode(reason){
+  el('setup').classList.remove('hide');
+  if (reason) el('setup').innerHTML = '&lt;b&gt;' + reason + '&lt;/b&gt;&lt;br&gt;지금은 이 브라우저에만 저장되는 연습 모드로 동작합니다.';
+  el('main').classList.remove('hide');
+  el('mode').textContent = '연습 모드';
+  items = localLoad();
+  render();
+  el('sync').textContent = '이 브라우저에만 저장됩니다';
+}
+
+/* ---------- 클라우드 모드 ---------- */
+async function startCloudMode(){
+  const [{ initializeApp }, authMod, fsMod] = await Promise.all([
+    import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js'),
+    import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js'),
+    import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js')
+  ]);
+
+  const app = initializeApp(firebaseConfig);
+  const auth = authMod.getAuth(app);
+  const db = fsMod.getFirestore(app);
+  cloud = { db, doc: fsMod.doc, setDoc: fsMod.setDoc, getDoc: fsMod.getDoc };
+
+  el('in').addEventListener('click', () =&gt; {
+    authMod.signInWithPopup(auth, new authMod.GoogleAuthProvider()).catch((e) =&gt; {
+      alert('로그인이 되지 않았습니다.\n\n' + e.code + '\n\n선생님께 이 메시지를 보여 주세요.');
+    });
+  });
+  el('out').addEventListener('click', () =&gt; authMod.signOut(auth));
+
+  authMod.onAuthStateChanged(auth, async (user) =&gt; {
+    if (!user){
+      uid = null; items = [];
+      el('gate').classList.remove('hide');
+      el('main').classList.add('hide');
+      el('who').classList.add('hide');
+      return;
+    }
+    uid = user.uid;
+    el('gate').classList.add('hide');
+    el('main').classList.remove('hide');
+    el('who').classList.remove('hide');
+    el('name').textContent = user.displayName || '나';
+    if (user.photoURL) el('photo').src = user.photoURL;
+    el('mode').textContent = '클라우드 저장';
+    el('sync').textContent = '불러오는 중…';
+
+    try {
+      const snap = await cloud.getDoc(cloud.doc(db, 'users', uid, 'data', 'todos'));
+      const data = snap.exists() ? snap.data() : null;
+      items = (data &amp;&amp; Array.isArray(data.items)) ? data.items : [];
+      el('sync').textContent = '어디서나 같은 목록이 보입니다';
+    } catch (e){
+      items = [];
+      el('sync').textContent = '불러오지 못했습니다 — 인터넷을 확인하세요';
+      console.error(e);
+    }
+    render();
+  });
+}
+
+/* ---------- 시작 ---------- */
+if (!READY){
+  startPracticeMode();
+} else {
+  startCloudMode().catch((e) =&gt; {
+    console.error(e);
+    startPracticeMode('파이어베이스에 연결하지 못했습니다.');
+  });
+}
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre></div>
+<div class="tip"><b>꿀팁</b><p><b>승인된 도메인을 빠뜨리는 사람이 가장 많습니다.</b> Authentication → Settings → 승인된 도메인에 <code>내아이디.github.io</code>를 넣어야 로그인 창이 열립니다. <code>https://</code>를 빼고, 뒤의 저장소 이름도 빼고 도메인만 넣으세요.
+<br><br><b>캔버스 미리보기에서는 로그인 창이 안 뜰 수 있습니다.</b> 확인은 반드시 올린 뒤 <b>내 주소</b>에서 하세요.
+<br><br><b>오늘 흐름</b><br>
+① 내 프로젝트 만들기 → ② 로그인·데이터베이스 켜기 → ③ 설정값 복사 → ④ 도메인 등록 → ⑤ 캔버스에서 붙이기 → ⑥ 올리고 내 주소에서 확인 → ⑦ 보안 규칙 게시
+<br><br><b>안 될 때 화면에 뜨는 글자를 그대로 보세요</b><br>
+<code>auth/unauthorized-domain</code> — 승인된 도메인에 내 주소를 안 넣었습니다.<br>
+<code>auth/popup-blocked</code> — 브라우저가 팝업을 막았습니다. 주소창 오른쪽의 팝업 허용을 누르세요.<br>
+<code>permission-denied</code> — 보안 규칙이 막은 것입니다. 저장하려는 위치가 <code>users/내uid/</code> 안인지 확인하세요.<br>
+<code>api-key-not-valid</code> — 설정값을 잘못 붙여넣었습니다. 콘솔에서 다시 복사하세요.
+<br><br><b>마지막에 보안 규칙을 꼭 게시하세요.</b> 테스트 모드로 만든 데이터베이스는 30일 동안 누구나 읽고 쓸 수 있습니다. 아래 규칙을 복사해 Firestore → 규칙 탭에 붙여넣고 <b>게시</b>를 누르세요.</p></div>
+<div class="submit"><span class="t"><b>📤 오늘 올릴 것 — 로그인을 붙인 학습 도구 — 덮어쓰기</b><em>이름을 <code>todo.html</code>으로 바꿔 내 저장소에 업로드 → Commit → <code>내주소/todo.html</code>으로 열어 보기</em></span><a class="go" href="#upload">올리는 법</a></div>
+</section>
+<section class="lab" id="l6">
+<div class="labhead"><span class="em">🌍</span><div><h2>6차시 · 웹 서비스 배포하고 공유하기</h2><p>주소가 생기면 친구가 내 게임을 한다</p></div></div>
+<a class="prev" href="tool_gallery.html" target="_blank" rel="noopener">▶ 전시관 먼저 보기</a>
+<div class="codewrap accentbox"><div class="chrome"><i></i><i></i><i></i><span>gemini.google.com — 캔버스</span></div><div class="codehead"><span>프롬프트 원문 — 캔버스를 켠 제미나이에 붙여넣기</span><button class="copy" data-t="l6-p">복사</button></div><pre id="l6-p"><code>지금 만든 게임에 구글 로그인과 클라우드 최고 기록을 붙여 줘. (해 보고 싶은 사람만)
+
+[설정값]
+아래 firebaseConfig를 코드 맨 위에 넣어 줘.
+
+(여기에 내 파이어베이스 프로젝트의 설정값을 붙여넣으세요)
+
+[방식]
+- 파이어베이스 v10 모듈 방식으로, https://www.gstatic.com/firebasejs/10.12.2/ 에서 불러와 줘.
+
+[추가할 것]
+- 화면 위쪽에 작은 "로그인" 버튼을 넣어 줘. 로그인하지 않아도 게임은 그냥 되게 해 줘.
+- 로그인한 상태에서 게임이 끝나면, 지금까지의 최고 점수를
+  users/{내 uid}/data/highscore 문서에 { score: 숫자 } 로 저장해 줘.
+- 지금 점수가 저장된 값보다 높을 때만 바꿔 써 줘.
+- 페이지를 열 때 저장된 최고 점수를 불러와 화면에 보여 줘.
+- 로그인하지 않았으면 3차시에 만든 localStorage 기록을 그대로 쓰게 해 줘.</code></pre></div>
+<h3 style="margin:24px 0 2px;font-size:17px">전시관에 등록하기</h3><p style="margin:0 0 12px;color:var(--muted);font-size:14.5px">전시관은 선생님이 만든 곳입니다. 설정값을 넣을 일은 없고 구글 로그인만 하면 됩니다.</p><div class="cvsteps"><div class="cvstep"><span class="n">1</span><b>로그인</b><span>전시관에서 구글 계정으로 로그인합니다.</span></div><div class="cvstep"><span class="n">2</span><b>별명 저장</b><span>실명 대신 별명을 씁니다.</span></div><div class="cvstep"><span class="n">3</span><b>작품 등록</b><span>게임 이름, 한 줄 설명, <b>내 게임 주소</b>를 넣습니다.</span></div><div class="cvstep"><span class="n">4</span><b>점수 등록</b><span>친구 게임을 해 보고 최고 점수를 올립니다.</span></div></div><p style="margin:16px 0 0;color:var(--muted);font-size:14.5px">등록할 주소는 <code>내아이디.github.io/my-web/game.html</code> 모양입니다. <b>올리기 전에 직접 눌러서 열리는지 확인하세요.</b> 안 열리는 주소를 올리면 친구가 못 합니다.</p><p style="margin:12px 0 0"><a class="prev" href="tool_gallery.html" target="_blank" rel="noopener">🏆 전시관 열어 보기</a></p>
+<div class="codewrap dim"><div class="chrome"><i></i><i></i><i></i><span>tool_gallery.html</span></div><div class="codehead"><span>완성 코드 — 우리 반 전시관</span><button class="copy" data-t="l6-d0">복사</button></div><pre id="l6-d0"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="ko"&gt;
+&lt;head&gt;
+&lt;meta charset="UTF-8"&gt;
+&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+&lt;meta name="theme-color" content="#5B3DF5"&gt;
+&lt;title&gt;우리 반 전시관&lt;/title&gt;
+&lt;style&gt;
+  :root{--accent:#5B3DF5;--accent-dark:#4A2FD6;--accent-soft:#EDE9FE;--ink:#171A2E;
+        --muted:#62648A;--line:#DCDCE8;--bg:#F3F3F8;--warn:#8a5a00;--gold:#B07A00}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Malgun Gothic","Apple SD Gothic Neo",sans-serif;
+    display:flex;flex-direction:column;align-items:center;padding:20px 14px 70px}
+  .app{width:100%;max-width:720px}
+  .bar-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap}
+  h1{font-size:28px;margin:0}
+  .lead{color:var(--muted);margin:0 0 18px;font-size:15px}
+  .who{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--muted)}
+  .who img{width:30px;height:30px;border-radius:50%;background:#E4E4EF}
+  button{background:var(--accent);color:#fff;border:0;border-radius:10px;padding:10px 18px;
+    font-size:15px;cursor:pointer;font-family:inherit}
+  button:hover{background:var(--accent-dark)}
+  button.ghost{background:none;color:var(--muted);border:1px solid var(--line);padding:7px 12px;font-size:14px}
+  button.ghost:hover{background:#F0EFF9;color:var(--ink)}
+  .banner{background:#fff4e6;border:1px solid #f0c391;border-left:5px solid var(--warn);
+    border-radius:11px;padding:13px 15px;font-size:14.5px;line-height:1.7;color:#6b4412;margin-bottom:16px}
+  .banner b{color:var(--warn)}
+  .gate{background:#fff;border:1px solid var(--line);border-radius:10px;padding:34px 24px;text-align:center}
+  .gate h2{font-size:21px;margin:0 0 10px}
+  .gate p{color:var(--muted);line-height:1.75;margin:0 0 20px;font-size:15px}
+  .tabs{display:flex;gap:6px;margin:18px 0 14px;border-bottom:2px solid var(--line)}
+  .tabs button{background:none;color:var(--muted);border:0;border-bottom:3px solid transparent;
+    border-radius:0;padding:10px 14px;font-size:16px;margin-bottom:-2px}
+  .tabs button.on{color:var(--accent-dark);border-bottom-color:var(--accent);font-weight:700}
+  .tabs button:hover{background:none;color:var(--ink)}
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px;
+    display:flex;flex-direction:column;gap:7px}
+  .card h3{margin:0;font-size:17px;line-height:1.4;word-break:break-all}
+  .card .by{color:var(--muted);font-size:13.5px}
+  .card p{margin:0;font-size:14.5px;color:#3A3C5C;line-height:1.6;word-break:break-all}
+  .card a{margin-top:auto;display:inline-block;background:var(--accent);color:#fff;
+    text-decoration:none;text-align:center;border-radius:9px;padding:10px;font-size:15px}
+  .card a:hover{background:var(--accent-dark)}
+  .rank{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:12px}
+  .rank h3{margin:0 0 10px;font-size:17px;display:flex;justify-content:space-between;align-items:baseline}
+  .rank h3 span{font-size:13px;color:var(--muted);font-weight:400}
+  .rk{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px dashed var(--line);font-size:15px}
+  .rk:last-child{border:0}
+  .rk .n{width:26px;text-align:center;color:var(--muted);font-size:14px}
+  .rk.top .n{color:var(--gold);font-weight:700}
+  .rk .who2{flex:1;word-break:break-all}
+  .rk .sc{font-weight:700;font-size:17px}
+  .rk.me{background:var(--accent-soft);border-radius:8px;padding:8px 10px;margin:0 -10px}
+  .panel{background:#fff;border:1px solid var(--line);border-radius:10px;padding:18px;margin-bottom:14px}
+  .panel h3{margin:0 0 4px;font-size:17px}
+  .panel .hint{color:var(--muted);font-size:14px;margin:0 0 12px;line-height:1.6}
+  .field{display:flex;flex-direction:column;gap:5px;margin-bottom:10px}
+  .field label{font-size:14px;color:var(--muted)}
+  input[type=text],input[type=url]{padding:12px;font-size:15.5px;border:1px solid var(--line);
+    border-radius:10px;font-family:inherit;background:#fff;width:100%}
+  input:focus{outline:2px solid var(--accent);outline-offset:-1px}
+  .empty{background:#fff;border:1px dashed var(--line);border-radius:12px;padding:34px 18px;
+    text-align:center;color:var(--muted);line-height:1.7}
+  .msg{font-size:14px;margin-top:8px;min-height:20px}
+  .msg.ok{color:var(--accent-dark)} .msg.no{color:#D9435A}
+  .safe{margin-top:26px;font-size:13.5px;color:var(--muted);line-height:1.8;
+    border-top:1px solid var(--line);padding-top:14px}
+  .hide{display:none}
+  :focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+  nav :focus-visible{outline-color:#FFD400}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class="app"&gt;
+
+  &lt;div class="bar-top"&gt;
+    &lt;h1&gt;우리 반 전시관&lt;/h1&gt;
+    &lt;div class="who hide" id="who"&gt;
+      &lt;img id="photo" alt=""&gt;&lt;span id="name"&gt;&lt;/span&gt;
+      &lt;button class="ghost" id="out"&gt;로그아웃&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;p class="lead"&gt;친구들이 만든 게임을 눌러서 해 보고, 점수를 남겨 보세요.&lt;/p&gt;
+
+  &lt;div class="banner hide" id="setup"&gt;
+    &lt;b&gt;아직 설정값을 넣지 않았습니다.&lt;/b&gt;&lt;br&gt;
+    &lt;code&gt;firebaseConfig&lt;/code&gt; 자리에 전시관용 설정값을 붙여넣으면 전시관이 열립니다. 학생은 로그인만 하면 됩니다.
+  &lt;/div&gt;
+
+  &lt;div class="gate hide" id="gate"&gt;
+    &lt;h2&gt;로그인하고 내 작품 올리기&lt;/h2&gt;
+    &lt;p&gt;로그인하면 내가 만든 게임을 전시하고, 점수를 랭킹에 남길 수 있습니다.&lt;/p&gt;
+    &lt;button id="in"&gt;구글 계정으로 로그인&lt;/button&gt;
+  &lt;/div&gt;
+
+  &lt;div class="hide" id="main"&gt;
+    &lt;div class="tabs"&gt;
+      &lt;button class="on" data-tab="gal"&gt;🎮 작품&lt;/button&gt;
+      &lt;button data-tab="rank"&gt;🏆 랭킹&lt;/button&gt;
+      &lt;button data-tab="mine"&gt;✍️ 내 작품 올리기&lt;/button&gt;
+    &lt;/div&gt;
+
+    &lt;div id="tab-gal"&gt;
+      &lt;div class="cards" id="cards"&gt;&lt;/div&gt;
+      &lt;div class="empty hide" id="galEmpty"&gt;아직 올라온 작품이 없습니다.&lt;br&gt;'내 작품 올리기'에서 첫 번째가 되어 보세요.&lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div id="tab-rank" class="hide"&gt;
+      &lt;div id="ranks"&gt;&lt;/div&gt;
+      &lt;div class="empty hide" id="rankEmpty"&gt;아직 기록이 없습니다.&lt;br&gt;친구 게임을 해 보고 '내 작품 올리기'에서 점수를 등록하세요.&lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div id="tab-mine" class="hide"&gt;
+      &lt;div class="panel"&gt;
+        &lt;h3&gt;내 별명&lt;/h3&gt;
+        &lt;p class="hint"&gt;랭킹에 이 이름으로 올라갑니다. 실명 대신 별명을 쓰세요.&lt;/p&gt;
+        &lt;div class="field"&gt;
+          &lt;input type="text" id="nick" maxlength="12" placeholder="예: 초록두더지"&gt;
+        &lt;/div&gt;
+        &lt;button id="saveNick"&gt;별명 저장&lt;/button&gt;
+        &lt;div class="msg" id="nickMsg"&gt;&lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;div class="panel"&gt;
+        &lt;h3&gt;내 게임 올리기&lt;/h3&gt;
+        &lt;p class="hint"&gt;배포된 주소를 넣으면 친구들이 눌러서 바로 할 수 있습니다. 이미 올렸다면 덮어씁니다.&lt;/p&gt;
+        &lt;div class="field"&gt;&lt;label for="title"&gt;게임 이름&lt;/label&gt;
+          &lt;input type="text" id="title" maxlength="40" placeholder="예: 30초 두더지"&gt;&lt;/div&gt;
+        &lt;div class="field"&gt;&lt;label for="desc"&gt;한 줄 설명&lt;/label&gt;
+          &lt;input type="text" id="desc" maxlength="60" placeholder="예: 폭탄을 피해서 두더지만 잡으세요"&gt;&lt;/div&gt;
+        &lt;div class="field"&gt;&lt;label for="url"&gt;게임 주소&lt;/label&gt;
+          &lt;input type="url" id="url" placeholder="https://..."&gt;&lt;/div&gt;
+        &lt;button id="saveWork"&gt;전시관에 올리기&lt;/button&gt;
+        &lt;div class="msg" id="workMsg"&gt;&lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;div class="panel"&gt;
+        &lt;h3&gt;점수 등록&lt;/h3&gt;
+        &lt;p class="hint"&gt;친구 게임을 해 보고 최고 점수를 올립니다. 게임마다 하나씩 올라갑니다.&lt;/p&gt;
+        &lt;div class="field"&gt;&lt;label for="sgame"&gt;어느 게임&lt;/label&gt;
+          &lt;input type="text" id="sgame" list="gamelist" maxlength="30" placeholder="예: 30초 두더지"&gt;
+          &lt;datalist id="gamelist"&gt;&lt;/datalist&gt;&lt;/div&gt;
+        &lt;div class="field"&gt;&lt;label for="sscore"&gt;내 점수&lt;/label&gt;
+          &lt;input type="number" id="sscore" min="0" max="1000000" step="1" placeholder="예: 24"&gt;&lt;/div&gt;
+        &lt;button id="saveScore"&gt;점수 올리기&lt;/button&gt;
+        &lt;div class="msg" id="scoreMsg"&gt;&lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class="safe"&gt;
+      전시관은 반 친구 누구나 볼 수 있습니다. 실명·사진·연락처·학교 이름은 넣지 마세요.&lt;br&gt;
+      올린 작품과 점수는 지울 수 없게 되어 있습니다. 고치고 싶으면 다시 올려 덮어쓰세요.
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;script type="module"&gt;
+/* ═══════════════════════════════════════════════════════
+   ▼ 강사용 — 여기 한 곳만 바꾸세요 ▼
+   전시관용 파이어베이스 프로젝트의 설정값을 붙여넣습니다.
+   학생은 이 파일을 고칠 일이 없습니다. 로그인만 하면 됩니다.
+   ═══════════════════════════════════════════════════════ */
+const firebaseConfig = {
+  apiKey: "여기에-전시관-설정값을-붙여넣으세요",
+  authDomain: "프로젝트이름.firebaseapp.com",
+  projectId: "프로젝트이름",
+  appId: "앱아이디"
+};
+/* ═══════════════════ 여기까지 ═══════════════════ */
+
+const el = (id) =&gt; document.getElementById(id);
+const READY = !String(firebaseConfig.apiKey).startsWith('여기에');
+let uid = null, fs = null, db = null;
+
+/* 탭 */
+document.querySelectorAll('.tabs button').forEach((b) =&gt; {
+  b.addEventListener('click', () =&gt; {
+    document.querySelectorAll('.tabs button').forEach((x) =&gt; x.classList.remove('on'));
+    b.classList.add('on');
+    ['gal','rank','mine'].forEach((t) =&gt; {
+      el('tab-' + t).classList.toggle('hide', t !== b.dataset.tab);
+    });
+  });
+});
+
+function setMsg(id, text, ok){
+  const m = el(id);
+  m.textContent = text;
+  m.className = 'msg ' + (ok ? 'ok' : 'no');
+}
+
+if (!READY){
+  el('setup').classList.remove('hide');
+} else {
+  start().catch((e) =&gt; {
+    console.error(e);
+    el('setup').classList.remove('hide');
+    el('setup').innerHTML = '&lt;b&gt;파이어베이스에 연결하지 못했습니다.&lt;/b&gt;&lt;br&gt;인터넷 연결과 설정값을 확인하세요.';
+  });
+}
+
+async function start(){
+  const [{ initializeApp }, authMod, fsMod] = await Promise.all([
+    import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js'),
+    import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js'),
+    import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js')
+  ]);
+  const app = initializeApp(firebaseConfig);
+  const auth = authMod.getAuth(app);
+  db = fsMod.getFirestore(app);
+  fs = fsMod;
+
+  el('in').addEventListener('click', () =&gt; {
+    authMod.signInWithPopup(auth, new authMod.GoogleAuthProvider()).catch((e) =&gt; {
+      alert('로그인이 되지 않았습니다.\n\n' + e.code + '\n\n선생님께 이 메시지를 보여 주세요.');
+    });
+  });
+  el('out').addEventListener('click', () =&gt; authMod.signOut(auth));
+
+  authMod.onAuthStateChanged(auth, async (user) =&gt; {
+    if (!user){
+      uid = null;
+      el('gate').classList.remove('hide');
+      el('main').classList.add('hide');
+      el('who').classList.add('hide');
+      return;
+    }
+    uid = user.uid;
+    el('gate').classList.add('hide');
+    el('main').classList.remove('hide');
+    el('who').classList.remove('hide');
+    el('name').textContent = user.displayName || '나';
+    if (user.photoURL) el('photo').src = user.photoURL;
+    el('nick').value = localStorage.getItem('nickname') || '';
+    await Promise.all([loadGallery(), loadRanking()]);
+  });
+
+  el('saveNick').addEventListener('click', () =&gt; {
+    const v = el('nick').value.trim();
+    if (v.length &lt; 1){ setMsg('nickMsg', '별명을 적어 주세요.', false); return; }
+    localStorage.setItem('nickname', v);
+    setMsg('nickMsg', '저장했습니다. 이제 게임 점수가 이 이름으로 올라갑니다.', true);
+  });
+
+  el('saveWork').addEventListener('click', async () =&gt; {
+    const title = el('title').value.trim();
+    const desc  = el('desc').value.trim();
+    const url   = el('url').value.trim();
+    const nick  = localStorage.getItem('nickname') || '';
+    if (!title){ setMsg('workMsg', '게임 이름을 적어 주세요.', false); return; }
+    if (!nick){ setMsg('workMsg', '먼저 위에서 별명을 저장해 주세요.', false); return; }
+    if (url &amp;&amp; !/^https?:\/\//i.test(url)){
+      setMsg('workMsg', '주소는 https:// 로 시작해야 합니다.', false); return;
+    }
+    try {
+      await fs.setDoc(fs.doc(db, 'gallery', uid), {
+        uid, title, desc, url, nickname: nick, at: Date.now()
+      });
+      setMsg('workMsg', '전시관에 올렸습니다.', true);
+      await loadGallery();
+      fillGameList();
+    } catch (e){
+      setMsg('workMsg', '올리지 못했습니다: ' + e.code, false);
+      console.error(e);
+    }
+  });
+
+  /* 점수 등록 — 게임은 자기 프로젝트에 자기 기록을 저장하므로,
+     반 전체 랭킹은 여기서 직접 올린다. */
+  el('saveScore').addEventListener('click', async () =&gt; {
+    const game = el('sgame').value.trim();
+    const raw  = el('sscore').value.trim();
+    const nick = localStorage.getItem('nickname') || '';
+    if (!nick){ setMsg('scoreMsg', '먼저 위에서 별명을 저장해 주세요.', false); return; }
+    if (!game){ setMsg('scoreMsg', '어느 게임인지 적어 주세요.', false); return; }
+    const score = Number(raw);
+    if (!raw || !Number.isFinite(score) || score &lt; 0 || score &gt; 1000000){
+      setMsg('scoreMsg', '점수는 0부터 1000000 사이의 숫자로 적어 주세요.', false); return;
+    }
+    const key = game.replace(/[\/\s]+/g, '_').slice(0, 30);
+    try {
+      await fs.setDoc(fs.doc(db, 'ranking', key + '__' + uid), {
+        uid, nickname: nick, game: game.slice(0, 30), score: Math.round(score), at: Date.now()
+      });
+      setMsg('scoreMsg', '점수를 올렸습니다.', true);
+      await loadRanking();
+    } catch (e){
+      setMsg('scoreMsg', '올리지 못했습니다: ' + e.code, false);
+      console.error(e);
+    }
+  });
+}
+
+/* 등록된 작품 이름을 점수 칸의 후보 목록으로 */
+let GAMES = [];
+function fillGameList(){
+  const dl = el('gamelist');
+  if (!dl) return;
+  dl.innerHTML = '';
+  GAMES.forEach((t) =&gt; {
+    const o = document.createElement('option');
+    o.value = t;
+    dl.appendChild(o);
+  });
+}
+
+async function loadGallery(){
+  const wrap = el('cards');
+  wrap.innerHTML = '';
+  let docs = [];
+  try {
+    const snap = await fs.getDocs(fs.collection(db, 'gallery'));
+    snap.forEach((d) =&gt; docs.push(d.data()));
+  } catch (e){ console.error(e); }
+  docs.sort((a, b) =&gt; (b.at || 0) - (a.at || 0));
+  el('galEmpty').classList.toggle('hide', docs.length &gt; 0);
+  GAMES = docs.map((w) =&gt; w.title).filter(Boolean);
+  fillGameList();
+
+  docs.forEach((w) =&gt; {
+    const c = document.createElement('div');
+    c.className = 'card';
+    const h = document.createElement('h3'); h.textContent = w.title || '이름 없는 게임';
+    const by = document.createElement('div'); by.className = 'by'; by.textContent = '만든 사람 · ' + (w.nickname || '익명');
+    const p = document.createElement('p'); p.textContent = w.desc || '';
+    c.append(h, by, p);
+    if (w.url &amp;&amp; /^https?:\/\//i.test(w.url)){
+      const a = document.createElement('a');
+      a.href = w.url; a.target = '_blank'; a.rel = 'noopener noreferrer';
+      a.textContent = '해 보기';
+      c.appendChild(a);
+    }
+    wrap.appendChild(c);
+  });
+}
+
+async function loadRanking(){
+  const wrap = el('ranks');
+  wrap.innerHTML = '';
+  let rows = [];
+  try {
+    const snap = await fs.getDocs(fs.collection(db, 'ranking'));
+    snap.forEach((d) =&gt; rows.push(d.data()));
+  } catch (e){ console.error(e); }
+  el('rankEmpty').classList.toggle('hide', rows.length &gt; 0);
+
+  const byGame = {};
+  rows.forEach((r) =&gt; {
+    const g = r.game || '이름 없는 게임';
+    (byGame[g] = byGame[g] || []).push(r);
+  });
+
+  Object.keys(byGame).sort().forEach((g) =&gt; {
+    const list = byGame[g].sort((a, b) =&gt; (b.score || 0) - (a.score || 0));
+    const box = document.createElement('div');
+    box.className = 'rank';
+    const h = document.createElement('h3');
+    h.innerHTML = '';
+    const t = document.createElement('span'); t.style.fontWeight = '700';
+    t.style.fontSize = '17px'; t.style.color = 'var(--ink)'; t.textContent = g;
+    const c = document.createElement('span'); c.textContent = list.length + '명 참가';
+    h.append(t, c);
+    box.appendChild(h);
+
+    list.slice(0, 5).forEach((r, i) =&gt; {
+      const row = document.createElement('div');
+      row.className = 'rk' + (i === 0 ? ' top' : '') + (r.uid === uid ? ' me' : '');
+      const n = document.createElement('span'); n.className = 'n'; n.textContent = (i + 1);
+      const w = document.createElement('span'); w.className = 'who2'; w.textContent = r.nickname || '익명';
+      const s = document.createElement('span'); s.className = 'sc'; s.textContent = r.score;
+      row.append(n, w, s);
+      box.appendChild(row);
+    });
+
+    const mineIdx = list.findIndex((r) =&gt; r.uid === uid);
+    if (mineIdx &gt;= 5){
+      const row = document.createElement('div');
+      row.className = 'rk me';
+      const n = document.createElement('span'); n.className = 'n'; n.textContent = (mineIdx + 1);
+      const w = document.createElement('span'); w.className = 'who2'; w.textContent = list[mineIdx].nickname || '나';
+      const s = document.createElement('span'); s.className = 'sc'; s.textContent = list[mineIdx].score;
+      row.append(n, w, s);
+      box.appendChild(row);
+    }
+    wrap.appendChild(box);
+  });
+}
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre></div>
+<div class="tip"><b>꿀팁</b><p><b>오늘은 선생님이 올려 줄 게 없습니다.</b> 내 저장소에 내가 올리고, 내 주소를 전시관에 등록합니다.
+<br><br><b>올리기 전 점검</b><br>
+파일 이름에 한글·띄어쓰기 없이 영문으로. 예: <code>game.html</code><br>
+파일 안에 실명·연락처·학교 이름이 없는지 한 번 더 확인.<br>
+올린 뒤 <b>내 주소를 직접 눌러</b> 실제로 열리는지 확인. 여기서 확인하지 않으면 전시관에 죽은 주소를 올리게 됩니다.
+<br><br><b>전시관에서 할 일</b><br>
+1. 구글 로그인 → 2. 별명 저장 → 3. 게임 이름·설명·<b>내 게임 주소</b> 등록 → 4. 친구 게임 해 보기 → 5. 내 점수 등록
+<br><br><b>전시관은 선생님 것입니다.</b> 내 프로젝트가 아니라 반 전체가 함께 쓰는 곳이라, 여기서는 설정값을 넣을 일이 없습니다. 로그인만 하면 됩니다.
+<br><br><b>남은 시간은 자유 플레이로</b><br>
+마지막 20분은 아무것도 시키지 말고 서로의 게임을 하게 두세요. 이 수업의 보상은 거기에 있습니다.</p></div>
+<div class="submit"><span class="t"><b>📤 오늘 올릴 것 — 내가 만든 게임</b><em>이름을 <code>game.html</code>으로 바꿔 내 저장소에 업로드 → Commit → <code>내주소/game.html</code>으로 열어 보기</em></span><a class="go" href="#upload">올리는 법</a></div>
+</section>
+<h2 class="sec" id="formula">프롬프트 작성 공식</h2>
+<p style="margin:0;color:var(--muted)">도구가 무엇이든 이 네 가지를 말해 주면 원하는 것에 가까워집니다.</p>
+<div class="formula"><div class="fcard"><b>🎯 목표와 환경</b><p>무엇을 만들지, 어디서 돌아가야 하는지.</p><em>"파일 하나로 완결되게, 외부 라이브러리 없이"</em></div><div class="fcard"><b>🎨 디자인과 배치</b><p>화면 구성, 색, 글자 크기, 휴대폰 대응.</p><em>"맨 위에 점수를 크게, 휴대폰에서도 가로 스크롤 없이"</em></div><div class="fcard"><b>⚙️ 동작 규칙</b><p>무엇을 누르면 무엇이 일어나는지, 예외는 어떻게.</p><em>"폭탄을 누르면 15점이 깎이되 0점 밑으로는 안 내려가게"</em></div><div class="fcard"><b>🗄️ 데이터 보관</b><p>저장할지, 새로고침해도 남아야 하는지.</p><em>"최고 점수만 localStorage에 저장해 줘"</em></div></div>
+<h2 class="sec">고칠 때는 짧게</h2><p>캔버스에서는 전체 코드를 다시 달라고 할 필요가 없습니다. <b>고칠 부분만</b> 말하면 그 자리에서 바뀝니다. 이 수업에서 가장 많이 하게 될 일입니다.</p><div class="codewrap "><div class="chrome"><i></i><i></i><i></i><span>gemini.google.com — 캔버스</span></div><div class="codehead"><span>이런 식으로 한 줄씩</span><button class="copy" data-t="fixline">복사</button></div><pre id="fixline"><code>제목을 더 크게 해 줘.
+버튼을 눌러도 아무 일도 안 일어나. 왜 그런지 찾아서 고쳐 줘.
+폭탄이 너무 자주 나와. 조금 줄여 줘.
+휴대폰에서 가로로 밀려. 세로로 접히게 고쳐 줘.</code></pre></div>
+<h2 class="sec">대화를 닫지 마세요</h2><p>같은 결과물을 다음 차시에 이어서 고칩니다. 제미나이의 <b>그 대화를 다시 열면</b> 만들던 것이 그대로 있습니다. 새 대화에서 시작하면 처음부터 다시 만들어야 합니다.</p>
+</main>
+<footer>바이브코딩으로 만드는 나만의 게임과 학습 도구 · 6차시 · 2026</footer>
+<script>
+document.querySelectorAll('.copy').forEach(function(b){
+  b.addEventListener('click', function(){
+    var el = document.getElementById(b.dataset.t);
+    var txt = el.innerText;
+    navigator.clipboard.writeText(txt).then(function(){
+      b.textContent = '복사됨!'; b.classList.add('done');
+      setTimeout(function(){ b.textContent = '복사'; b.classList.remove('done'); }, 1400);
+    }).catch(function(){
+      var r = document.createRange(); r.selectNodeContents(el);
+      var s = getSelection(); s.removeAllRanges(); s.addRange(r);
+      b.textContent = 'Ctrl+C';
+    });
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#5B3DF5">
+<title>우리 반 전시관</title>
+<style>
+  :root{--accent:#5B3DF5;--accent-dark:#4A2FD6;--accent-soft:#EDE9FE;--ink:#171A2E;
+        --muted:#62648A;--line:#DCDCE8;--bg:#F3F3F8;--warn:#8a5a00;--gold:#B07A00}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Malgun Gothic","Apple SD Gothic Neo",sans-serif;
+    display:flex;flex-direction:column;align-items:center;padding:20px 14px 70px}
+  .app{width:100%;max-width:720px}
+  .bar-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap}
+  h1{font-size:28px;margin:0}
+  .lead{color:var(--muted);margin:0 0 18px;font-size:15px}
+  .who{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--muted)}
+  .who img{width:30px;height:30px;border-radius:50%;background:#E4E4EF}
+  button{background:var(--accent);color:#fff;border:0;border-radius:10px;padding:10px 18px;
+    font-size:15px;cursor:pointer;font-family:inherit}
+  button:hover{background:var(--accent-dark)}
+  button.ghost{background:none;color:var(--muted);border:1px solid var(--line);padding:7px 12px;font-size:14px}
+  button.ghost:hover{background:#F0EFF9;color:var(--ink)}
+  .banner{background:#fff4e6;border:1px solid #f0c391;border-left:5px solid var(--warn);
+    border-radius:11px;padding:13px 15px;font-size:14.5px;line-height:1.7;color:#6b4412;margin-bottom:16px}
+  .banner b{color:var(--warn)}
+  .gate{background:#fff;border:1px solid var(--line);border-radius:10px;padding:34px 24px;text-align:center}
+  .gate h2{font-size:21px;margin:0 0 10px}
+  .gate p{color:var(--muted);line-height:1.75;margin:0 0 20px;font-size:15px}
+  .tabs{display:flex;gap:6px;margin:18px 0 14px;border-bottom:2px solid var(--line)}
+  .tabs button{background:none;color:var(--muted);border:0;border-bottom:3px solid transparent;
+    border-radius:0;padding:10px 14px;font-size:16px;margin-bottom:-2px}
+  .tabs button.on{color:var(--accent-dark);border-bottom-color:var(--accent);font-weight:700}
+  .tabs button:hover{background:none;color:var(--ink)}
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px;
+    display:flex;flex-direction:column;gap:7px}
+  .card h3{margin:0;font-size:17px;line-height:1.4;word-break:break-all}
+  .card .by{color:var(--muted);font-size:13.5px}
+  .card p{margin:0;font-size:14.5px;color:#3A3C5C;line-height:1.6;word-break:break-all}
+  .card a{margin-top:auto;display:inline-block;background:var(--accent);color:#fff;
+    text-decoration:none;text-align:center;border-radius:9px;padding:10px;font-size:15px}
+  .card a:hover{background:var(--accent-dark)}
+  .rank{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:12px}
+  .rank h3{margin:0 0 10px;font-size:17px;display:flex;justify-content:space-between;align-items:baseline}
+  .rank h3 span{font-size:13px;color:var(--muted);font-weight:400}
+  .rk{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px dashed var(--line);font-size:15px}
+  .rk:last-child{border:0}
+  .rk .n{width:26px;text-align:center;color:var(--muted);font-size:14px}
+  .rk.top .n{color:var(--gold);font-weight:700}
+  .rk .who2{flex:1;word-break:break-all}
+  .rk .sc{font-weight:700;font-size:17px}
+  .rk.me{background:var(--accent-soft);border-radius:8px;padding:8px 10px;margin:0 -10px}
+  .panel{background:#fff;border:1px solid var(--line);border-radius:10px;padding:18px;margin-bottom:14px}
+  .panel h3{margin:0 0 4px;font-size:17px}
+  .panel .hint{color:var(--muted);font-size:14px;margin:0 0 12px;line-height:1.6}
+  .field{display:flex;flex-direction:column;gap:5px;margin-bottom:10px}
+  .field label{font-size:14px;color:var(--muted)}
+  input[type=text],input[type=url]{padding:12px;font-size:15.5px;border:1px solid var(--line);
+    border-radius:10px;font-family:inherit;background:#fff;width:100%}
+  input:focus{outline:2px solid var(--accent);outline-offset:-1px}
+  .empty{background:#fff;border:1px dashed var(--line);border-radius:12px;padding:34px 18px;
+    text-align:center;color:var(--muted);line-height:1.7}
+  .msg{font-size:14px;margin-top:8px;min-height:20px}
+  .msg.ok{color:var(--accent-dark)} .msg.no{color:#D9435A}
+  .safe{margin-top:26px;font-size:13.5px;color:var(--muted);line-height:1.8;
+    border-top:1px solid var(--line);padding-top:14px}
+  .hide{display:none}
+  :focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+  nav :focus-visible{outline-color:#FFD400}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="bar-top">
+    <h1>우리 반 전시관</h1>
+    <div class="who hide" id="who">
+      <img id="photo" alt=""><span id="name"></span>
+      <button class="ghost" id="out">로그아웃</button>
+    </div>
+  </div>
+  <p class="lead">친구들이 만든 게임을 눌러서 해 보고, 점수를 남겨 보세요.</p>
+
+  <div class="banner hide" id="setup">
+    <b>아직 설정값을 넣지 않았습니다.</b><br>
+    <code>firebaseConfig</code> 자리에 전시관용 설정값을 붙여넣으면 전시관이 열립니다. 학생은 로그인만 하면 됩니다.
+  </div>
+
+  <div class="gate hide" id="gate">
+    <h2>로그인하고 내 작품 올리기</h2>
+    <p>로그인하면 내가 만든 게임을 전시하고, 점수를 랭킹에 남길 수 있습니다.</p>
+    <button id="in">구글 계정으로 로그인</button>
+  </div>
+
+  <div class="hide" id="main">
+    <div class="tabs">
+      <button class="on" data-tab="gal">🎮 작품</button>
+      <button data-tab="rank">🏆 랭킹</button>
+      <button data-tab="mine">✍️ 내 작품 올리기</button>
+    </div>
+
+    <div id="tab-gal">
+      <div class="cards" id="cards"></div>
+      <div class="empty hide" id="galEmpty">아직 올라온 작품이 없습니다.<br>'내 작품 올리기'에서 첫 번째가 되어 보세요.</div>
+    </div>
+
+    <div id="tab-rank" class="hide">
+      <div id="ranks"></div>
+      <div class="empty hide" id="rankEmpty">아직 기록이 없습니다.<br>친구 게임을 해 보고 '내 작품 올리기'에서 점수를 등록하세요.</div>
+    </div>
+
+    <div id="tab-mine" class="hide">
+      <div class="panel">
+        <h3>내 별명</h3>
+        <p class="hint">랭킹에 이 이름으로 올라갑니다. 실명 대신 별명을 쓰세요.</p>
+        <div class="field">
+          <input type="text" id="nick" maxlength="12" placeholder="예: 초록두더지">
+        </div>
+        <button id="saveNick">별명 저장</button>
+        <div class="msg" id="nickMsg"></div>
+      </div>
+
+      <div class="panel">
+        <h3>내 게임 올리기</h3>
+        <p class="hint">배포된 주소를 넣으면 친구들이 눌러서 바로 할 수 있습니다. 이미 올렸다면 덮어씁니다.</p>
+        <div class="field"><label for="title">게임 이름</label>
+          <input type="text" id="title" maxlength="40" placeholder="예: 30초 두더지"></div>
+        <div class="field"><label for="desc">한 줄 설명</label>
+          <input type="text" id="desc" maxlength="60" placeholder="예: 폭탄을 피해서 두더지만 잡으세요"></div>
+        <div class="field"><label for="url">게임 주소</label>
+          <input type="url" id="url" placeholder="https://..."></div>
+        <button id="saveWork">전시관에 올리기</button>
+        <div class="msg" id="workMsg"></div>
+      </div>
+
+      <div class="panel">
+        <h3>점수 등록</h3>
+        <p class="hint">친구 게임을 해 보고 최고 점수를 올립니다. 게임마다 하나씩 올라갑니다.</p>
+        <div class="field"><label for="sgame">어느 게임</label>
+          <input type="text" id="sgame" list="gamelist" maxlength="30" placeholder="예: 30초 두더지">
+          <datalist id="gamelist"></datalist></div>
+        <div class="field"><label for="sscore">내 점수</label>
+          <input type="number" id="sscore" min="0" max="1000000" step="1" placeholder="예: 24"></div>
+        <button id="saveScore">점수 올리기</button>
+        <div class="msg" id="scoreMsg"></div>
+      </div>
+    </div>
+
+    <div class="safe">
+      전시관은 반 친구 누구나 볼 수 있습니다. 실명·사진·연락처·학교 이름은 넣지 마세요.<br>
+      올린 작품과 점수는 지울 수 없게 되어 있습니다. 고치고 싶으면 다시 올려 덮어쓰세요.
+    </div>
+  </div>
+</div>
+
+<script type="module">
+/* ═══════════════════════════════════════════════════════
+   ▼ 강사용 — 여기 한 곳만 바꾸세요 ▼
+   전시관용 파이어베이스 프로젝트의 설정값을 붙여넣습니다.
+   학생은 이 파일을 고칠 일이 없습니다. 로그인만 하면 됩니다.
+   ═══════════════════════════════════════════════════════ */
+const firebaseConfig = {
+  apiKey: "여기에-전시관-설정값을-붙여넣으세요",
+  authDomain: "프로젝트이름.firebaseapp.com",
+  projectId: "프로젝트이름",
+  appId: "앱아이디"
+};
+/* ═══════════════════ 여기까지 ═══════════════════ */
+
+const el = (id) => document.getElementById(id);
+const READY = !String(firebaseConfig.apiKey).startsWith('여기에');
+let uid = null, fs = null, db = null;
+
+/* 탭 */
+document.querySelectorAll('.tabs button').forEach((b) => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.tabs button').forEach((x) => x.classList.remove('on'));
+    b.classList.add('on');
+    ['gal','rank','mine'].forEach((t) => {
+      el('tab-' + t).classList.toggle('hide', t !== b.dataset.tab);
+    });
+  });
+});
+
+function setMsg(id, text, ok){
+  const m = el(id);
+  m.textContent = text;
+  m.className = 'msg ' + (ok ? 'ok' : 'no');
+}
+
+if (!READY){
+  el('setup').classList.remove('hide');
+} else {
+  start().catch((e) => {
+    console.error(e);
+    el('setup').classList.remove('hide');
+    el('setup').innerHTML = '<b>파이어베이스에 연결하지 못했습니다.</b><br>인터넷 연결과 설정값을 확인하세요.';
+  });
+}
+
+async function start(){
+  const [{ initializeApp }, authMod, fsMod] = await Promise.all([
+    import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js'),
+    import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js'),
+    import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js')
+  ]);
+  const app = initializeApp(firebaseConfig);
+  const auth = authMod.getAuth(app);
+  db = fsMod.getFirestore(app);
+  fs = fsMod;
+
+  el('in').addEventListener('click', () => {
+    authMod.signInWithPopup(auth, new authMod.GoogleAuthProvider()).catch((e) => {
+      alert('로그인이 되지 않았습니다.\n\n' + e.code + '\n\n선생님께 이 메시지를 보여 주세요.');
+    });
+  });
+  el('out').addEventListener('click', () => authMod.signOut(auth));
+
+  authMod.onAuthStateChanged(auth, async (user) => {
+    if (!user){
+      uid = null;
+      el('gate').classList.remove('hide');
+      el('main').classList.add('hide');
+      el('who').classList.add('hide');
+      return;
+    }
+    uid = user.uid;
+    el('gate').classList.add('hide');
+    el('main').classList.remove('hide');
+    el('who').classList.remove('hide');
+    el('name').textContent = user.displayName || '나';
+    if (user.photoURL) el('photo').src = user.photoURL;
+    el('nick').value = localStorage.getItem('nickname') || '';
+    await Promise.all([loadGallery(), loadRanking()]);
+  });
+
+  el('saveNick').addEventListener('click', () => {
+    const v = el('nick').value.trim();
+    if (v.length < 1){ setMsg('nickMsg', '별명을 적어 주세요.', false); return; }
+    localStorage.setItem('nickname', v);
+    setMsg('nickMsg', '저장했습니다. 이제 게임 점수가 이 이름으로 올라갑니다.', true);
+  });
+
+  el('saveWork').addEventListener('click', async () => {
+    const title = el('title').value.trim();
+    const desc  = el('desc').value.trim();
+    const url   = el('url').value.trim();
+    const nick  = localStorage.getItem('nickname') || '';
+    if (!title){ setMsg('workMsg', '게임 이름을 적어 주세요.', false); return; }
+    if (!nick){ setMsg('workMsg', '먼저 위에서 별명을 저장해 주세요.', false); return; }
+    if (url && !/^https?:\/\//i.test(url)){
+      setMsg('workMsg', '주소는 https:// 로 시작해야 합니다.', false); return;
+    }
+    try {
+      await fs.setDoc(fs.doc(db, 'gallery', uid), {
+        uid, title, desc, url, nickname: nick, at: Date.now()
+      });
+      setMsg('workMsg', '전시관에 올렸습니다.', true);
+      await loadGallery();
+      fillGameList();
+    } catch (e){
+      setMsg('workMsg', '올리지 못했습니다: ' + e.code, false);
+      console.error(e);
+    }
+  });
+
+  /* 점수 등록 — 게임은 자기 프로젝트에 자기 기록을 저장하므로,
+     반 전체 랭킹은 여기서 직접 올린다. */
+  el('saveScore').addEventListener('click', async () => {
+    const game = el('sgame').value.trim();
+    const raw  = el('sscore').value.trim();
+    const nick = localStorage.getItem('nickname') || '';
+    if (!nick){ setMsg('scoreMsg', '먼저 위에서 별명을 저장해 주세요.', false); return; }
+    if (!game){ setMsg('scoreMsg', '어느 게임인지 적어 주세요.', false); return; }
+    const score = Number(raw);
+    if (!raw || !Number.isFinite(score) || score < 0 || score > 1000000){
+      setMsg('scoreMsg', '점수는 0부터 1000000 사이의 숫자로 적어 주세요.', false); return;
+    }
+    const key = game.replace(/[\/\s]+/g, '_').slice(0, 30);
+    try {
+      await fs.setDoc(fs.doc(db, 'ranking', key + '__' + uid), {
+        uid, nickname: nick, game: game.slice(0, 30), score: Math.round(score), at: Date.now()
+      });
+      setMsg('scoreMsg', '점수를 올렸습니다.', true);
+      await loadRanking();
+    } catch (e){
+      setMsg('scoreMsg', '올리지 못했습니다: ' + e.code, false);
+      console.error(e);
+    }
+  });
+}
+
+/* 등록된 작품 이름을 점수 칸의 후보 목록으로 */
+let GAMES = [];
+function fillGameList(){
+  const dl = el('gamelist');
+  if (!dl) return;
+  dl.innerHTML = '';
+  GAMES.forEach((t) => {
+    const o = document.createElement('option');
+    o.value = t;
+    dl.appendChild(o);
+  });
+}
+
+async function loadGallery(){
+  const wrap = el('cards');
+  wrap.innerHTML = '';
+  let docs = [];
+  try {
+    const snap = await fs.getDocs(fs.collection(db, 'gallery'));
+    snap.forEach((d) => docs.push(d.data()));
+  } catch (e){ console.error(e); }
+  docs.sort((a, b) => (b.at || 0) - (a.at || 0));
+  el('galEmpty').classList.toggle('hide', docs.length > 0);
+  GAMES = docs.map((w) => w.title).filter(Boolean);
+  fillGameList();
+
+  docs.forEach((w) => {
+    const c = document.createElement('div');
+    c.className = 'card';
+    const h = document.createElement('h3'); h.textContent = w.title || '이름 없는 게임';
+    const by = document.createElement('div'); by.className = 'by'; by.textContent = '만든 사람 · ' + (w.nickname || '익명');
+    const p = document.createElement('p'); p.textContent = w.desc || '';
+    c.append(h, by, p);
+    if (w.url && /^https?:\/\//i.test(w.url)){
+      const a = document.createElement('a');
+      a.href = w.url; a.target = '_blank'; a.rel = 'noopener noreferrer';
+      a.textContent = '해 보기';
+      c.appendChild(a);
+    }
+    wrap.appendChild(c);
+  });
+}
+
+async function loadRanking(){
+  const wrap = el('ranks');
+  wrap.innerHTML = '';
+  let rows = [];
+  try {
+    const snap = await fs.getDocs(fs.collection(db, 'ranking'));
+    snap.forEach((d) => rows.push(d.data()));
+  } catch (e){ console.error(e); }
+  el('rankEmpty').classList.toggle('hide', rows.length > 0);
+
+  const byGame = {};
+  rows.forEach((r) => {
+    const g = r.game || '이름 없는 게임';
+    (byGame[g] = byGame[g] || []).push(r);
+  });
+
+  Object.keys(byGame).sort().forEach((g) => {
+    const list = byGame[g].sort((a, b) => (b.score || 0) - (a.score || 0));
+    const box = document.createElement('div');
+    box.className = 'rank';
+    const h = document.createElement('h3');
+    h.innerHTML = '';
+    const t = document.createElement('span'); t.style.fontWeight = '700';
+    t.style.fontSize = '17px'; t.style.color = 'var(--ink)'; t.textContent = g;
+    const c = document.createElement('span'); c.textContent = list.length + '명 참가';
+    h.append(t, c);
+    box.appendChild(h);
+
+    list.slice(0, 5).forEach((r, i) => {
+      const row = document.createElement('div');
+      row.className = 'rk' + (i === 0 ? ' top' : '') + (r.uid === uid ? ' me' : '');
+      const n = document.createElement('span'); n.className = 'n'; n.textContent = (i + 1);
+      const w = document.createElement('span'); w.className = 'who2'; w.textContent = r.nickname || '익명';
+      const s = document.createElement('span'); s.className = 'sc'; s.textContent = r.score;
+      row.append(n, w, s);
+      box.appendChild(row);
+    });
+
+    const mineIdx = list.findIndex((r) => r.uid === uid);
+    if (mineIdx >= 5){
+      const row = document.createElement('div');
+      row.className = 'rk me';
+      const n = document.createElement('span'); n.className = 'n'; n.textContent = (mineIdx + 1);
+      const w = document.createElement('span'); w.className = 'who2'; w.textContent = list[mineIdx].nickname || '나';
+      const s = document.createElement('span'); s.className = 'sc'; s.textContent = list[mineIdx].score;
+      row.append(n, w, s);
+      box.appendChild(row);
+    }
+    wrap.appendChild(box);
+  });
+}
+</script>
+</body>
+</html>

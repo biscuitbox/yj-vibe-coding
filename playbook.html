@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#5B3DF5">
+<title>초보 가이드북 · 바이브코딩으로 만드는 나만의 게임과 학습 도구</title>
+<style>
+  :root{--accent:#5B3DF5;--accent-dark:#4A2FD6;--accent-soft:#EDE9FE;--ink:#171A2E;
+        --muted:#62648A;--line:#DCDCE8;--bg:#F3F3F8;--warn:#8a5a00;--warn-soft:#fff4e6;
+        --bad:#D9435A}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);line-height:1.75;font-size:16px;
+    font-family:-apple-system,"Malgun Gothic","Apple SD Gothic Neo",sans-serif}
+  nav{background:var(--ink);position:sticky;top:0;z-index:20}
+  nav .in{max-width:860px;margin:0 auto;padding:10px 16px;display:flex;flex-wrap:wrap;gap:5px}
+  nav a{color:#A8ABD0;text-decoration:none;padding:6px 10px;border-radius:8px;font-size:15px}
+  nav a:hover{background:#2B3053;color:#fff}
+  nav a.on{background:var(--accent);color:#fff}
+  main{max-width:860px;margin:0 auto;padding:26px 16px 90px}
+  h1{font-size:31px;margin:10px 0 4px;line-height:1.3}
+  .lead{color:var(--muted);margin:0 0 24px}
+  h2{font-size:23px;margin:46px 0 12px;padding-bottom:8px;border-bottom:2px solid var(--line)}
+  h3{font-size:17.5px;margin:26px 0 6px}
+  .jump{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:10px}
+  .jump a{background:#fff;border:1px solid var(--line);border-radius:999px;padding:7px 14px;
+    text-decoration:none;color:var(--ink);font-size:14.5px}
+  .jump a:hover{border-color:var(--accent);color:var(--accent-dark)}
+  .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:12px;margin:16px 0}
+  .step{background:#fff;border:1px solid var(--line);border-radius:10px;padding:17px}
+  .step .n{display:inline-block;background:var(--accent);color:#fff;font-weight:700;
+    border-radius:8px;padding:2px 11px;font-size:15px;margin-bottom:8px}
+  .step b{display:block;font-size:16.5px;margin-bottom:3px}
+  .step p{margin:0;color:#3A3C5C;font-size:14.5px;line-height:1.65}
+  table{width:100%;border-collapse:collapse;margin:14px 0;background:#fff;font-size:15.5px}
+  th,td{border:1px solid var(--line);padding:11px 13px;text-align:left;vertical-align:top}
+  th{background:var(--accent-soft);white-space:nowrap}
+  .faq{background:#fff;border:1px solid var(--line);border-radius:10px;padding:4px 20px 16px;margin:14px 0}
+  .faq h3{display:flex;gap:9px;align-items:baseline;flex-wrap:wrap}
+  .faq h3 em{font-style:normal;color:var(--bad);font-size:14px;font-weight:400;white-space:nowrap}
+  .faq dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:15.5px}
+  .faq dt{color:var(--muted);white-space:nowrap}
+  .faq dd{margin:0}
+  .faq dd b{color:var(--accent-dark)}
+  code{background:#EFEDFB;padding:1px 6px;border-radius:5px;font-size:14.5px;
+    font-family:ui-monospace,Consolas,monospace;word-break:break-all}
+  .quote{background:#fff;border:1px solid var(--line);border-left:5px solid var(--accent);
+    border-radius:12px;padding:14px 18px;margin:12px 0;font-size:16px}
+  .quote p{margin:0 0 8px}
+  .quote p:last-child{margin:0}
+  .warn{background:var(--warn-soft);border:1px solid #f0c391;border-left:5px solid var(--warn);
+    border-radius:12px;padding:14px 17px;margin:18px 0;color:#5f4110}
+  .warn b{color:var(--warn)}
+  .warn ul{margin:8px 0 0;padding-left:22px}
+  .shot{border:2px dashed #AAABC6;border-radius:12px;background:#F0EFF9;color:var(--muted);
+    text-align:center;padding:34px 14px;margin:14px 0;font-size:14.5px}
+  .shot img{max-width:100%;border-radius:8px;display:block}
+  footer{max-width:860px;margin:0 auto;padding:22px 16px 70px;color:var(--muted);
+    font-size:14px;border-top:1px solid var(--line)}
+  @media (max-width:560px){
+    h1{font-size:25px} main{padding:20px 12px 70px}
+    .faq dl{grid-template-columns:1fr;gap:2px}
+    .faq dt{margin-top:7px;font-size:13.5px}
+    table,tbody,tr,td,th{display:block;width:100%}
+    thead{display:none}
+    td{border-top:0}
+    td:first-child{border-top:1px solid var(--line);font-weight:700;background:var(--accent-soft)}
+  }
+  :focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+  nav :focus-visible{outline-color:#FFD400}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<nav><div class="in">
+  <a href="index.html">🏠 홈</a>
+  <a href="slides-1.html">📺 강의 슬라이드</a>
+  <a href="workbench.html">🛠️ 실습 워크벤치</a>
+  <a class="on" href="playbook.html">📖 초보 가이드북</a>
+  <a href="handout.html">🖨️ 인쇄용 유인물</a>
+</div></nav>
+
+<main>
+<h1>초보 가이드북</h1>
+<p class="lead">막혔을 때 여기부터 보세요. 거의 모든 문제가 아래 중 하나입니다.</p>
+
+<div class="jump">
+  <a href="#canvas">캔버스 쓰는 법</a><a href="#fix">고치는 법</a>
+  <a href="#export">내 파일로 가져오기</a><a href="#faq">안 될 때</a>
+  <a href="#submit">올리기와 주소</a><a href="#ethics">AI를 쓸 때의 책임</a>
+</div>
+
+<h2 id="canvas">캔버스 쓰는 법</h2>
+<p>이 수업은 제미나이의 <b>캔버스</b>에서 진행합니다. 캔버스를 켜 두면 만든 화면이 오른쪽에 바로 떠서,
+말하고 → 보고 → 고치는 일이 한자리에서 됩니다. 설치할 프로그램은 없습니다.</p>
+<div class="steps">
+  <div class="step"><span class="n">1</span><b>제미나이 열기</b>
+    <p><code>gemini.google.com</code>에 영재원 계정으로 로그인합니다.</p></div>
+  <div class="step"><span class="n">2</span><b>캔버스 켜기</b>
+    <p>입력창 아래의 캔버스 버튼을 누릅니다. 이걸 켜야 화면이 보입니다.</p></div>
+  <div class="step"><span class="n">3</span><b>프롬프트 넣기</b>
+    <p>워크벤치에서 복사해 그대로 붙여넣습니다.</p></div>
+  <div class="step"><span class="n">4</span><b>보면서 고치기</b>
+    <p>오른쪽 화면을 직접 눌러 보고, 고칠 부분만 말합니다.</p></div>
+</div>
+<div class="shot"><img src="shots/canvas_button.png" alt="" onerror="this.style.display='none';this.parentNode.insertAdjacentText('beforeend','여기에 캔버스 버튼 위치 캡처 — shots/canvas_button.png')"></div>
+
+<div class="warn">
+  <b>대화를 닫지 마세요.</b>
+  <ul>
+    <li>같은 결과물을 다음 차시에 이어서 고칩니다. 그 대화를 다시 열면 만들던 것이 그대로 있습니다.</li>
+    <li>새 대화에서 시작하면 처음부터 다시 만들어야 합니다.</li>
+    <li>대화 제목을 <code>내 게임</code>, <code>내 할 일 도구</code>처럼 바꿔 두면 찾기 쉽습니다.</li>
+  </ul>
+</div>
+
+<h2 id="fix">고치는 법 — 짧게 말하기</h2>
+<p>캔버스에서는 전체 코드를 다시 달라고 할 필요가 없습니다. <b>고칠 부분만</b> 말하면 그 자리에서 바뀝니다.
+이 수업에서 가장 많이 하게 될 일이고, 사실 이게 바이브코딩의 전부입니다.</p>
+<div class="quote">
+  <p>"제목을 더 크게 해 줘."</p>
+  <p>"버튼을 눌러도 아무 일도 안 일어나. 왜 그런지 찾아서 고쳐 줘."</p>
+  <p>"폭탄이 너무 자주 나와. 조금 줄여 줘."</p>
+  <p>"휴대폰에서 가로로 밀려. 세로로 접히게 고쳐 줘."</p>
+  <p>"지금 코드가 무슨 일을 하는지 한 줄씩 설명해 줘."</p>
+</div>
+
+<h3>한 번에 하나씩</h3>
+<p>여러 가지를 한꺼번에 바꿔 달라고 하면 어디서 망가졌는지 찾기 어렵습니다. 하나 고치고 눌러 보고,
+또 하나 고치고 눌러 보세요. 캔버스는 이 반복이 빠르니까 이렇게 하는 게 결국 더 빠릅니다.</p>
+
+<h3>잘 되던 것이 망가졌다면</h3>
+<p>캔버스에는 이전 버전을 보는 기능이 있습니다. 그걸로 되돌리거나, <b>"방금 바꾼 것을 되돌려 줘"</b>라고
+말하면 됩니다. 중요한 단계마다 코드를 받아서 <code>mygame_1.html</code>, <code>mygame_2.html</code>처럼
+번호를 붙여 두면 더 안전합니다.</p>
+
+<h2 id="export">내 파일로 가져오기 — 3차시부터</h2>
+<p>캔버스는 보고 고치기 좋은 곳이지만 <b>임시 공간</b>입니다. 기록을 남기고 인터넷에 올리려면
+내 컴퓨터의 파일이어야 합니다.</p>
+<div class="steps">
+  <div class="step"><span class="n">1</span><b>코드 받기</b>
+    <p>캔버스 오른쪽 위 메뉴에서 내려받습니다.</p></div>
+  <div class="step"><span class="n">2</span><b>이름 바꾸기</b>
+    <p>영문 + <code>.html</code> — 예: <code>mygame.html</code></p></div>
+  <div class="step"><span class="n">3</span><b>내 폴더에</b>
+    <p>바탕화면에 폴더를 하나 만들어 모아 둡니다.</p></div>
+  <div class="step"><span class="n">4</span><b>더블클릭</b>
+    <p>브라우저가 열리면 성공입니다.</p></div>
+</div>
+<div class="shot"><img src="shots/canvas_export.png" alt="" onerror="this.style.display='none';this.parentNode.insertAdjacentText('beforeend','여기에 캔버스 코드 받기 메뉴 캡처 — shots/canvas_export.png')"></div>
+
+<div class="warn">
+  <b>내려받기가 안 되면 복사해서 저장하세요.</b>
+  <ul>
+    <li>캔버스의 <b>코드</b> 탭에서 전체를 복사합니다.</li>
+    <li>메모장을 열고 붙여넣습니다.</li>
+    <li>저장할 때 파일 형식을 <b>모든 파일(*.*)</b>로, 이름은 <code>mygame.html</code>, 인코딩은 <b>UTF-8</b>로 합니다.</li>
+    <li>파일 형식을 안 바꾸면 <code>mygame.html.txt</code>가 되어 메모장으로 열립니다.</li>
+  </ul>
+</div>
+
+<h2 id="faq">안 될 때</h2>
+
+<div class="faq">
+  <h3>캔버스가 안 보입니다 <em>가장 흔함</em></h3>
+  <dl>
+    <dt>증상</dt><dd>코드만 길게 나오고 화면이 안 뜹니다.</dd>
+    <dt>이유</dt><dd>캔버스를 안 켠 상태입니다.</dd>
+    <dt>해결</dt><dd>입력창 아래의 <b>캔버스</b> 버튼을 누르고 다시 요청하세요. 이미 만든 것이 있다면 <b>"지금 만든 걸 캔버스로 보여 줘"</b>라고 하면 됩니다.</dd>
+  </dl>
+</div>
+
+<div class="faq">
+  <h3>화면이 하얗게만 나옵니다</h3>
+  <dl>
+    <dt>증상</dt><dd>캔버스는 열렸는데 아무것도 없습니다.</dd>
+    <dt>이유</dt><dd>코드 어딘가에 오류가 있어서 멈춘 것입니다.</dd>
+    <dt>해결</dt><dd>AI에게 <b>"화면이 하얗게만 나와. 왜 그런지 찾아서 고쳐 줘"</b>라고 하세요. 캔버스는 지금 코드를 그대로 보고 있어서 바로 찾아냅니다.</dd>
+  </dl>
+</div>
+
+<div class="faq">
+  <h3>버튼을 눌러도 아무 일이 없습니다</h3>
+  <dl>
+    <dt>증상</dt><dd>화면은 제대로 나오는데 클릭이 먹히지 않습니다.</dd>
+    <dt>이유</dt><dd>화면을 그리는 부분만 만들어지고 동작 부분이 빠졌거나, 둘이 서로 다른 이름을 보고 있습니다.</dd>
+    <dt>해결</dt><dd><b>어떤 버튼인지 말하고</b> 고쳐 달라고 하세요. "시작 버튼을 눌러도 게임이 시작되지 않아. 고쳐 줘."</dd>
+  </dl>
+</div>
+
+<div class="faq">
+  <h3>고쳐 달라고 했는데 엉뚱한 게 바뀝니다</h3>
+  <dl>
+    <dt>증상</dt><dd>글자 크기를 바꿔 달랬는데 색까지 바뀌었습니다.</dd>
+    <dt>이유</dt><dd>말이 짧아서 AI가 범위를 넓게 잡았습니다.</dd>
+    <dt>해결</dt><dd>어디를 바꿀지 콕 집어 말하세요. "맨 위 <b>제목</b>만 더 크게 해 줘. 나머지는 그대로."</dd>
+  </dl>
+</div>
+
+<div class="faq">
+  <h3>최고 점수가 저장되지 않습니다 <em>3차시</em></h3>
+  <dl>
+    <dt>증상</dt><dd>새로고침하면 기록이 0으로 돌아갑니다.</dd>
+    <dt>이유</dt><dd>저장하는 함수를 만들기만 하고 게임이 끝날 때 부르지 않았습니다.</dd>
+    <dt>해결</dt><dd><b>"게임이 끝날 때 saveScore를 부르도록 연결해 줘"</b>라고 하세요. 캔버스 미리보기에서는 저장이 안 될 수도 있으니, <b>코드를 받아 내 파일로 연 뒤</b> 확인하세요.</dd>
+  </dl>
+</div>
+
+<div class="faq">
+  <h3>받은 파일을 열었더니 메모장이 뜹니다 <em>3차시</em></h3>
+  <dl>
+    <dt>증상</dt><dd>더블클릭하면 브라우저가 아니라 메모장이 열립니다.</dd>
+    <dt>이유</dt><dd>파일 이름이 실제로는 <code>이름.html.txt</code>입니다.</dd>
+    <dt>해결</dt><dd>파일 이름을 <code>이름.html</code>로 바꾸세요. 메모장에서 저장했다면 파일 형식을 <b>모든 파일</b>로 바꾸고 다시 저장합니다.</dd>
+  </dl>
+</div>
+
+<div class="faq">
+  <h3>집에서 열었더니 내용이 비어 있습니다 <em>4차시 이후</em></h3>
+  <dl>
+    <dt>증상</dt><dd>학교에서 적은 내용이 집 컴퓨터에는 없습니다.</dd>
+    <dt>이유</dt><dd>고장이 아닙니다. <code>localStorage</code>는 컴퓨터마다 따로 있는 수첩입니다.</dd>
+    <dt>해결</dt><dd>이걸 해결하는 것이 5차시입니다. 로그인을 붙이면 어느 기기에서나 같은 내용이 열립니다.</dd>
+  </dl>
+</div>
+
+<div class="faq">
+  <h3>캔버스에서 로그인 버튼이 안 먹힙니다 <em>5차시</em></h3>
+  <dl>
+    <dt>증상</dt><dd>로그인 버튼을 눌러도 창이 안 뜨거나 바로 닫힙니다.</dd>
+    <dt>이유</dt><dd>캔버스는 안전을 위해 좁은 공간에서 돌아가서 로그인 창이 막힐 수 있습니다. 코드가 틀린 게 아닙니다.</dd>
+    <dt>해결</dt><dd>코드를 받아 내 저장소에 올린 뒤 <b>내 주소</b>에서 확인하세요. 로그인은 그곳에서만 제대로 됩니다.</dd>
+  </dl>
+</div>
+
+<div class="faq">
+  <h3>내 주소에서도 로그인이 안 됩니다 <em>5차시</em></h3>
+  <dl>
+    <dt>증상</dt><dd>오류 글자가 뜹니다.</dd>
+    <dt>이유·해결</dt><dd>
+      <code>auth/unauthorized-domain</code> — 이 주소가 등록되지 않았습니다. 선생님께 주소를 알리세요.<br>
+      <code>auth/popup-blocked</code> — 브라우저가 팝업을 막았습니다. 주소창 오른쪽의 팝업 허용을 누르세요.<br>
+      <code>permission-denied</code> — 보안 규칙이 막은 것입니다. 저장 위치가 <code>users/내uid/</code> 안인지 확인하세요.</dd>
+  </dl>
+</div>
+
+<div class="faq">
+  <h3>한글이 깨져서 보입니다</h3>
+  <dl>
+    <dt>증상</dt><dd>글자가 <code>???</code>나 알 수 없는 기호로 나옵니다.</dd>
+    <dt>이유</dt><dd>메모장으로 저장할 때 인코딩이 UTF-8이 아니었습니다.</dd>
+    <dt>해결</dt><dd>다시 저장하면서 인코딩을 <code>UTF-8</code>로 고릅니다. 그래도 깨지면 <b>"코드 맨 위에 charset UTF-8 메타 태그를 넣어 줘"</b>라고 요청하세요.</dd>
+  </dl>
+</div>
+
+<h2 id="submit">올리기와 주소</h2>
+<p>만든 파일은 <b>내가 직접</b> 내 저장소에 올립니다. 1차시에 만든 계정과 저장소를 그대로 씁니다.</p>
+<table>
+  <thead><tr><th>차시</th><th>올릴 파일</th><th>열리는 주소</th></tr></thead>
+  <tbody>
+    <tr><td>1차시</td><td><code>index.html</code></td><td><code>내아이디.github.io/my-web/</code></td></tr>
+    <tr><td>2~3차시</td><td><code>game.html</code></td><td><code>…/my-web/game.html</code></td></tr>
+    <tr><td>4~5차시</td><td><code>todo.html</code></td><td><code>…/my-web/todo.html</code></td></tr>
+  </tbody>
+</table>
+<p>같은 이름으로 다시 올리면 <b>덮어쓰기</b>가 됩니다. 고친 파일은 이름을 바꾸지 말고 그대로 올리세요.
+   차시가 바뀌어도 파일은 하나씩만 있으면 됩니다.</p>
+
+<h3>올리는 네 단계</h3>
+<table>
+  <tbody>
+    <tr><td><b>1</b></td><td>캔버스에서 <b>코드 받기</b></td></tr>
+    <tr><td><b>2</b></td><td>이름을 영문 + <code>.html</code>로 (첫 페이지만 <code>index.html</code>)</td></tr>
+    <tr><td><b>3</b></td><td>내 저장소 → <b>Add file</b> → <b>Upload files</b> → 끌어다 놓기</td></tr>
+    <tr><td><b>4</b></td><td>아래 <b>Commit changes</b> → 1~2분 뒤 주소로 열림</td></tr>
+  </tbody>
+</table>
+
+<div class="warn">
+  <b>올리기 전에 한 번만 확인하세요.</b>
+  <ul>
+    <li>파일 이름이 영문인가 — 한글이나 띄어쓰기가 있으면 주소가 깨집니다.</li>
+    <li>코드 안에 실명·연락처·학교 이름이 없는가 — 올리면 코드까지 누구나 볼 수 있습니다.</li>
+    <li>내 컴퓨터에서 더블클릭해서 잘 돌아가는가.</li>
+    <li>올린 뒤 <b>내 주소를 직접 눌러</b> 열리는지 확인했는가.</li>
+  </ul>
+</div>
+
+<h3>주소가 404로 나올 때</h3>
+<dl>
+  <dt>올린 직후다</dt>
+  <dd>1~2분 기다렸다가 새로고침하세요. 고장이 아니라 아직 올라가는 중입니다.</dd>
+  <dt>몇 분이 지나도 404다</dt>
+  <dd>Settings → Pages에서 Branch가 <b>main</b>으로 저장되어 있는지 확인하세요. 1차시에 빠뜨린 경우가 많습니다.</dd>
+  <dt>주소 끝에 파일 이름이 빠졌다</dt>
+  <dd><code>index.html</code> 말고 다른 이름으로 올렸다면 주소 뒤에 그 파일 이름을 붙여야 열립니다.</dd>
+  <dt>파일 이름 철자가 다르다</dt>
+  <dd>대소문자까지 똑같아야 합니다. <code>Game.html</code>과 <code>game.html</code>은 다른 주소입니다.</dd>
+</dl>
+
+<h2 id="ethics">AI를 쓸 때의 책임</h2>
+<table>
+  <thead><tr><th>지킬 것</th><th>왜</th></tr></thead>
+  <tbody>
+    <tr><td>개인정보를 입력하지 않기</td>
+        <td>이름·연락처·주소·학교 이름은 AI에게 적지 않습니다. 대화 내용이 어디까지 남는지 우리는 알 수 없습니다.</td></tr>
+    <tr><td>틀릴 수 있다고 생각하기</td>
+        <td>AI는 모르는 것도 아는 것처럼 말합니다. 없는 기능이나 틀린 설명을 그럴듯하게 주기도 합니다. 캔버스에서 직접 눌러 확인하세요.</td></tr>
+    <tr><td>남의 것을 그대로 쓰지 않기</td>
+        <td>인터넷에서 찾은 그림·음악·글은 만든 사람이 있습니다. 내 작품에 넣기 전에 써도 되는 것인지 확인하세요.</td></tr>
+    <tr><td>결과에 대한 책임은 올린 사람에게</td>
+        <td>"AI가 만들었다"는 이유가 되지 않습니다. 내 이름으로 올리는 순간 내 작품입니다.</td></tr>
+    <tr><td>남을 해치는 것은 만들지 않기</td>
+        <td>특정한 사람을 놀리거나 무섭게 하는 내용은 만들지 않습니다. 전시관은 반 전체가 봅니다.</td></tr>
+  </tbody>
+</table>
+
+<h2>왜 복잡한 도구를 안 쓰나요</h2>
+<p>이 수업에서 만드는 것은 전부 <b>HTML 파일 하나</b>로 끝납니다. 인터넷에서 받아오는 추가 파일도 없습니다.</p>
+<p>이유는 간단합니다. 추가 파일을 받아오는 방식은 학교 인터넷이 막거나 느릴 때 <b>오류 메시지도 없이 흰 화면</b>이 됩니다.
+그러면 코드를 아무리 들여다봐도 원인을 찾을 수 없습니다. 파일 하나로 끝나면 인터넷이 끊겨도, 집에 가져가도 똑같이 열립니다.</p>
+<p>딱 한 군데 예외가 5차시의 로그인입니다. 그건 인터넷 없이는 불가능한 기능이라서,
+대신 연결이 안 될 때 자동으로 연습 모드로 바뀌도록 만들어 두었습니다.</p>
+
+</main>
+<footer>바이브코딩으로 만드는 나만의 게임과 학습 도구 · 6차시 · 2026</footer>
+</body>
+</html>

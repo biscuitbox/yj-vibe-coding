@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#5B3DF5">
+<title>두더지 잡기 · 30초</title>
+<style>
+  :root{--accent:#5B3DF5;--ink:#171A2E;--muted:#62648A;--line:#DCDCE8;--bg:#F3F3F8;--bad:#D9435A}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Malgun Gothic","Apple SD Gothic Neo",sans-serif;
+    display:flex;flex-direction:column;align-items:center;padding:20px 14px 60px}
+  h1{font-size:26px;margin:6px 0 2px}
+  .sub{color:var(--muted);font-size:15px;margin:0 0 16px;text-align:center}
+  .board{width:100%;max-width:420px}
+  .hud{display:flex;justify-content:space-between;background:#fff;border:1px solid var(--line);
+    border-radius:12px;padding:12px 16px;margin-bottom:12px}
+  .hud div{text-align:center;flex:1}
+  .hud .l{color:var(--muted);font-size:13px}
+  .hud .v{font-size:25px;font-weight:700;line-height:1.2}
+  .hud .v.low{color:var(--bad)}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .hole{aspect-ratio:1;border-radius:10px;background:#E4E4EF;border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;font-size:40px;cursor:pointer;
+    user-select:none;padding:0;font-family:inherit;transition:background .1s}
+  .hole:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+  .hole.up{background:#DCD5FA}
+  .hole.bomb{background:#FADCE0}
+  .hole.hit{background:var(--accent)}
+  .hole.miss{background:#F3CBD2}
+  .panel{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-top:16px}
+  .score{font-size:42px;font-weight:700;color:var(--accent);line-height:1.1}
+  .label{color:var(--muted);font-size:14px}
+  .row{display:flex;justify-content:space-between;align-items:baseline;padding:7px 0;
+    border-bottom:1px dashed var(--line)}
+  .row:last-child{border:0}
+  button.go{background:var(--accent);color:#fff;border:0;border-radius:10px;padding:13px;
+    font-size:16px;cursor:pointer;font-family:inherit;width:100%;margin-top:12px}
+  .note{color:var(--muted);font-size:13px;margin-top:18px;text-align:center;max-width:420px;line-height:1.6}
+</style>
+</head>
+<body>
+
+<h1>30초 두더지</h1>
+<p class="sub">두더지는 +10점, 폭탄은 −15점. 폭탄을 참는 게 실력입니다.</p>
+
+<div class="board">
+  <div class="hud">
+    <div><div class="l">남은 시간</div><div class="v" id="time">30</div></div>
+    <div><div class="l">현재 점수</div><div class="v" id="live">0</div></div>
+    <div><div class="l">연속</div><div class="v" id="combo">0</div></div>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+  <div class="panel">
+    <div class="label">점수</div>
+    <div class="score" id="score">—</div>
+    <div id="detail"></div>
+    <div class="row"><span>최고 점수</span><b id="best">0</b></div>
+    <button class="go" id="start">시작하기</button>
+  </div>
+</div>
+
+<p class="note">기록은 이 브라우저에만 저장됩니다. 다른 컴퓨터에서 열면 처음부터 시작합니다.</p>
+
+<script>
+/* ===== 게임 규격 ===== */
+const GAME_ID   = 'mole';
+const GAME_NAME = '두더지 잡기';
+
+/* ===== 점수 저장 모듈 (3차시) ===== */
+function saveScore(score){
+  const key = 'best_' + GAME_ID;
+  const best = Number(localStorage.getItem(key) || 0);
+  if (score > best) localStorage.setItem(key, String(score));
+  return Math.max(score, best);
+}
+function loadBest(){ return Number(localStorage.getItem('best_' + GAME_ID) || 0); }
+
+/* ===== 게임 본체 ===== */
+const SIZE = 9, PLAY_SEC = 30;
+const el = function(id){ return document.getElementById(id); };
+const grid = el('grid');
+const holes = [];
+let live = 0, combo = 0, maxCombo = 0, hits = 0, bombs = 0;
+let running = false, tickTimer = null, popTimer = null, left = PLAY_SEC;
+
+for (let i = 0; i < SIZE; i++){
+  const b = document.createElement('button');
+  b.className = 'hole';
+  b.dataset.kind = '';
+  b.addEventListener('click', function(){ whack(b); });
+  grid.appendChild(b);
+  holes.push(b);
+}
+
+function clearHole(b){
+  b.dataset.kind = '';
+  b.textContent = '';
+  b.className = 'hole';
+}
+
+function flash(b, cls){
+  b.className = 'hole ' + cls;
+  setTimeout(function(){ if (b.dataset.kind === '') b.className = 'hole'; }, 160);
+}
+
+function pop(){
+  if (!running) return;
+  const free = holes.filter(function(h){ return h.dataset.kind === ''; });
+  if (free.length){
+    const b = free[Math.floor(Math.random() * free.length)];
+    const isBomb = Math.random() < 0.25;
+    b.dataset.kind = isBomb ? 'bomb' : 'mole';
+    b.textContent = isBomb ? '💣' : '🐹';
+    b.classList.add(isBomb ? 'bomb' : 'up');
+    const life = 700 + Math.random() * 600;
+    setTimeout(function(){
+      if (b.dataset.kind === 'mole'){ combo = 0; el('combo').textContent = 0; }
+      if (b.dataset.kind !== '') clearHole(b);
+    }, life);
+  }
+  const gap = Math.max(260, 760 - (PLAY_SEC - left) * 14);
+  popTimer = setTimeout(pop, gap);
+}
+
+function whack(b){
+  if (!running) return;
+  const kind = b.dataset.kind;
+  if (kind === 'mole'){
+    hits++; combo++; maxCombo = Math.max(maxCombo, combo);
+    live += 10 + Math.min(combo - 1, 5) * 2;
+    clearHole(b); flash(b, 'hit');
+  } else if (kind === 'bomb'){
+    bombs++; combo = 0;
+    live = Math.max(0, live - 15);
+    clearHole(b); flash(b, 'miss');
+  } else {
+    combo = 0;
+    flash(b, 'miss');
+  }
+  el('live').textContent = live;
+  el('combo').textContent = combo;
+}
+
+function start(){
+  running = true;
+  live = 0; combo = 0; maxCombo = 0; hits = 0; bombs = 0; left = PLAY_SEC;
+  holes.forEach(clearHole);
+  el('live').textContent = 0;
+  el('combo').textContent = 0;
+  el('time').textContent = PLAY_SEC;
+  el('time').classList.remove('low');
+  el('score').textContent = '—';
+  el('detail').innerHTML = '';
+  el('start').style.display = 'none';
+  pop();
+  tickTimer = setInterval(function(){
+    left--;
+    el('time').textContent = left;
+    if (left <= 5) el('time').classList.add('low');
+    if (left <= 0) finish();
+  }, 1000);
+}
+
+function finish(){
+  running = false;
+  clearInterval(tickTimer);
+  clearTimeout(popTimer);
+  holes.forEach(clearHole);
+  el('detail').innerHTML =
+    '<div class="row"><span>잡은 두더지</span><b>' + hits + '마리</b></div>' +
+    '<div class="row"><span>밟은 폭탄</span><b>' + bombs + '개</b></div>' +
+    '<div class="row"><span>최고 연속</span><b>' + maxCombo + '연타</b></div>';
+  el('start').textContent = '다시 하기';
+  el('start').style.display = 'block';
+  gameOver(live);
+}
+
+function gameOver(score){
+  el('score').textContent = score;
+  el('best').textContent = saveScore(score);
+}
+
+el('start').addEventListener('click', start);
+el('best').textContent = loadBest();
+</script>
+</body>
+</html>

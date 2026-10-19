@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#171A2E">
+<title>바이브코딩으로 만드는 나만의 게임과 학습 도구</title>
+<style>
+  :root{
+    --ink:#171A2E; --ink-2:#232846; --paper:#F3F3F8; --white:#fff;
+    --accent:#5B3DF5; --accent-dim:#4A2FD6; --accent-soft:#EDE9FE;
+    --spark:#FFD400; --line:#DCDCE8; --muted:#62648A; --dim:#A8ABD0;
+    --mono:ui-monospace,Consolas,"D2Coding",Menlo,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);line-height:1.7;font-size:16px;
+    font-family:-apple-system,"Malgun Gothic","Apple SD Gothic Neo",sans-serif}
+  a{color:var(--accent-dim)}
+
+  /* ── 상단 내비 ── */
+  nav{background:var(--ink);position:sticky;top:0;z-index:30}
+  nav .in{max-width:1080px;margin:0 auto;padding:9px 20px;display:flex;flex-wrap:wrap;gap:4px}
+  nav a{color:var(--dim);text-decoration:none;padding:7px 12px;border-radius:7px;font-size:15px}
+  nav a:hover{background:#2B3053;color:#fff}
+  nav a.on{background:var(--accent);color:#fff}
+
+  /* ── 히어로 ── */
+  .hero{background:var(--ink);color:#fff;padding:46px 20px 60px}
+  .hero .in{max-width:1080px;margin:0 auto;display:grid;gap:40px;
+    grid-template-columns:minmax(0,1fr) minmax(0,440px);align-items:center}
+  .hero h1{font-size:clamp(30px,4.6vw,50px);line-height:1.16;margin:0 0 16px;
+    letter-spacing:-.04em;font-weight:700}
+  .hero .say{font-size:clamp(17px,2vw,21px);color:var(--dim);margin:0 0 26px;
+    line-height:1.55;max-width:24em}
+  .hero .say b{color:var(--spark);font-weight:700}
+  .badges{display:flex;flex-wrap:wrap;gap:7px}
+  .badges span{border:1px solid #39406B;color:#C3C6E6;border-radius:5px;
+    padding:5px 11px;font-size:13.5px}
+
+  /* ── 화면 프레임 ── */
+  .screen{border:1px solid var(--line);border-radius:10px;background:var(--white);
+    overflow:hidden}
+  .screen .chrome{background:var(--ink);color:var(--dim);display:flex;align-items:center;
+    gap:7px;padding:8px 13px;font-family:var(--mono);font-size:12.5px}
+  .screen .chrome i{width:8px;height:8px;border-radius:50%;background:#464C78;display:block;
+    flex:0 0 auto}
+  .screen .chrome i:first-child{background:var(--spark)}
+  .screen .chrome span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .hero .screen{border-color:#39406B;box-shadow:0 18px 50px rgba(0,0,0,.35)}
+
+  /* 히어로 안의 시연 */
+  .demo{padding:16px}
+  .demo .ask{font-family:var(--mono);font-size:13.5px;line-height:1.6;color:#3C4166;
+    background:#F0EFF9;border-radius:9px 9px 9px 2px;padding:10px 13px;margin:0 0 14px;
+    min-height:3.6em}
+  .demo .ask::after{content:"▌";color:var(--accent);animation:blink 1s steps(1) infinite}
+  .demo.done .ask::after{content:""}
+  @keyframes blink{50%{opacity:0}}
+  .demo .out{opacity:0;transition:opacity .4s}
+  .demo.done .out{opacity:1}
+  .demo .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;
+    max-width:258px;margin:0 auto 13px}
+  .demo .grid button{aspect-ratio:1/1;border:1px solid var(--line);background:#FAFAFD;
+    border-radius:7px;cursor:pointer;padding:0;font-family:inherit}
+  .demo .grid button.hot{background:var(--spark);border-color:#E6BF00}
+  .demo .grid button:disabled{cursor:default}
+  .demo .foot{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:13.5px;
+    color:var(--muted)}
+  .demo .score{font-family:var(--mono);font-size:19px;font-weight:700;color:var(--ink);
+    font-variant-numeric:tabular-nums}
+  .demo .go{border:0;background:var(--accent);color:#fff;border-radius:7px;padding:7px 14px;
+    font-size:14px;cursor:pointer;font-family:inherit}
+  .demo .go:hover{background:var(--accent-dim)}
+  .hero figcaption{color:#7A7FB4;font-size:13px;margin-top:10px;text-align:right}
+
+  /* ── 본문 ── */
+  main{max-width:1080px;margin:0 auto;padding:0 20px 90px}
+  section{padding-top:52px}
+  h2{font-size:25px;margin:0 0 6px;letter-spacing:-.03em;font-weight:700}
+  .lede{color:var(--muted);margin:0 0 22px;font-size:15.5px}
+
+  /* 페이지 카드 */
+  .pages{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:16px}
+  .pages a{text-decoration:none;color:inherit;display:block}
+  .pages .screen{height:100%;display:flex;flex-direction:column;transition:border-color .15s}
+  .pages a:hover .screen{border-color:var(--accent)}
+  .pages a:hover .chrome{background:var(--accent)}
+  .pages .pad{padding:17px 18px 19px;flex:1}
+  .pages .em{font-size:26px;line-height:1.2;display:block;margin-bottom:6px}
+  .pages b{font-size:17.5px;display:block;letter-spacing:-.02em}
+  .pages p{margin:4px 0 0;color:var(--muted);font-size:14.5px;line-height:1.55}
+
+  /* 여섯 번의 흐름 — 저장 단계로 묶는다 */
+  .stage{margin-bottom:22px}
+  .stage > h3{margin:0 0 3px;font-size:17px;letter-spacing:-.025em;
+    display:flex;align-items:center;gap:9px}
+  .stage > h3 .sn{background:var(--ink);color:var(--paper);width:24px;height:24px;
+    border-radius:4px;display:flex;align-items:center;justify-content:center;
+    font-size:14px;font-variant-numeric:tabular-nums;flex:0 0 auto}
+  .stage:last-of-type > h3 .sn{background:var(--spark);color:var(--ink)}
+  .stage > p{margin:0 0 12px;color:var(--muted);font-size:14px}
+  .ses{border-top:1px solid var(--line)}
+  .ses a{display:flex;gap:16px;align-items:baseline;padding:14px 4px;
+    border-bottom:1px solid var(--line);text-decoration:none;color:inherit}
+  .ses a:hover{background:var(--white)}
+  .ses .n{font-weight:700;color:var(--ink);font-size:15.5px;white-space:nowrap;
+    flex:0 0 auto;min-width:3.5em;font-variant-numeric:tabular-nums}
+  .ses .t{flex:1;min-width:0}
+  .ses .t b{display:block;font-size:17px;letter-spacing:-.02em}
+  .ses .t span{color:var(--muted);font-size:14.5px}
+  .ses .go{color:var(--accent);font-size:14px;flex:0 0 auto}
+
+  /* 완성 도구 */
+  .tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:14px}
+  .tools a{text-decoration:none;color:inherit}
+  .tools .screen{transition:border-color .15s}
+  .tools a:hover .screen{border-color:var(--accent)}
+  .tools .pad{padding:14px 16px 16px}
+  .tools b{display:block;font-size:16.5px;letter-spacing:-.02em}
+  .tools span{color:var(--muted);font-size:14px}
+
+  /* 약속 · 안내 */
+  .rules{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+  .rules li{border-bottom:1px solid var(--line);padding:13px 0 13px 28px;position:relative;
+    font-size:16px}
+  .rules li::before{content:"";position:absolute;left:0;top:1.32em;width:9px;height:9px;
+    background:var(--accent);border-radius:2px}
+  .after{background:var(--white);border:1px solid var(--line);border-radius:10px;
+    padding:18px 21px}
+  .after p{margin:0 0 9px} .after p:last-child{margin:0}
+  .teacher{background:var(--ink);color:#C7CAE8;border-radius:10px;padding:17px 21px;
+    margin-top:30px;font-size:15px}
+  .teacher b{color:#fff} .teacher a{color:var(--spark)}
+
+  footer{max-width:1080px;margin:0 auto;padding:26px 20px 70px;color:var(--muted);
+    font-size:14px;border-top:1px solid var(--line)}
+  footer .url{font-family:var(--mono);font-size:13px;color:#8A8DB4}
+
+  :focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+  nav :focus-visible,.hero :focus-visible{outline-color:var(--spark)}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+  @media (max-width:860px){
+    .hero .in{grid-template-columns:1fr;gap:28px}
+    .hero figcaption{text-align:left}
+  }
+  @media (max-width:560px){
+    main{padding:0 14px 70px} .hero{padding:32px 14px 42px}
+    nav .in{padding:8px 14px}
+    .ses a{flex-wrap:wrap;gap:6px} .ses .go{display:none}
+  }
+</style>
+</head>
+<body>
+
+<nav><div class="in">
+  <a class="on" href="index.html">🏠 홈</a>
+  <a href="slides-1.html">📺 강의 슬라이드</a>
+  <a href="workbench.html">🛠️ 실습 워크벤치</a>
+  <a href="playbook.html">📖 초보 가이드북</a>
+  <a href="handout.html">🖨️ 인쇄용 유인물</a>
+</div></nav>
+
+<div class="hero"><div class="in">
+  <div>
+    <h1>바이브코딩으로 만드는<br>나만의 게임과 학습 도구</h1>
+    <p class="say">코딩을 한 줄도 몰라도, 말로 설명하면 만들어집니다.<br>
+       여섯 번이면 <b>내 주소와 내 데이터베이스</b>가 남습니다.<br>계정부터 배포까지 전부 직접 만듭니다.</p>
+    <div class="badges">
+      <span>중학생</span><span>6차시 · 45분</span><span>제미나이 캔버스</span>
+      <span>설치 없음</span><span>1인 1대</span><span>계정 직접 생성</span>
+    </div>
+  </div>
+
+  <figure style="margin:0">
+    <div class="screen">
+      <div class="chrome"><i></i><i></i><i></i><span>gemini.google.com — 캔버스</span></div>
+      <div class="demo" id="demo">
+        <p class="ask" id="ask"></p>
+        <div class="out">
+          <div class="grid" id="grid"></div>
+          <div class="foot">
+            <span class="score" id="score">0점</span>
+            <span id="msg">5초 동안 노란 칸을 누르세요</span>
+            <button class="go" id="go">해 보기</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <figcaption>말한 그대로 화면이 생깁니다 — 눌러 보세요</figcaption>
+  </figure>
+</div></div>
+
+<main>
+
+<section>
+  <h2>어디로 갈까요</h2>
+  <p class="lede">수업 중에도, 수업이 끝난 뒤에도 같은 주소에서 다 찾을 수 있습니다.</p>
+  <div class="pages">
+    <a href="workbench.html"><div class="screen">
+      <div class="chrome"><i></i><i></i><i></i><span>workbench.html</span></div>
+      <div class="pad"><span class="em">🛠️</span><b>실습 워크벤치</b>
+      <p>프롬프트와 완성 코드가 다 있습니다. 수업 중에 가장 많이 열게 될 곳입니다.</p></div>
+    </div></a>
+    <a href="slides-1.html"><div class="screen">
+      <div class="chrome"><i></i><i></i><i></i><span>slides-1.html</span></div>
+      <div class="pad"><span class="em">📺</span><b>강의 슬라이드</b>
+      <p>차시별 슬라이드. 좌우 방향키로 넘깁니다.</p></div>
+    </div></a>
+    <a href="playbook.html"><div class="screen">
+      <div class="chrome"><i></i><i></i><i></i><span>playbook.html</span></div>
+      <div class="pad"><span class="em">📖</span><b>초보 가이드북</b>
+      <p>캔버스 쓰는 법, 고치는 법, 안 될 때 해결법.</p></div>
+    </div></a>
+    <a href="handout.html"><div class="screen">
+      <div class="chrome"><i></i><i></i><i></i><span>handout.html</span></div>
+      <div class="pad"><span class="em">🖨️</span><b>인쇄용 유인물</b>
+      <p>A4 두 장짜리 학습지. 기획 칸과 주소 적는 칸이 있습니다.</p></div>
+    </div></a>
+    <a href="tool_gallery.html"><div class="screen">
+      <div class="chrome"><i></i><i></i><i></i><span>tool_gallery.html</span></div>
+      <div class="pad"><span class="em">🏆</span><b>우리 반 전시관</b>
+      <p>친구들이 만든 게임을 해 보고 점수를 남기는 곳. 6차시에 엽니다.</p></div>
+    </div></a>
+  </div>
+</section>
+
+<section>
+  <h2>여섯 번의 흐름</h2>
+  <p class="lede">주소를 만들고, 기록을 남기고, 내 데이터베이스까지. 세 단계로 올라갑니다.</p>
+
+  <div class="stage">
+    <h3><span class="sn">1</span>내 주소를 만든다</h3>
+    <p>계정과 저장소를 만들고, 만든 것을 올려 주소로 엽니다.</p>
+    <div class="ses">
+      <a href="slides-1.html"><span class="n">1차시</span><span class="t">
+        <b>개발 환경 구축하고 첫 페이지 배포하기</b><span>계정·저장소를 만들고 첫 페이지를 올립니다</span>
+      </span><span class="go">슬라이드 열기</span></a>
+      <a href="slides-2.html"><span class="n">2차시</span><span class="t">
+        <b>게임 로직 설계하고 구현하기</b><span>내가 정한 규칙으로 만드는 내 게임</span>
+      </span><span class="go">슬라이드 열기</span></a>
+    </div>
+  </div>
+
+  <div class="stage">
+    <h3><span class="sn">2</span>기록이 남는다</h3>
+    <p>점수와 할 일이 남습니다. 단, 지금 쓰는 컴퓨터에서만요.</p>
+    <div class="ses">
+      <a href="slides-3.html"><span class="n">3차시</span><span class="t">
+        <b>데이터 저장하여 기록 관리하기</b><span>새로고침해도 최고 점수는 남는다</span>
+      </span><span class="go">슬라이드 열기</span></a>
+      <a href="slides-4.html"><span class="n">4차시</span><span class="t">
+        <b>사용자 중심 학습 도구 개발하기</b><span>오늘부터 내가 진짜로 쓸 도구</span>
+      </span><span class="go">슬라이드 열기</span></a>
+    </div>
+  </div>
+
+  <div class="stage">
+    <h3><span class="sn">3</span>내 데이터베이스를 만든다</h3>
+    <p>파이어베이스 프로젝트를 직접 만들어 연결합니다. 집에서도 내 것이 그대로 보입니다.</p>
+    <div class="ses">
+      <a href="slides-5.html"><span class="n">5차시</span><span class="t">
+        <b>계정 인증과 클라우드 데이터베이스 구축하기</b><span>내 데이터베이스를 만들어 연결합니다</span>
+      </span><span class="go">슬라이드 열기</span></a>
+      <a href="slides-6.html"><span class="n">6차시</span><span class="t">
+        <b>웹 서비스 배포하고 공유하기</b><span>전시관을 열고 서로의 게임을 합니다</span>
+      </span><span class="go">슬라이드 열기</span></a>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>완성된 결과물 미리 보기</h2>
+  <p class="lede">실습으로 만들 것들입니다. 먼저 해 보면 무엇을 만드는지 감이 옵니다.</p>
+  <div class="tools">
+    <a href="tool_game_reaction.html"><div class="screen">
+      <div class="chrome"><i></i><i></i><i></i><span>tool_game_reaction.html</span></div>
+      <div class="pad"><b>⚡ 5번의 찰나</b><span>반응속도 게임</span></div></div></a>
+    <a href="tool_game_number.html"><div class="screen">
+      <div class="chrome"><i></i><i></i><i></i><span>tool_game_number.html</span></div>
+      <div class="pad"><b>🔢 여덟 번의 질문</b><span>숫자 맞히기</span></div></div></a>
+    <a href="tool_game_mole.html"><div class="screen">
+      <div class="chrome"><i></i><i></i><i></i><span>tool_game_mole.html</span></div>
+      <div class="pad"><b>🐹 30초 두더지</b><span>두더지 잡기</span></div></div></a>
+    <a href="tool_todo_local.html"><div class="screen">
+      <div class="chrome"><i></i><i></i><i></i><span>tool_todo_local.html</span></div>
+      <div class="pad"><b>📋 오늘 할 일</b><span>4차시 · 이 브라우저에만 저장</span></div></div></a>
+    <a href="tool_todo.html"><div class="screen">
+      <div class="chrome"><i></i><i></i><i></i><span>tool_todo.html</span></div>
+      <div class="pad"><b>🔐 내 할 일</b><span>5차시 · 내 데이터베이스에 저장</span></div></div></a>
+    <a href="tool_gallery.html"><div class="screen">
+      <div class="chrome"><i></i><i></i><i></i><span>tool_gallery.html</span></div>
+      <div class="pad"><b>🏆 우리 반 전시관</b><span>6차시 · 작품 주소와 랭킹</span></div></div></a>
+  </div>
+</section>
+
+<section>
+  <h2>수업 중 약속</h2>
+  <ul class="rules">
+    <li>이름, 연락처, 주소, 학교 이름은 AI에게 적지 않습니다.</li>
+    <li>AI가 준 답이 틀릴 때가 있습니다. 캔버스에서 직접 눌러서 확인합니다.</li>
+    <li>만든 것은 친구들이 보게 되므로, 누군가를 놀리거나 무섭게 하는 내용은 만들지 않습니다.</li>
+    <li>AI가 만들었어도 그 결과에 대한 책임은 올린 사람에게 있습니다.</li>
+    <li>전시관에서는 실명 대신 별명을 씁니다.</li>
+    <li>깃허브 아이디도 주소로 공개됩니다. 실명 대신 영문 별명으로 정합니다.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>수업이 끝난 뒤에도</h2>
+  <div class="after">
+    <p><b>내 저장소와 내 데이터베이스는 수업이 끝나도 내 것입니다.</b> 집에서 다시 만들고 싶을 때 워크벤치의 프롬프트를 복사해 쓰세요.</p>
+    <p>만들던 게임에 기능을 하나씩 더해 보고, 집에서 쓸 도구를 하나 더 만들어 내 저장소에 올려 보세요.
+       막히면 AI에게 물어보면 됩니다. 이제 묻는 법을 아니까요.</p>
+  </div>
+
+  <div class="teacher">
+    <b>강사용</b> — 차시별 45분 운영은 <a href="script.html">진행 대본</a>,
+    파이어베이스 설정과 배포 절차는 <a href="firebase_setup.html">설정 문서</a>에 있습니다.
+    학생 작품은 <b>4차시 끝</b>에 한 번 올려야 5차시 로그인이 됩니다.
+  </div>
+</section>
+
+</main>
+
+<footer>
+  바이브코딩으로 만드는 나만의 게임과 학습 도구 · 중학생 6차시 · 2026<br>
+  강사 김시명 · 해연중학교<br>
+  <span class="url">biscuitbox.github.io/student-vibe-coding/</span>
+</footer>
+
+<script>
+(function(){
+  var LINE = '5초 동안 노란 칸을 최대한 많이 누르는 게임 만들어 줘.\n점수는 누른 횟수로 보여 줘.';
+  var demo = document.getElementById('demo'),
+      ask  = document.getElementById('ask'),
+      grid = document.getElementById('grid'),
+      scoreEl = document.getElementById('score'),
+      msg  = document.getElementById('msg'),
+      go   = document.getElementById('go');
+
+  /* 3x3 칸 만들기 */
+  var cells = [];
+  for (var k = 0; k < 9; k++) {
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.disabled = true;
+    btn.setAttribute('aria-label', '칸 ' + (k + 1));
+    grid.appendChild(btn);
+    cells.push(btn);
+  }
+
+  /* 불러올 때 한 번만: 문장이 타이핑되고 결과가 나타난다 */
+  var reduce = false;
+  try { reduce = matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+  if (reduce) {
+    ask.textContent = LINE;
+    demo.classList.add('done');
+  } else {
+    var p = 0;
+    (function type(){
+      ask.textContent = LINE.slice(0, p++);
+      if (p <= LINE.length) setTimeout(type, 28);
+      else setTimeout(function(){ demo.classList.add('done'); }, 250);
+    })();
+  }
+
+  /* 미니 게임 */
+  var hits = 0, hot = -1, timer = null, tick = null, left = 5;
+  function pick(){
+    if (hot >= 0) cells[hot].classList.remove('hot');
+    var n;
+    do { n = Math.floor(Math.random() * 9); } while (n === hot);
+    hot = n;
+    cells[hot].classList.add('hot');
+  }
+  function stop(){
+    clearInterval(timer); clearInterval(tick);
+    cells.forEach(function(c){ c.disabled = true; c.classList.remove('hot'); });
+    hot = -1;
+    msg.textContent = '끝! 다시 해 보려면 눌러 주세요';
+    go.textContent = '다시';
+    go.disabled = false;
+  }
+  function start(){
+    hits = 0; left = 5;
+    scoreEl.textContent = '0점';
+    go.disabled = true;
+    go.textContent = '진행 중';
+    msg.textContent = '5초 남음';
+    cells.forEach(function(c){ c.disabled = false; });
+    pick();
+    timer = setInterval(pick, 700);
+    tick = setInterval(function(){
+      left--;
+      msg.textContent = left + '초 남음';
+      if (left <= 0) stop();
+    }, 1000);
+  }
+  cells.forEach(function(c, idx){
+    c.addEventListener('click', function(){
+      if (idx !== hot) return;
+      hits++;
+      scoreEl.textContent = hits + '점';
+      pick();
+    });
+  });
+  go.addEventListener('click', start);
+})();
+</script>
+</body>
+</html>

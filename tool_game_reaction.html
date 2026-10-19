@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#5B3DF5">
+<title>반응속도 · 5번의 찰나</title>
+<style>
+  :root{--accent:#5B3DF5;--ink:#171A2E;--muted:#62648A;--line:#DCDCE8;--bg:#F3F3F8}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Malgun Gothic","Apple SD Gothic Neo",sans-serif;
+    display:flex;flex-direction:column;align-items:center;padding:20px 14px 60px}
+  h1{font-size:26px;margin:6px 0 2px}
+  .sub{color:var(--muted);font-size:15px;margin:0 0 18px;text-align:center}
+  .board{width:100%;max-width:460px}
+  .pad{height:280px;border-radius:10px;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;cursor:pointer;user-select:none;
+    background:#353A5E;color:#fff;text-align:center;padding:16px;
+    transition:background .08s linear;border:0;width:100%;font-family:inherit}
+  .pad b{font-size:26px;display:block;margin-bottom:6px}
+  .pad span{font-size:16px;opacity:.85;line-height:1.6}
+  .pad.wait{background:#D9435A}
+  .pad.go{background:#15803d}
+  .pad.early{background:#8a5a00}
+  .pad:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+  .rounds{display:flex;gap:6px;justify-content:center;margin:14px 0}
+  .dot{width:38px;height:38px;border-radius:9px;background:#E4E4EF;border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;font-size:12.5px;color:var(--muted)}
+  .dot.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .panel{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-top:16px}
+  .score{font-size:42px;font-weight:700;color:var(--accent);line-height:1.1}
+  .label{color:var(--muted);font-size:14px}
+  .row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;
+    padding:7px 0;border-bottom:1px dashed var(--line)}
+  .row:last-child{border:0}
+  button.go{background:var(--accent);color:#fff;border:0;border-radius:10px;padding:12px 22px;
+    font-size:16px;cursor:pointer;font-family:inherit;margin-top:12px;width:100%}
+  .note{color:var(--muted);font-size:13px;margin-top:18px;text-align:center;max-width:460px;line-height:1.6}
+</style>
+</head>
+<body>
+
+<h1>5번의 찰나</h1>
+<p class="sub">초록으로 바뀌는 순간 누르세요. 다섯 번의 평균으로 점수가 정해집니다.</p>
+
+<div class="board">
+  <button class="pad" id="pad"><b>누르면 시작</b><span>빨강일 때 기다리고<br>초록이 되면 바로 누르세요</span></button>
+  <div class="rounds" id="rounds"></div>
+
+  <div class="panel">
+    <div class="label">점수</div>
+    <div class="score" id="score">—</div>
+    <div id="detail"></div>
+    <div class="row"><span>최고 점수</span><b id="best">0</b></div>
+    <button class="go" id="again" style="display:none">다시 하기</button>
+  </div>
+</div>
+
+<p class="note">기록은 이 브라우저에만 저장됩니다. 다른 컴퓨터에서 열면 처음부터 시작합니다.</p>
+
+<script>
+/* =========================================================
+   게임 규격 — 이 네 줄은 어떤 게임을 만들어도 똑같이 지킵니다
+   ========================================================= */
+const GAME_ID   = 'reaction';
+const GAME_NAME = '반응속도';
+// 게임이 끝나면 gameOver(점수) 를 부릅니다. 점수는 높을수록 잘한 것.
+
+/* ===== 점수 저장 모듈 (3차시) =====
+   localStorage = 이 브라우저에만 남는 저장소 */
+function saveScore(score){
+  const key = 'best_' + GAME_ID;
+  const best = Number(localStorage.getItem(key) || 0);
+  if (score > best) localStorage.setItem(key, String(score));
+  return Math.max(score, best);
+}
+function loadBest(){
+  return Number(localStorage.getItem('best_' + GAME_ID) || 0);
+}
+
+/* ===== 게임 본체 ===== */
+const TOTAL = 5;
+const pad = document.getElementById('pad');
+const roundsEl = document.getElementById('rounds');
+const scoreEl = document.getElementById('score');
+const detailEl = document.getElementById('detail');
+const bestEl = document.getElementById('best');
+const againBtn = document.getElementById('again');
+
+let times = [], state = 'idle', timer = null, startAt = 0;
+
+function drawRounds(){
+  roundsEl.innerHTML = '';
+  for (let i = 0; i < TOTAL; i++){
+    const d = document.createElement('div');
+    d.className = 'dot' + (times[i] !== undefined ? ' on' : '');
+    d.textContent = times[i] !== undefined ? times[i] : (i + 1);
+    roundsEl.appendChild(d);
+  }
+}
+
+function setPad(cls, title, desc){
+  pad.className = 'pad' + (cls ? ' ' + cls : '');
+  pad.innerHTML = '<b>' + title + '</b><span>' + desc + '</span>';
+}
+
+function nextRound(){
+  if (times.length >= TOTAL){ finish(); return; }
+  state = 'wait';
+  setPad('wait', '기다리세요', '초록이 될 때까지 누르면 안 됩니다');
+  const delay = 1200 + Math.random() * 2600;
+  timer = setTimeout(function(){
+    state = 'go';
+    startAt = performance.now();
+    setPad('go', '지금!', '누르세요');
+  }, delay);
+}
+
+function finish(){
+  state = 'done';
+  const avg = Math.round(times.reduce(function(a,b){return a+b;}, 0) / times.length);
+  const score = Math.max(0, 1000 - avg);
+  setPad('', '끝!', '평균 ' + avg + '밀리초');
+  detailEl.innerHTML =
+    '<div class="row"><span>평균 반응속도</span><b>' + avg + ' ms</b></div>' +
+    '<div class="row"><span>가장 빨랐던 판</span><b>' + Math.min.apply(null, times) + ' ms</b></div>';
+  gameOver(score);
+  againBtn.style.display = 'block';
+}
+
+function gameOver(score){
+  scoreEl.textContent = score;
+  const best = saveScore(score);
+  bestEl.textContent = best;
+}
+
+pad.addEventListener('click', function(){
+  if (state === 'idle' || state === 'done'){
+    times = []; drawRounds();
+    scoreEl.textContent = '—'; detailEl.innerHTML = '';
+    againBtn.style.display = 'none';
+    nextRound();
+    return;
+  }
+  if (state === 'wait'){
+    clearTimeout(timer);
+    state = 'early';
+    setPad('early', '너무 빨랐어요', '초록이 될 때까지 기다려야 합니다<br>눌러서 이 판 다시 하기');
+    setTimeout(function(){ if (state === 'early') state = 'ready'; }, 400);
+    return;
+  }
+  if (state === 'ready'){ nextRound(); return; }
+  if (state === 'go'){
+    const ms = Math.round(performance.now() - startAt);
+    times.push(ms);
+    drawRounds();
+    if (times.length >= TOTAL){ finish(); }
+    else { setPad('', ms + ' ms', '눌러서 다음 판으로'); state = 'ready'; }
+  }
+});
+
+againBtn.addEventListener('click', function(){ pad.click(); });
+
+drawRounds();
+bestEl.textContent = loadBest();
+</script>
+</body>
+</html>
