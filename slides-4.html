@@ -12,6 +12,9 @@
   --spark:#FFD400; --line:#DCDCE8; --muted:#62648A; --dim:#A8ABD0;
 }
 *{box-sizing:border-box}
+/* 한글이 단어 중간에서 끊기지 않게 — '메뉴에서'의 '서'만 내려가는 일을 막는다 */
+h2,.sub,.note,.big,.lead,figcaption,ul.pts li,.step b,.step span,.tlrow .d,
+.cover h1,.cover p,.shotbox .body{word-break:keep-all;overflow-wrap:break-word}
 html,body{height:100%}
 body{margin:0;background:var(--paper);color:var(--ink);overflow:hidden;
   font-family:-apple-system,"Malgun Gothic","Apple SD Gothic Neo",sans-serif}
@@ -225,7 +228,7 @@ figcaption{color:var(--muted);font-size:clamp(13px,1.55vw,25px);text-align:cente
   <text x="240" y="293" fill="#4A2FD6" text-anchor="end">저장 범위 안내</text>
 </g>
 </svg><figcaption>워크벤치에서 미리보기를 눌러 직접 만져 볼 수 있습니다.</figcaption></figure></section>
-<section class="slide punch"><div class="mark"><span class="n">4</span><span>사용자 중심 학습 도구 개발하기</span></div><p class="lead">이제 직접</p><p class="big">24분, 내 도구 만들기</p><p class="sub">화면이 예쁜 것보다 <b>내가 쓸 만한가</b>가 중요합니다.</p></section>
+<section class="slide punch"><div class="mark"><span class="n">4</span><span>사용자 중심 학습 도구 개발하기</span></div><p class="lead">이제 직접</p><p class="big">24분, 내 도구 만들기</p><p class="sub"><b>워크벤치에서 4차시 프롬프트를 복사</b>해 만들고 싶은 도구로 바꿔 넣으세요.<br>화면이 예쁜 것보다 <b>내가 쓸 만한가</b>가 중요합니다.</p></section>
 <section class="slide"><div class="mark"><span class="n">4</span><span>사용자 중심 학습 도구 개발하기</span></div><h2>이 시간이 끝나기 전에</h2><ul class="pts"><li>코드를 받아 <b>todo.html</b>처럼 영문으로 이름을 붙인다</li><li>이름·연락처·학교 이름이 들어 있지 않은지 확인한다</li><li>내 저장소에 업로드하고 Commit한다</li><li><b>내 주소 / todo.html</b>로 열어 본다</li></ul><p class="note">올려 두어야 다음 시간에 여기에 로그인을 붙일 수 있습니다.</p></section>
 <section class="slide"><div class="mark"><span class="n">4</span><span>사용자 중심 학습 도구 개발하기</span></div><h2>내 저장소에 쌓이는 것</h2><figure><svg viewBox="0 0 980 320" role="img" aria-label="내 저장소에 차시별 파일이 쌓이는 모습"><defs><marker id="a" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0 0 L11 4 L0 8 z" fill="#5B3DF5"/></marker><marker id="g" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0 0 L11 4 L0 8 z" fill="#AAABC6"/></marker><marker id="r" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0 0 L11 4 L0 8 z" fill="#D9435A"/></marker></defs>
 <rect x="150" y="30" width="680" height="246" rx="14" fill="#fff" stroke="#DCDCE8" stroke-width="2"/>

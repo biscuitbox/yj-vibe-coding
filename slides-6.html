@@ -12,6 +12,9 @@
   --spark:#FFD400; --line:#DCDCE8; --muted:#62648A; --dim:#A8ABD0;
 }
 *{box-sizing:border-box}
+/* 한글이 단어 중간에서 끊기지 않게 — '메뉴에서'의 '서'만 내려가는 일을 막는다 */
+h2,.sub,.note,.big,.lead,figcaption,ul.pts li,.step b,.step span,.tlrow .d,
+.cover h1,.cover p,.shotbox .body{word-break:keep-all;overflow-wrap:break-word}
 html,body{height:100%}
 body{margin:0;background:var(--paper);color:var(--ink);overflow:hidden;
   font-family:-apple-system,"Malgun Gothic","Apple SD Gothic Neo",sans-serif}

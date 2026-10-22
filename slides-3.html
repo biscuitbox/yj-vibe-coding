@@ -12,6 +12,9 @@
   --spark:#FFD400; --line:#DCDCE8; --muted:#62648A; --dim:#A8ABD0;
 }
 *{box-sizing:border-box}
+/* 한글이 단어 중간에서 끊기지 않게 — '메뉴에서'의 '서'만 내려가는 일을 막는다 */
+h2,.sub,.note,.big,.lead,figcaption,ul.pts li,.step b,.step span,.tlrow .d,
+.cover h1,.cover p,.shotbox .body{word-break:keep-all;overflow-wrap:break-word}
 html,body{height:100%}
 body{margin:0;background:var(--paper);color:var(--ink);overflow:hidden;
   font-family:-apple-system,"Malgun Gothic","Apple SD Gothic Neo",sans-serif}
@@ -238,7 +241,7 @@ figcaption{color:var(--muted);font-size:clamp(13px,1.55vw,25px);text-align:cente
 </svg><figcaption>3차시부터는 수업이 끝날 때마다 코드를 받아 두는 습관을 들입니다.</figcaption></figure></section>
 <section class="slide"><div class="mark"><span class="n">3</span><span>데이터 저장하여 기록 관리하기</span></div><h2>내 파일로 가져오기</h2><div class="steps"><div class="step"><div class="ic num">1</div><b>코드 받기</b><span>캔버스 오른쪽 위 메뉴에서</span></div><div class="step"><div class="ic num">2</div><b>이름 정하기</b><span>영문 + <b>.html</b>로 (예: game.html)</span></div><div class="step"><div class="ic num">3</div><b>폴더에 두기</b><span>바탕화면에 내 폴더를 하나 만들어 모아 둡니다</span></div><div class="step"><div class="ic num">4</div><b>더블클릭</b><span>브라우저가 열리면 성공</span></div></div><p class="note">내 컴퓨터에서 먼저 확인하고 올리는 습관을 들이세요. 올린 뒤에 고치는 것보다 빠릅니다.</p></section>
 <section class="slide"><div class="mark"><span class="n">3</span><span>데이터 저장하여 기록 관리하기</span></div><h2>붙일 기능</h2><ul class="pts"><li>게임이 끝나면 점수를 수첩에 적는다</li><li>이미 적힌 점수보다 <b>높을 때만</b> 바꿔 쓴다</li><li>페이지를 열 때 적힌 점수를 읽어 와 보여 준다</li><li>화면에 '이 브라우저에만 저장됩니다'라고 알려 준다</li></ul><p class="note">워크벤치 3차시 프롬프트에 그대로 들어 있습니다.</p></section>
-<section class="slide punch"><div class="mark"><span class="n">3</span><span>데이터 저장하여 기록 관리하기</span></div><p class="lead">이제 직접</p><p class="big">16분, 기록 남기기</p><p class="sub">붙인 다음 코드를 다시 받아 파일을 덮어쓰고,<br>새로고침해 보세요. 최고 점수가 남아 있으면 성공입니다.</p></section>
+<section class="slide punch"><div class="mark"><span class="n">3</span><span>데이터 저장하여 기록 관리하기</span></div><p class="lead">이제 직접</p><p class="big">16분, 기록 남기기</p><p class="sub"><b>워크벤치에서 3차시 프롬프트를 붙여넣기</b> 한 다음, 코드를 다시 받아 파일을 덮어쓰고<br>새로고침해 보세요. 최고 점수가 남아 있으면 성공입니다.</p></section>
 <section class="slide punch"><div class="mark"><span class="n">3</span><span>데이터 저장하여 기록 관리하기</span></div><p class="lead">한 가지 실험</p><p class="big">옆자리 컴퓨터에서 열어 보세요</p><p class="sub">같은 주소인데, 내 최고 점수가 보이나요?</p></section>
 <section class="slide"><div class="mark"><span class="n">3</span><span>데이터 저장하여 기록 관리하기</span></div><h2>왜 안 보일까</h2><figure><svg viewBox="0 0 980 300" role="img" aria-label="브라우저 저장소는 컴퓨터마다 따로 존재한다"><defs><marker id="a" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0 0 L11 4 L0 8 z" fill="#5B3DF5"/></marker><marker id="g" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0 0 L11 4 L0 8 z" fill="#AAABC6"/></marker><marker id="r" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0 0 L11 4 L0 8 z" fill="#D9435A"/></marker></defs>
 <g text-anchor="middle">

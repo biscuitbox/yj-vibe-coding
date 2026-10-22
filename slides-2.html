@@ -12,6 +12,9 @@
   --spark:#FFD400; --line:#DCDCE8; --muted:#62648A; --dim:#A8ABD0;
 }
 *{box-sizing:border-box}
+/* 한글이 단어 중간에서 끊기지 않게 — '메뉴에서'의 '서'만 내려가는 일을 막는다 */
+h2,.sub,.note,.big,.lead,figcaption,ul.pts li,.step b,.step span,.tlrow .d,
+.cover h1,.cover p,.shotbox .body{word-break:keep-all;overflow-wrap:break-word}
 html,body{height:100%}
 body{margin:0;background:var(--paper);color:var(--ink);overflow:hidden;
   font-family:-apple-system,"Malgun Gothic","Apple SD Gothic Neo",sans-serif}
@@ -229,7 +232,7 @@ figcaption{color:var(--muted);font-size:clamp(13px,1.55vw,25px);text-align:cente
 </svg><figcaption>규모 제한은 규칙이 아니라 좋은 게임의 조건으로 생각하세요.</figcaption></figure></section>
 <section class="slide"><div class="mark"><span class="n">2</span><span>게임 로직 설계하고 구현하기</span></div><h2>아이디어가 없다면</h2><div class="steps"><div class="step"><div class="ic">⚡</div><b>반응속도</b><span>신호가 바뀌면 누르기</span></div><div class="step"><div class="ic">🐹</div><b>두더지 잡기</b><span>튀어나오는 것만 빠르게</span></div><div class="step"><div class="ic">🃏</div><b>짝 맞추기</b><span>같은 그림 찾기</span></div><div class="step"><div class="ic">🔢</div><b>숫자 맞히기</b><span>위아래 힌트로 찾기</span></div></div><p class="note">워크벤치에 12가지가 더 있습니다. 골라도 되고 바꿔도 됩니다.</p></section>
 <section class="slide"><div class="mark"><span class="n">2</span><span>게임 로직 설계하고 구현하기</span></div><h2>시연</h2><p class="sub" style="margin-bottom:clamp(10px,1.8vh,24px)">게임 설명 부분만 내 것으로 바꾸고, 규격 부분은 그대로 둡니다.</p><div class="shotbox"><div class="chrome"><i></i><i></i><i></i><span>gemini.google.com — 캔버스</span></div><div class="body"><img src="shots/game_demo.png" alt="" onerror="this.style.display='none';this.parentNode.insertAdjacentText('beforeend','여기에 게임 프롬프트를 넣은 캔버스 화면 캡처 — shots/game_demo.png')"></div></div></section>
-<section class="slide punch"><div class="mark"><span class="n">2</span><span>게임 로직 설계하고 구현하기</span></div><p class="lead">이제 직접</p><p class="big">24분, 내 게임 만들기</p><p class="sub">먼저 돌아가게 만들고, 그다음에 재미를 더하세요.<br>캔버스에서 바로 해 보면서 고치면 됩니다.</p></section>
+<section class="slide punch"><div class="mark"><span class="n">2</span><span>게임 로직 설계하고 구현하기</span></div><p class="lead">이제 직접</p><p class="big">24분, 내 게임 만들기</p><p class="sub"><b>워크벤치에서 2차시 프롬프트를 복사</b>해 게임 설명 부분만 내 것으로 바꾸세요.<br>먼저 돌아가게 만들고, 그다음에 재미를 더합니다.</p></section>
 <section class="slide"><div class="mark"><span class="n">2</span><span>게임 로직 설계하고 구현하기</span></div><h2>막혔을 때 쓰는 말</h2><ul class="pts"><li>"버튼을 눌러도 아무 일도 안 일어나. 왜 그런지 찾아서 고쳐 줘."</li><li>"화면이 하얗게만 나와. 고쳐 줘."</li><li>"연속으로 성공하면 점수가 더 오르게 해 줘."</li><li>"시간이 지날수록 조금씩 빨라지게 해 줘."</li></ul><p class="note">캔버스에서는 <b>고칠 부분만</b> 말하면 됩니다. 전체 코드를 다시 달라고 하지 않아도 됩니다.</p></section>
 <section class="slide"><div class="mark"><span class="n">2</span><span>게임 로직 설계하고 구현하기</span></div><h2>이 시간이 끝나기 전에</h2><ul class="pts"><li>코드를 받아 <b>game.html</b>로 이름을 바꾼다</li><li>내 저장소에 업로드하고 Commit한다</li><li><b>내 주소 / game.html</b>로 열어 본다</li><li>옆자리 친구에게 주소를 알려 주고 한 판 하게 한다</li></ul><p class="note">친구가 내 주소에서 게임을 하는 순간이 이번 시간의 목표입니다.</p></section>
 <section class="slide punch"><div class="mark"><span class="n">2</span><span>게임 로직 설계하고 구현하기</span></div><p class="lead">다음 시간</p><p class="big">점수가 사라지는 문제</p><p class="sub">방금 올린 게임을 다시 열어 보세요. 점수가 남아 있을까요?</p></section>
