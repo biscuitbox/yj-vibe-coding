@@ -63,7 +63,7 @@ ul.pts:has(li:nth-child(3):last-child) li{
   height:clamp(32px,2.8vw,46px);border-radius:5px;display:flex;align-items:center;
   justify-content:center;font-weight:700;font-size:clamp(17px,1.7vw,27px);
   font-variant-numeric:tabular-nums}
-.step b{display:block;font-size:clamp(18px,2.35vw,39px);margin:clamp(9px,1.3vh,18px) 0 5px;
+.step > b{display:block;font-size:clamp(18px,2.35vw,39px);margin:clamp(9px,1.3vh,18px) 0 5px;
   letter-spacing:-.025em;line-height:1.25}
 .step span{color:var(--muted);font-size:clamp(15px,1.9vw,31px);line-height:1.42}
 
@@ -173,7 +173,7 @@ figcaption{color:var(--muted);font-size:clamp(13px,1.55vw,25px);text-align:cente
 <div class="deck" id="deck">
   <div class="stage">
 <section class="slide cover"><div class="course">바이브코딩으로 만드는 나만의 게임과 학습 도구</div><div class="six"><span class="done"></span><span class="done"></span><span class="now"></span><span class=""></span><span class=""></span><span class=""></span></div><p class="ses"><span class="num">3</span><span class="of">차시 / 전체 6차시</span></p><h1>데이터 저장하여 기록 관리하기</h1><p>새로고침해도 최고 점수는 남는다</p></section>
-<section class="slide"><div class="mark"><span class="n">3</span><span>데이터 저장하여 기록 관리하기</span></div><h2>오늘의 흐름 · 45분</h2><div class="tl"><div class="tlrow"><span class="t">00~05분</span><span class="d">점수가 사라지는 문제</span><span class="track"><i class="len" style="width:11.1%"></i></span></div><div class="tlrow"><span class="t">05~12분</span><span class="d">저장할 곳 세 군데</span><span class="track"><i class="len" style="width:15.6%"></i></span></div><div class="tlrow"><span class="t">12~20분</span><span class="d">코드 받아 내 파일로</span><span class="track"><i class="len" style="width:17.8%"></i></span></div><div class="tlrow"><span class="t">20~36분</span><span class="d">저장 붙이기</span><span class="track"><i class="len" style="width:35.6%"></i></span></div><div class="tlrow"><span class="t">36~45분</span><span class="d">올리고 옆자리에서 열기</span><span class="track"><i class="len" style="width:20.0%"></i></span></div></div><p class="note">시간은 안내일 뿐입니다. 막히는 사람이 많으면 실습 시간을 늘립니다.</p></section>
+<section class="slide"><div class="mark"><span class="n">3</span><span>데이터 저장하여 기록 관리하기</span></div><h2>이번 차시 흐름 · 45분</h2><div class="tl"><div class="tlrow"><span class="t">00~05분</span><span class="d">점수가 사라지는 문제</span><span class="track"><i class="len" style="width:11.1%"></i></span></div><div class="tlrow"><span class="t">05~12분</span><span class="d">저장할 곳 세 군데</span><span class="track"><i class="len" style="width:15.6%"></i></span></div><div class="tlrow"><span class="t">12~20분</span><span class="d">코드 받아 내 파일로</span><span class="track"><i class="len" style="width:17.8%"></i></span></div><div class="tlrow"><span class="t">20~36분</span><span class="d">저장 붙이기</span><span class="track"><i class="len" style="width:35.6%"></i></span></div><div class="tlrow"><span class="t">36~45분</span><span class="d">올리고 옆자리에서 열기</span><span class="track"><i class="len" style="width:20.0%"></i></span></div></div><p class="note">시간은 안내일 뿐입니다. 막히는 사람이 많으면 실습 시간을 늘립니다.</p></section>
 <section class="slide punch"><div class="mark"><span class="n">3</span><span>데이터 저장하여 기록 관리하기</span></div><p class="lead">해 보세요</p><p class="big">게임을 한 판 하고 새로고침</p><p class="sub">점수가 어떻게 됐나요?</p></section>
 <section class="slide punch"><div class="mark"><span class="n">3</span><span>데이터 저장하여 기록 관리하기</span></div><p class="lead">사라졌습니다</p><p class="big">컴퓨터는 꺼진 순간 잊어버립니다</p><p class="sub">기억하게 하려면 <b>어딘가에 적어 두라고</b> 말해 줘야 합니다.</p></section>
 <section class="slide"><div class="mark"><span class="n">3</span><span>데이터 저장하여 기록 관리하기</span></div><h2>저장할 곳은 세 군데</h2><figure><svg viewBox="0 0 980 290" role="img" aria-label="저장의 세 단계 — 안 남음, 내 PC에만, 어디서나"><defs><marker id="a" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0 0 L11 4 L0 8 z" fill="#5B3DF5"/></marker><marker id="g" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0 0 L11 4 L0 8 z" fill="#AAABC6"/></marker><marker id="r" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0 0 L11 4 L0 8 z" fill="#D9435A"/></marker></defs>
@@ -193,7 +193,7 @@ figcaption{color:var(--muted);font-size:clamp(13px,1.55vw,25px);text-align:cente
 <text x="371" y="138" font-size="18" fill="#E0DAFB">브라우저 수첩에 적음</text>
 <text x="371" y="168" font-size="18" fill="#fff">껐다 켜도 남음</text>
 <rect x="371" y="180" width="118" height="26" rx="7" fill="rgba(255,255,255,.2)"/>
-<text x="430" y="199" font-size="15" fill="#fff" text-anchor="middle">오늘</text>
+<text x="430" y="199" font-size="15" fill="#fff" text-anchor="middle">지금</text>
 
 <rect x="684" y="48" width="285" height="160" rx="16" fill="#fff" stroke="#DCDCE8"
       stroke-width="2" stroke-dasharray="8 6"/>
@@ -210,9 +210,9 @@ figcaption{color:var(--muted);font-size:clamp(13px,1.55vw,25px);text-align:cente
   <line x1="637" y1="128" x2="674" y2="128" stroke="#AAABC6" marker-end="url(#g)"/>
 </g>
 <text x="490" y="256" font-size="19" fill="#62648A" text-anchor="middle">
-  오늘은 <tspan font-weight="700" fill="#4A2FD6">②번</tspan>까지 간다</text>
+  지금은 <tspan font-weight="700" fill="#4A2FD6">②번</tspan>까지 간다</text>
 </svg><figcaption>단계마다 불편한 점이 하나씩 남습니다. 그 불편이 다음 시간의 주제가 됩니다.</figcaption></figure></section>
-<section class="slide punch"><div class="mark"><span class="n">3</span><span>데이터 저장하여 기록 관리하기</span></div><p class="lead">오늘 쓸 것</p><p class="big">localStorage</p><p class="sub">브라우저가 가진 작은 수첩입니다.<br>껐다 켜도 남아 있지만, <b>그 브라우저 안에서만</b> 남습니다.</p></section>
+<section class="slide punch"><div class="mark"><span class="n">3</span><span>데이터 저장하여 기록 관리하기</span></div><p class="lead">지금 쓸 것</p><p class="big">localStorage</p><p class="sub">브라우저가 가진 작은 수첩입니다.<br>껐다 켜도 남아 있지만, <b>그 브라우저 안에서만</b> 남습니다.</p></section>
 <section class="slide"><div class="mark"><span class="n">3</span><span>데이터 저장하여 기록 관리하기</span></div><h2>그 전에 할 일</h2><figure><svg viewBox="0 0 980 300" role="img" aria-label="캔버스에서 코드를 받아 내 파일로 만드는 과정"><defs><marker id="a" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0 0 L11 4 L0 8 z" fill="#5B3DF5"/></marker><marker id="g" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0 0 L11 4 L0 8 z" fill="#AAABC6"/></marker><marker id="r" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0 0 L11 4 L0 8 z" fill="#D9435A"/></marker></defs>
 <rect x="20" y="52" width="300" height="170" rx="16" fill="#fff" stroke="#5B3DF5" stroke-width="2"/>
 <text x="170" y="88" font-size="18" fill="#4A2FD6" text-anchor="middle">캔버스</text>
@@ -234,7 +234,7 @@ figcaption{color:var(--muted);font-size:clamp(13px,1.55vw,25px);text-align:cente
 <line x1="626" y1="137" x2="656" y2="137" stroke="#5B3DF5" stroke-width="4" marker-end="url(#a)"/>
 
 <text x="490" y="262" font-size="19" fill="#62648A" text-anchor="middle">
-  오늘부터는 <tspan font-weight="700" fill="#4A2FD6">내 파일</tspan>로 가져와서 쓴다</text>
+  이제부터는 <tspan font-weight="700" fill="#4A2FD6">내 파일</tspan>로 가져와서 쓴다</text>
 </svg><figcaption>3차시부터는 수업이 끝날 때마다 코드를 받아 두는 습관을 들입니다.</figcaption></figure></section>
 <section class="slide"><div class="mark"><span class="n">3</span><span>데이터 저장하여 기록 관리하기</span></div><h2>내 파일로 가져오기</h2><div class="steps"><div class="step"><div class="ic num">1</div><b>코드 받기</b><span>캔버스 오른쪽 위 메뉴에서</span></div><div class="step"><div class="ic num">2</div><b>이름 정하기</b><span>영문 + <b>.html</b>로 (예: game.html)</span></div><div class="step"><div class="ic num">3</div><b>폴더에 두기</b><span>바탕화면에 내 폴더를 하나 만들어 모아 둡니다</span></div><div class="step"><div class="ic num">4</div><b>더블클릭</b><span>브라우저가 열리면 성공</span></div></div><p class="note">내 컴퓨터에서 먼저 확인하고 올리는 습관을 들이세요. 올린 뒤에 고치는 것보다 빠릅니다.</p></section>
 <section class="slide"><div class="mark"><span class="n">3</span><span>데이터 저장하여 기록 관리하기</span></div><h2>붙일 기능</h2><ul class="pts"><li>게임이 끝나면 점수를 수첩에 적는다</li><li>이미 적힌 점수보다 <b>높을 때만</b> 바꿔 쓴다</li><li>페이지를 열 때 적힌 점수를 읽어 와 보여 준다</li><li>화면에 '이 브라우저에만 저장됩니다'라고 알려 준다</li></ul><p class="note">워크벤치 3차시 프롬프트에 그대로 들어 있습니다.</p></section>

@@ -30,7 +30,7 @@ h1{font-size:31px;line-height:1.3;margin:10px 0 4px}
 .canvasbox p.sub{margin:0 0 16px;color:var(--muted);font-size:15px}
 .cvsteps{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:12px}
 .cvstep{background:var(--bg);border-radius:12px;padding:14px 16px}
-.cvstep b{display:block;font-size:16px;margin-bottom:3px}
+.cvstep > b{display:block;font-size:16px;margin-bottom:3px}
 .cvstep .n{display:inline-block;background:var(--accent);color:#fff;font-weight:700;
   border-radius:6px;padding:1px 9px;font-size:13px;margin-bottom:7px}
 .cvstep span{color:#3A3C5C;font-size:14px;line-height:1.6;display:block;word-break:keep-all}
@@ -74,14 +74,14 @@ pre code{background:none;color:inherit;padding:0}
 .copy.done{background:#166534}
 .tip{background:var(--warn-soft);border:1px solid #f0c391;border-left:5px solid var(--warn);
   border-radius:11px;padding:13px 16px;margin-top:14px;font-size:14.5px;line-height:1.75;color:#5f4110}
-.tip b{color:var(--warn);display:block;margin-bottom:4px}
+.tip > b{color:var(--warn);display:block;margin-bottom:4px}
 .tip p{margin:0}
 .submit{display:flex;align-items:center;justify-content:space-between;gap:16px;
   flex-wrap:wrap;background:var(--ink);color:#fff;text-decoration:none;border-radius:10px;
   padding:16px 20px;margin-top:16px}
 .submit .go{text-decoration:none}
 .submit .go:hover{background:var(--accent-dim)}
-.submit .t b{display:block;font-size:17.5px;letter-spacing:-.02em}
+.submit .t > b{display:block;font-size:17.5px;letter-spacing:-.02em}
 .submit .t em{font-style:normal;color:#A8ABD0;font-size:14.5px;display:block;margin-top:2px}
 .submit .t code{background:#2B3053;color:#E4E2FA;font-size:13.5px}
 .submit .go{background:var(--accent);color:#fff;border-radius:8px;padding:9px 16px;
@@ -95,7 +95,7 @@ h2.sec{font-size:23px;margin:44px 0 10px;padding-bottom:8px;border-bottom:2px so
 .formula{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:14px}
 .fcard{background:#fff;border:1px solid var(--line);border-left:5px solid var(--accent);
   border-radius:12px;padding:15px 17px}
-.fcard b{display:block;font-size:16.5px;margin-bottom:3px}
+.fcard > b{display:block;font-size:16.5px;margin-bottom:3px}
 .fcard p{margin:0;font-size:14.5px;color:#3A3C5C;line-height:1.7}
 .fcard em{display:block;font-style:normal;color:var(--muted);font-size:13.5px;margin-top:7px}
 code{background:#EFEDFB;padding:1px 6px;border-radius:5px;font-size:14px;
@@ -120,7 +120,7 @@ nav :focus-visible{outline-color:#FFD400}
 <div class="jump"><a href="#l1">1차시 웹페이지</a><a href="#l2">2차시 게임</a><a href="#l3">3차시 기록 저장</a><a href="#l4">4차시 학습 도구</a><a href="#l5">5차시 로그인</a><a href="#l6">6차시 배포·전시</a><a href="#github">내 주소 만들기</a><a href="#upload">올리는 법</a><a href="#formula">프롬프트 작성 공식</a></div>
 <div class="canvasbox"><h2>먼저 — 캔버스를 켜세요</h2><p class="sub">이 수업은 제미나이의 캔버스에서 진행합니다. 켜 두면 만든 화면이 오른쪽에 바로 뜹니다.</p><div class="cvsteps"><div class="cvstep"><span class="n">1</span><b>제미나이 열기</b><span>gemini.google.com · 영재원 계정으로 로그인</span></div><div class="cvstep"><span class="n">2</span><b>캔버스 켜기</b><span>입력창 아래의 캔버스 버튼을 누릅니다.</span></div><div class="cvstep"><span class="n">3</span><b>프롬프트 붙여넣기</b><span>아래에서 복사해 그대로 넣습니다.</span></div><div class="cvstep"><span class="n">4</span><b>고치기</b><span>고칠 부분만 말하면 그 자리에서 바뀝니다.</span></div></div><div class="shot"><img src="shots/canvas_button.png" alt="" onerror="this.style.display='none';this.parentNode.insertAdjacentText('beforeend','여기에 캔버스 버튼 위치 캡처 — shots/canvas_button.png')"></div></div>
 <div class="canvasbox" id="github"><h2>그다음 — 내 주소 만들기 (1차시에 한 번만)</h2><p class="sub">계정과 저장소는 처음 한 번만 만듭니다. 그 뒤로는 파일을 올리기만 하면 됩니다.</p><div class="cvsteps"><div class="cvstep"><span class="n">1</span><b>계정 만들기</b><span><code>github.com</code> → Sign up. <b>아이디가 그대로 주소가 됩니다.</b> 영문 소문자로 짧게.</span></div><div class="cvstep"><span class="n">2</span><b>저장소 만들기</b><span>오른쪽 위 <b>+</b> → New repository. 이름은 <code>my-web</code>처럼 영문으로, <b>Public</b>으로.</span></div><div class="cvstep"><span class="n">3</span><b>인터넷에 공개</b><span>Settings → Pages → Branch를 <b>main</b>으로 Save.</span></div><div class="cvstep"><span class="n">4</span><b>주소 확인</b><span>1~2분 뒤 <code>내아이디.github.io/my-web/</code>이 열립니다.</span></div></div><div class="shot"><img src="shots/gh_pages.png" alt="" onerror="this.style.display='none';this.parentNode.insertAdjacentText('beforeend','여기에 Settings → Pages 화면 캡처 — shots/gh_pages.png')"></div></div>
-<div class="canvasbox" id="upload"><h2>매 차시 끝 — 내 저장소에 올리기</h2><p class="sub">1차시부터 6차시까지 매번 같은 네 단계입니다. 익숙해지면 1분이면 됩니다.</p><div class="cvsteps"><div class="cvstep"><span class="n">1</span><b>코드 받기</b><span>캔버스 오른쪽 위 메뉴에서 파일을 받습니다.</span></div><div class="cvstep"><span class="n">2</span><b>이름 바꾸기</b><span>영문 + <code>.html</code>. 첫 페이지만 <code>index.html</code>.</span></div><div class="cvstep"><span class="n">3</span><b>업로드</b><span>내 저장소 → <b>Add file</b> → <b>Upload files</b> → 끌어다 놓기.</span></div><div class="cvstep"><span class="n">4</span><b>Commit</b><span>아래 <b>Commit changes</b>. 1~2분 뒤 주소로 열립니다.</span></div></div><p style="margin:16px 0 0;color:var(--muted);font-size:14.5px">같은 이름으로 다시 올리면 <b>덮어쓰기</b>가 됩니다. 고친 파일은 같은 이름으로 올리세요. 올린 직후 404가 뜨면 고장이 아니라 아직 올라가는 중입니다.</p></div>
+<div class="canvasbox" id="upload"><h2>매 차시 끝 — 내 저장소에 올리기</h2><p class="sub">1차시부터 6차시까지 매번 같은 네 단계입니다. 익숙해지면 1분이면 됩니다.</p><div class="cvsteps"><div class="cvstep"><span class="n">1</span><b>코드 받기</b><span>캔버스 오른쪽 위 메뉴에서 파일 받기</span></div><div class="cvstep"><span class="n">2</span><b>이름 바꾸기</b><span>영문 + <code>.html</code> (첫 페이지만 <code>index.html</code>)</span></div><div class="cvstep"><span class="n">3</span><b>업로드</b><span>내 저장소 → <b>Add file</b> → <b>Upload files</b> → 끌어다 놓기</span></div><div class="cvstep"><span class="n">4</span><b>Commit</b><span>아래 <b>Commit changes</b> → 1~2분 뒤 주소로 열립니다</span></div></div><p style="margin:16px 0 0;color:var(--muted);font-size:14.5px">같은 이름으로 다시 올리면 <b>덮어쓰기</b>가 됩니다. 고친 파일은 같은 이름으로 올리세요. 올린 직후 404가 뜨면 고장이 아니라 아직 올라가는 중입니다.</p></div>
 <section class="lab" id="l1">
 <div class="labhead"><span class="em">💬</span><div><h2>1차시 · AI와 대화하여 웹페이지 제작하기</h2><p>말로 설명했더니 화면이 생겼다</p></div></div>
 <div class="codewrap accentbox"><div class="chrome"><i></i><i></i><i></i><span>gemini.google.com — 캔버스</span></div><div class="codehead"><span>프롬프트 원문 — 캔버스를 켠 제미나이에 붙여넣기</span><button class="copy" data-t="l1-p">복사</button></div><pre id="l1-p"><code>웹페이지를 하나 만들어 줘. "나를 소개하는 페이지"야.
@@ -150,7 +150,7 @@ nav :focus-visible{outline-color:#FFD400}
 ① 캔버스에서 <b>코드 받기</b> → ② 이름을 <code>index.html</code>로 → ③ 저장소에서 <b>Add file → Upload files</b> → ④ 아래 <b>Commit changes</b>
 <br><br><b>1~2분 기다리세요.</b> 올린 직후에는 주소가 404로 나올 수 있습니다. 고장이 아니라 아직 올라가는 중입니다.
 <br><br><b>아이디는 신중히.</b> 깃허브 아이디가 그대로 주소가 됩니다. 실명 대신 영문 별명으로 짧게 정하세요.</p></div>
-<div class="submit"><span class="t"><b>📤 오늘 올릴 것 — 내 소개 페이지</b><em>이름을 <code>index.html</code>으로 바꿔 내 저장소에 업로드 → Commit → <code>내주소/</code>으로 열어 보기</em></span><a class="go" href="#upload">올리는 법</a></div>
+<div class="submit"><span class="t"><b>📤 지금 올릴 것 — 내 소개 페이지</b><em>이름을 <code>index.html</code>으로 바꿔 내 저장소에 업로드 → Commit → <code>내주소/</code>으로 열어 보기</em></span><a class="go" href="#upload">올리는 법</a></div>
 </section>
 <section class="lab" id="l2">
 <div class="labhead"><span class="em">🎮</span><div><h2>2차시 · 게임 로직 설계하고 구현하기</h2><p>내가 정한 규칙으로 만드는 내 게임</p></div></div>
@@ -733,8 +733,8 @@ el('best').textContent = loadBest();
 "연속으로 성공하면 점수가 더 많이 오르게 해 줘."<br>
 "시간이 지날수록 조금씩 빨라지게 해 줘."<br>
 "가끔 방해 요소가 나오게 해 줘. 그걸 누르면 점수가 깎여."
-<br><br><b>오늘 대화는 닫지 마세요.</b> 다음 시간에 같은 대화를 이어서 열면 만들던 게임을 그대로 고칠 수 있습니다.</p></div>
-<div class="submit"><span class="t"><b>📤 오늘 올릴 것 — 내 게임</b><em>이름을 <code>game.html</code>으로 바꿔 내 저장소에 업로드 → Commit → <code>내주소/game.html</code>으로 열어 보기</em></span><a class="go" href="#upload">올리는 법</a></div>
+<br><br><b>대화는 닫지 마세요.</b> 다음 시간에 같은 대화를 이어서 열면 만들던 게임을 그대로 고칠 수 있습니다.</p></div>
+<div class="submit"><span class="t"><b>📤 지금 올릴 것 — 내 게임</b><em>이름을 <code>game.html</code>으로 바꿔 내 저장소에 업로드 → Commit → <code>내주소/game.html</code>으로 열어 보기</em></span><a class="go" href="#upload">올리는 법</a></div>
 </section>
 <section class="lab" id="l3">
 <div class="labhead"><span class="em">💾</span><div><h2>3차시 · 데이터 저장하여 기록 관리하기</h2><p>새로고침해도 최고 점수는 남는다</p></div></div>
@@ -783,7 +783,7 @@ function gameOver(score){
 같은 파일을 <b>옆자리 컴퓨터</b>에서 열어 보게 하세요. 내 기록이 없습니다. 이 경험이 5차시 로그인의 이유가 됩니다.</p></div>
 </section>
 <section class="lab" id="l4">
-<div class="labhead"><span class="em">📋</span><div><h2>4차시 · 사용자 중심 학습 도구 개발하기</h2><p>오늘부터 내가 진짜로 쓸 도구</p></div></div>
+<div class="labhead"><span class="em">📋</span><div><h2>4차시 · 사용자 중심 학습 도구 개발하기</h2><p>이제부터 내가 진짜로 쓸 도구</p></div></div>
 <a class="prev" href="tool_todo_local.html" target="_blank" rel="noopener">▶ 완성된 도구 먼저 보기</a>
 <div class="codewrap accentbox"><div class="chrome"><i></i><i></i><i></i><span>gemini.google.com — 캔버스</span></div><div class="codehead"><span>프롬프트 원문 — 캔버스를 켠 제미나이에 붙여넣기</span><button class="copy" data-t="l4-p">복사</button></div><pre id="l4-p"><code>"오늘 할 일" 도구를 만들어 줘. 내가 매일 실제로 쓸 거야.
 
@@ -983,8 +983,8 @@ render();
 &lt;/body&gt;
 &lt;/html&gt;
 </code></pre></div>
-<div class="tip"><b>꿀팁</b><p><b>4차시 결과물은 오늘부터 실제로 쓰게 하세요.</b> 일주일 써 본 학생과 안 써 본 학생은 5차시 몰입도가 완전히 다릅니다.
-<br><br><b>오늘은 올리기까지 해야 합니다.</b> 내 저장소에 올라가 있어야 다음 시간에 로그인을 붙여 확인할 수 있습니다. 파일 이름은 <code>todo.html</code>로 통일하세요.
+<div class="tip"><b>꿀팁</b><p><b>4차시 결과물은 수업이 끝난 뒤 실제로 쓰게 하세요.</b> 내가 쓰는 도구라야 5차시에 '어디서나 열리게 하고 싶다'는 마음이 생깁니다. 그러려면 지금 만드는 것이 <b>내가 진짜 필요한 것</b>이어야 합니다.
+<br><br><b>이번 차시는 올리기까지 해야 합니다.</b> 내 저장소에 올라가 있어야 다음 시간에 로그인을 붙여 확인할 수 있습니다. 파일 이름은 <code>todo.html</code>로 통일하세요.
 <br><br><b>다른 도구로 바꾸고 싶다면</b><br>
 "과목별 시간표를 만들어 줘. 칸을 누르면 과목 이름을 고칠 수 있게."<br>
 "25분 공부하고 5분 쉬는 타이머를 만들어 줘. 몇 번 했는지 세어 줘."<br>
@@ -992,7 +992,7 @@ render();
 <br><br><b>더 해 볼 요청</b><br>
 "할 일에 중요 표시를 달 수 있게 해 줘. 중요한 건 위로 올라오게."<br>
 "어제 못 끝낸 일이 오늘 목록에 남아 있게 해 줘.</p></div>
-<div class="submit"><span class="t"><b>📤 오늘 올릴 것 — 내 학습 도구</b><em>이름을 <code>todo.html</code>으로 바꿔 내 저장소에 업로드 → Commit → <code>내주소/todo.html</code>으로 열어 보기</em></span><a class="go" href="#upload">올리는 법</a></div>
+<div class="submit"><span class="t"><b>📤 지금 올릴 것 — 내 학습 도구</b><em>이름을 <code>todo.html</code>으로 바꿔 내 저장소에 업로드 → Commit → <code>내주소/todo.html</code>으로 열어 보기</em></span><a class="go" href="#upload">올리는 법</a></div>
 </section>
 <section class="lab" id="l5">
 <div class="labhead"><span class="em">🔐</span><div><h2>5차시 · 계정 인증과 클라우드 데이터베이스 연동하기</h2><p>로그인하면 집에서도 내 것이 그대로</p></div></div>
@@ -1356,7 +1356,7 @@ if (!READY){
 </code></pre></div>
 <div class="tip"><b>꿀팁</b><p><b>승인된 도메인을 빠뜨리는 사람이 가장 많습니다.</b> Authentication → Settings → 승인된 도메인에 <code>내아이디.github.io</code>를 넣어야 로그인 창이 열립니다. <code>https://</code>를 빼고, 뒤의 저장소 이름도 빼고 도메인만 넣으세요.
 <br><br><b>캔버스 미리보기에서는 로그인 창이 안 뜰 수 있습니다.</b> 확인은 반드시 올린 뒤 <b>내 주소</b>에서 하세요.
-<br><br><b>오늘 흐름</b><br>
+<br><br><b>이번 차시 흐름</b><br>
 ① 내 프로젝트 만들기 → ② 로그인·데이터베이스 켜기 → ③ 설정값 복사 → ④ 도메인 등록 → ⑤ 캔버스에서 붙이기 → ⑥ 올리고 내 주소에서 확인 → ⑦ 보안 규칙 게시
 <br><br><b>안 될 때 화면에 뜨는 글자를 그대로 보세요</b><br>
 <code>auth/unauthorized-domain</code> — 승인된 도메인에 내 주소를 안 넣었습니다.<br>
@@ -1364,7 +1364,7 @@ if (!READY){
 <code>permission-denied</code> — 보안 규칙이 막은 것입니다. 저장하려는 위치가 <code>users/내uid/</code> 안인지 확인하세요.<br>
 <code>api-key-not-valid</code> — 설정값을 잘못 붙여넣었습니다. 콘솔에서 다시 복사하세요.
 <br><br><b>마지막에 보안 규칙을 꼭 게시하세요.</b> 테스트 모드로 만든 데이터베이스는 30일 동안 누구나 읽고 쓸 수 있습니다. 아래 규칙을 복사해 Firestore → 규칙 탭에 붙여넣고 <b>게시</b>를 누르세요.</p></div>
-<div class="submit"><span class="t"><b>📤 오늘 올릴 것 — 로그인을 붙인 학습 도구 — 덮어쓰기</b><em>이름을 <code>todo.html</code>으로 바꿔 내 저장소에 업로드 → Commit → <code>내주소/todo.html</code>으로 열어 보기</em></span><a class="go" href="#upload">올리는 법</a></div>
+<div class="submit"><span class="t"><b>📤 지금 올릴 것 — 로그인을 붙인 학습 도구 — 덮어쓰기</b><em>이름을 <code>todo.html</code>으로 바꿔 내 저장소에 업로드 → Commit → <code>내주소/todo.html</code>으로 열어 보기</em></span><a class="go" href="#upload">올리는 법</a></div>
 </section>
 <section class="lab" id="l6">
 <div class="labhead"><span class="em">🌍</span><div><h2>6차시 · 웹 서비스 배포하고 공유하기</h2><p>주소가 생기면 친구가 내 게임을 한다</p></div></div>
@@ -1868,7 +1868,7 @@ async function loadRanking(){
 &lt;/body&gt;
 &lt;/html&gt;
 </code></pre></div>
-<div class="tip"><b>꿀팁</b><p><b>오늘은 선생님이 올려 줄 게 없습니다.</b> 내 저장소에 내가 올리고, 내 주소를 전시관에 등록합니다.
+<div class="tip"><b>꿀팁</b><p><b>이번 차시는 선생님이 올려 줄 게 없습니다.</b> 내 저장소에 내가 올리고, 내 주소를 전시관에 등록합니다.
 <br><br><b>올리기 전 점검</b><br>
 파일 이름에 한글·띄어쓰기 없이 영문으로. 예: <code>game.html</code><br>
 파일 안에 실명·연락처·학교 이름이 없는지 한 번 더 확인.<br>
@@ -1878,7 +1878,7 @@ async function loadRanking(){
 <br><br><b>전시관은 선생님 것입니다.</b> 내 프로젝트가 아니라 반 전체가 함께 쓰는 곳이라, 여기서는 설정값을 넣을 일이 없습니다. 로그인만 하면 됩니다.
 <br><br><b>남은 시간은 자유 플레이로</b><br>
 마지막 20분은 아무것도 시키지 말고 서로의 게임을 하게 두세요. 이 수업의 보상은 거기에 있습니다.</p></div>
-<div class="submit"><span class="t"><b>📤 오늘 올릴 것 — 내가 만든 게임</b><em>이름을 <code>game.html</code>으로 바꿔 내 저장소에 업로드 → Commit → <code>내주소/game.html</code>으로 열어 보기</em></span><a class="go" href="#upload">올리는 법</a></div>
+<div class="submit"><span class="t"><b>📤 지금 올릴 것 — 내가 만든 게임</b><em>이름을 <code>game.html</code>으로 바꿔 내 저장소에 업로드 → Commit → <code>내주소/game.html</code>으로 열어 보기</em></span><a class="go" href="#upload">올리는 법</a></div>
 </section>
 <h2 class="sec" id="formula">프롬프트 작성 공식</h2>
 <p style="margin:0;color:var(--muted)">도구가 무엇이든 이 네 가지를 말해 주면 원하는 것에 가까워집니다.</p>
