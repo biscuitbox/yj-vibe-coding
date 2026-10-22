@@ -53,6 +53,11 @@ ul.pts:has(li:nth-child(2):last-child) li,
 ul.pts:has(li:nth-child(3):last-child) li{
   padding-top:clamp(20px,3.6vh,52px);padding-bottom:clamp(20px,3.6vh,52px);
   font-size:clamp(19px,2.65vw,48px)}
+/* 목록(왼쪽) + 캡처(오른쪽) 2단 — 글만으로는 어느 탭인지 못 찾는 화면용 */
+.twocol{display:grid;grid-template-columns:1fr 1fr;gap:clamp(20px,2.6vw,46px);align-items:start}
+.twocol .pts{margin-top:0}
+.twocol .shotbox{margin-top:0;height:100%}
+.twocol .shotbox img{max-height:44vh}
 .note{margin:clamp(16px,2.4vh,32px) 0 0;font-size:clamp(14px,1.75vw,29px);
   color:var(--muted);line-height:1.5}
 .note b{color:var(--accent-dim);font-weight:700}
@@ -77,6 +82,7 @@ ul.pts:has(li:nth-child(3):last-child) li{
 .shotbox .chrome{background:var(--ink);color:var(--dim);display:flex;align-items:center;
   gap:9px;padding:clamp(6px,.9vh,11px) clamp(11px,1.1vw,18px);
   font-family:ui-monospace,Consolas,"D2Coding",monospace;font-size:clamp(11px,1.15vw,18px)}
+.shotbox .chrome span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .shotbox .chrome i{width:clamp(7px,.62vw,11px);height:clamp(7px,.62vw,11px);
   border-radius:50%;background:#464C78;display:block}
 .shotbox .chrome i:first-child{background:var(--spark)}
@@ -157,6 +163,7 @@ figcaption{color:var(--muted);font-size:clamp(13px,1.55vw,25px);text-align:cente
 .punch :focus-visible,.cover :focus-visible{outline-color:var(--spark)}
 
 @media (max-width:600px){
+  .twocol{grid-template-columns:1fr}
   .slide{padding:9vh 6vw 7vh}
   .bar a{display:none}
   .tlrow .len{display:none}
@@ -289,7 +296,7 @@ figcaption{color:var(--muted);font-size:clamp(13px,1.55vw,25px);text-align:cente
 <text x="222" y="152" font-size="16" font-weight="700" fill="#D9435A"
       transform="rotate(-21 222 152)">막힘</text>
 </svg><figcaption>이 규칙이 없으면 주소를 아는 누구나 내 기록을 지울 수 있습니다.</figcaption></figure></section>
-<section class="slide"><div class="mark"><span class="n">5</span><span>계정 인증과 클라우드 데이터베이스 구축하기</span></div><h2>규칙을 한 줄씩 읽어 봅시다</h2><ul class="pts"><li>내 할 일은 <b>나만</b> 읽고 쓴다</li><li>로그인하지 않은 사람은 아무것도 못 한다</li><li><b>지우기는 아무도 못 한다</b></li><li>그 외의 모든 곳은 막혀 있다</li></ul><p class="note">워크벤치에서 규칙을 복사해 Firestore → 규칙 탭에 붙여넣고 <b>게시</b>를 누릅니다.</p></section>
+<section class="slide"><div class="mark"><span class="n">5</span><span>계정 인증과 클라우드 데이터베이스 구축하기</span></div><h2>규칙을 한 줄씩 읽어 봅시다</h2><div class="twocol"><ul class="pts"><li>내 할 일은 <b>나만</b> 읽고 쓴다</li><li>로그인하지 않은 사람은 아무것도 못 한다</li><li><b>지우기는 아무도 못 한다</b></li><li>그 외의 모든 곳은 막혀 있다</li></ul><div class="shotbox"><div class="chrome"><i></i><i></i><i></i><span>Firestore Database → 규칙</span></div><div class="body"><img src="shots/fb_rules.png" alt="" onerror="this.style.display='none';this.parentNode.insertAdjacentText('beforeend','여기에 Firestore 규칙 탭 캡처 — shots/fb_rules.png')"></div></div></div><p class="note">워크벤치에서 규칙을 복사해 Firestore → 규칙 탭에 붙여넣고 <b>게시</b>를 누릅니다.</p></section>
 <section class="slide"><div class="mark"><span class="n">5</span><span>계정 인증과 클라우드 데이터베이스 구축하기</span></div><h2>함께 지킬 것</h2><ul class="pts"><li>저장되는 것은 계정 번호와 내가 적은 내용뿐입니다</li><li>남에게 알려지면 곤란한 내용은 적지 않습니다</li><li>내 데이터는 내가 지울 수 있습니다 — 내 프로젝트니까요</li><li>저장을 반복문 안에 넣으면 순식간에 수만 번 기록됩니다 — 주의</li></ul></section>
 <section class="slide punch"><div class="mark"><span class="n">5</span><span>계정 인증과 클라우드 데이터베이스 구축하기</span></div><p class="lead">다음 시간</p><p class="big">전시관을 엽니다</p><p class="sub">친구들이 내 게임을 하고, 점수가 랭킹에 올라갑니다.</p></section>
   </div>
