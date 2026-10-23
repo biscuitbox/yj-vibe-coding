@@ -34,20 +34,14 @@
     line-height:1.55;max-width:24em}
   .hero .say b{color:var(--spark);font-weight:700}
   .badges{display:flex;flex-wrap:wrap;gap:7px}
-  /* 강의 자료 주소 — 수강생이 폰으로 찍어 들어오는 자리 */
-  .qrbox{display:flex;align-items:center;gap:16px;margin-top:28px;padding:14px;
-    border:1px solid #39406B;border-radius:12px;background:#1C2142;max-width:466px}
-  .qrfig{flex:0 0 auto;width:104px;height:104px;background:#fff;border-radius:8px;
-    padding:7px;display:flex;align-items:center;justify-content:center}
-  .qrfig img,.qrfig svg{width:100%;height:100%;display:block}
-  .qrtxt{min-width:0}
-  .qrtxt b{display:block;font-size:15px;color:var(--spark);margin-bottom:5px}
-  .qrtxt .addr{display:block;font-size:13.5px;color:#C3C6E6;line-height:1.5;
-    word-break:break-all;font-family:ui-monospace,Consolas,monospace}
-  .qrcopy{margin-top:9px;background:#39406B;color:#fff;border:0;border-radius:7px;
-    padding:7px 12px;font-size:13.5px;font-family:inherit}
-  .qrcopy:hover{background:var(--accent)}
-  @media (max-width:420px){ .qrbox{flex-direction:column;align-items:flex-start} }
+  /* 강의 자료 주소 — 수강생이 주소창에 그대로 입력하는 자리 */
+  .linkbox{margin-top:30px;padding:20px 24px;border:1px solid #39406B;
+    border-radius:12px;background:#1C2142;max-width:560px}
+  .linkbox .cap{display:block;font-size:15px;color:var(--dim);margin-bottom:10px}
+  .linkbox .url{display:block;font-size:clamp(30px,4.4vw,48px);font-weight:700;
+    color:var(--spark);letter-spacing:-.02em;line-height:1.15;word-break:keep-all}
+  .linkbox .how{display:block;margin-top:12px;font-size:14.5px;color:#C3C6E6;line-height:1.6}
+  .linkbox .how b{color:#fff}
   .badges span{border:1px solid #39406B;color:#C3C6E6;border-radius:5px;
     padding:5px 11px;font-size:13.5px}
 
@@ -185,22 +179,12 @@
       <span>설치 없음</span><span>1인 1대</span><span>계정 직접 생성</span>
     </div>
 
-    <div class="qrbox">
-      <div class="qrfig">
-        <!-- shots/qr.png 를 넣으면 아래 기본 QR 대신 그 그림이 보입니다 -->
-        <img src="shots/qr.png" alt="강의 자료 주소 QR 코드"
-             onerror="this.remove();document.getElementById('qrsvg').removeAttribute('hidden')">
-        <svg id="qrsvg" hidden viewBox="-2 -2 37 37" shape-rendering="crispEdges"
-             role="img" aria-label="강의 자료 주소 QR 코드">
-          <rect x="-2" y="-2" width="37" height="37" fill="#fff"/>
-          <path d="M0 0h7v1h-7zM8 0h2v1h-2zM13 0h1v1h-1zM19 0h2v1h-2zM23 0h1v1h-1zM26 0h7v1h-7zM0 1h1v1h-1zM6 1h1v1h-1zM9 1h2v1h-2zM13 1h1v1h-1zM15 1h2v1h-2zM18 1h1v1h-1zM20 1h3v1h-3zM26 1h1v1h-1zM32 1h1v1h-1zM0 2h1v1h-1zM2 2h3v1h-3zM6 2h1v1h-1zM9 2h1v1h-1zM11 2h1v1h-1zM13 2h1v1h-1zM18 2h1v1h-1zM21 2h2v1h-2zM26 2h1v1h-1zM28 2h3v1h-3zM32 2h1v1h-1zM0 3h1v1h-1zM2 3h3v1h-3zM6 3h1v1h-1zM12 3h2v1h-2zM16 3h1v1h-1zM18 3h2v1h-2zM22 3h1v1h-1zM24 3h1v1h-1zM26 3h1v1h-1zM28 3h3v1h-3zM32 3h1v1h-1zM0 4h1v1h-1zM2 4h3v1h-3zM6 4h1v1h-1zM8 4h1v1h-1zM11 4h1v1h-1zM13 4h2v1h-2zM16 4h1v1h-1zM18 4h1v1h-1zM23 4h2v1h-2zM26 4h1v1h-1zM28 4h3v1h-3zM32 4h1v1h-1zM0 5h1v1h-1zM6 5h1v1h-1zM8 5h1v1h-1zM11 5h1v1h-1zM13 5h4v1h-4zM20 5h2v1h-2zM26 5h1v1h-1zM32 5h1v1h-1zM0 6h7v1h-7zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h1v1h-1zM14 6h1v1h-1zM16 6h1v1h-1zM18 6h1v1h-1zM20 6h1v1h-1zM22 6h1v1h-1zM24 6h1v1h-1zM26 6h7v1h-7zM12 7h2v1h-2zM18 7h5v1h-5zM1 8h7v1h-7zM9 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h2v1h-2zM19 8h1v1h-1zM22 8h1v1h-1zM27 8h2v1h-2zM32 8h1v1h-1zM1 9h2v1h-2zM4 9h1v1h-1zM7 9h1v1h-1zM9 9h3v1h-3zM13 9h3v1h-3zM17 9h7v1h-7zM26 9h2v1h-2zM29 9h2v1h-2zM32 9h1v1h-1zM0 10h2v1h-2zM3 10h1v1h-1zM5 10h4v1h-4zM10 10h1v1h-1zM17 10h1v1h-1zM20 10h1v1h-1zM26 10h1v1h-1zM28 10h1v1h-1zM30 10h1v1h-1zM0 11h1v1h-1zM2 11h1v1h-1zM7 11h1v1h-1zM9 11h2v1h-2zM12 11h3v1h-3zM16 11h9v1h-9zM26 11h1v1h-1zM28 11h3v1h-3zM32 11h1v1h-1zM1 12h2v1h-2zM5 12h6v1h-6zM13 12h2v1h-2zM16 12h1v1h-1zM22 12h1v1h-1zM24 12h1v1h-1zM27 12h3v1h-3zM3 13h2v1h-2zM7 13h1v1h-1zM10 13h2v1h-2zM13 13h1v1h-1zM15 13h5v1h-5zM21 13h1v1h-1zM23 13h1v1h-1zM26 13h1v1h-1zM29 13h1v1h-1zM31 13h2v1h-2zM0 14h1v1h-1zM2 14h1v1h-1zM5 14h4v1h-4zM11 14h3v1h-3zM17 14h2v1h-2zM20 14h3v1h-3zM24 14h3v1h-3zM31 14h1v1h-1zM0 15h1v1h-1zM2 15h4v1h-4zM9 15h1v1h-1zM12 15h2v1h-2zM15 15h1v1h-1zM17 15h1v1h-1zM19 15h3v1h-3zM23 15h8v1h-8zM0 16h1v1h-1zM2 16h2v1h-2zM5 16h2v1h-2zM8 16h2v1h-2zM11 16h4v1h-4zM22 16h1v1h-1zM24 16h2v1h-2zM27 16h2v1h-2zM32 16h1v1h-1zM1 17h1v1h-1zM3 17h3v1h-3zM8 17h1v1h-1zM11 17h2v1h-2zM14 17h2v1h-2zM18 17h3v1h-3zM23 17h1v1h-1zM26 17h2v1h-2zM29 17h2v1h-2zM32 17h1v1h-1zM2 18h8v1h-8zM11 18h1v1h-1zM15 18h1v1h-1zM17 18h1v1h-1zM22 18h1v1h-1zM25 18h4v1h-4zM30 18h2v1h-2zM2 19h1v1h-1zM4 19h2v1h-2zM7 19h1v1h-1zM9 19h1v1h-1zM14 19h4v1h-4zM19 19h7v1h-7zM27 19h5v1h-5zM4 20h4v1h-4zM10 20h1v1h-1zM12 20h1v1h-1zM14 20h1v1h-1zM16 20h4v1h-4zM22 20h1v1h-1zM24 20h2v1h-2zM28 20h2v1h-2zM31 20h1v1h-1zM0 21h3v1h-3zM10 21h5v1h-5zM18 21h4v1h-4zM23 21h1v1h-1zM25 21h2v1h-2zM32 21h1v1h-1zM0 22h1v1h-1zM2 22h5v1h-5zM9 22h2v1h-2zM14 22h1v1h-1zM16 22h3v1h-3zM28 22h4v1h-4zM0 23h1v1h-1zM2 23h1v1h-1zM4 23h1v1h-1zM8 23h4v1h-4zM14 23h2v1h-2zM18 23h4v1h-4zM24 23h1v1h-1zM26 23h1v1h-1zM28 23h3v1h-3zM0 24h1v1h-1zM2 24h1v1h-1zM4 24h1v1h-1zM6 24h1v1h-1zM12 24h2v1h-2zM15 24h3v1h-3zM19 24h1v1h-1zM22 24h7v1h-7zM31 24h2v1h-2zM8 25h1v1h-1zM10 25h1v1h-1zM13 25h3v1h-3zM19 25h1v1h-1zM21 25h1v1h-1zM23 25h2v1h-2zM28 25h1v1h-1zM30 25h3v1h-3zM0 26h7v1h-7zM8 26h2v1h-2zM13 26h2v1h-2zM21 26h4v1h-4zM26 26h1v1h-1zM28 26h1v1h-1zM30 26h2v1h-2zM0 27h1v1h-1zM6 27h1v1h-1zM8 27h3v1h-3zM14 27h2v1h-2zM18 27h1v1h-1zM21 27h1v1h-1zM23 27h2v1h-2zM28 27h3v1h-3zM0 28h1v1h-1zM2 28h3v1h-3zM6 28h1v1h-1zM8 28h1v1h-1zM12 28h1v1h-1zM16 28h1v1h-1zM18 28h2v1h-2zM22 28h1v1h-1zM24 28h6v1h-6zM32 28h1v1h-1zM0 29h1v1h-1zM2 29h3v1h-3zM6 29h1v1h-1zM8 29h1v1h-1zM12 29h2v1h-2zM16 29h5v1h-5zM23 29h3v1h-3zM28 29h2v1h-2zM32 29h1v1h-1zM0 30h1v1h-1zM2 30h3v1h-3zM6 30h1v1h-1zM8 30h1v1h-1zM10 30h2v1h-2zM13 30h1v1h-1zM15 30h1v1h-1zM17 30h1v1h-1zM20 30h1v1h-1zM22 30h1v1h-1zM26 30h2v1h-2zM29 30h1v1h-1zM0 31h1v1h-1zM6 31h1v1h-1zM8 31h1v1h-1zM10 31h2v1h-2zM13 31h1v1h-1zM15 31h1v1h-1zM21 31h2v1h-2zM25 31h1v1h-1zM28 31h1v1h-1zM30 31h1v1h-1zM0 32h7v1h-7zM9 32h3v1h-3zM14 32h2v1h-2zM19 32h2v1h-2zM22 32h3v1h-3zM26 32h2v1h-2zM31 32h1v1h-1z" fill="#171A2E"/>
-        </svg>
-      </div>
-      <div class="qrtxt">
-        <b>📱 폰으로 찍으면 바로 열립니다</b>
-        <span class="addr" id="qraddr"></span>
-        <button class="qrcopy" id="qrcopy" type="button">주소 복사</button>
-      </div>
+    <div class="linkbox">
+      <span class="cap">📱 강의 자료 주소</span>
+      <!-- ▼ 강사용 — 여기 한 곳만 바꾸세요. '코드' 자리에 실제 단축주소 코드를 넣으세요 ▼ -->
+      <span class="url" id="shorturl">숏.한국/코드</span>
+      <!-- ▲ 여기까지 ▲ -->
+      <span class="how">검색창이 아니라 <b>브라우저 맨 위 주소창</b>에 한글 그대로 입력하세요.</span>
     </div>
   </div>
 
@@ -438,41 +422,6 @@
     });
   });
   go.addEventListener('click', start);
-})();
-
-/* ═══ ▼ 강사용 — 여기 한 줄만 바꾸세요 ▼ ═══
-   단축주소(예: bit.ly/○○○)를 만들었으면 따옴표 안에 넣으세요.
-   비워 두면 아래 전체 주소가 그대로 보입니다.
-   ※ 단축주소를 넣었다면, 그 단축주소의 QR 그림을 shots/qr.png 로 함께 올려야
-      QR과 글자가 같은 곳을 가리킵니다. 기본 QR은 전체 주소를 가리킵니다. */
-var 단축주소 = "";
-/* ═══ 여기까지 ═══ */
-
-(function(){
-  var FULL = 'https://biscuitbox.github.io/yj-vibe-coding/';
-  var 보여줄주소 = (단축주소 || '').trim() || FULL;
-  var addr = document.getElementById('qraddr');
-  var btn  = document.getElementById('qrcopy');
-  if (!addr || !btn) return;
-  addr.textContent = 보여줄주소.replace(/^https?:\/\//, '').replace(/\/$/, '');
-  btn.addEventListener('click', function(){
-    var done = function(){
-      btn.textContent = '복사됨!';
-      setTimeout(function(){ btn.textContent = '주소 복사'; }, 1600);
-    };
-    if (navigator.clipboard && navigator.clipboard.writeText){
-      navigator.clipboard.writeText(보여줄주소).then(done, fallback);
-    } else { fallback(); }
-    function fallback(){
-      // 보안 제약이나 구형 브라우저에서 클립보드가 막힐 때 — 긁어 가게 선택만 해 준다
-      var r = document.createRange();
-      r.selectNodeContents(addr);
-      var sel = window.getSelection();
-      sel.removeAllRanges(); sel.addRange(r);
-      btn.textContent = '직접 복사하세요';
-      setTimeout(function(){ btn.textContent = '주소 복사'; }, 2200);
-    }
-  });
 })();
 </script>
 </body>
